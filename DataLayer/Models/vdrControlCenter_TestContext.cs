@@ -1,0 +1,283 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+
+namespace DataLayer.Models
+{
+    public partial class vdrControlCenterContext : DbContext
+    {
+        public vdrControlCenterContext()
+        {
+            
+        }
+
+        public vdrControlCenterContext(DbContextOptions<vdrControlCenterContext> options)
+            : base(options)
+        {
+        }
+
+        public virtual DbSet<Channels> Channels { get; set; }
+        public virtual DbSet<Epg> Epg { get; set; }
+        public virtual DbSet<Recordings> Recordings { get; set; }
+        public virtual DbSet<StationTypes> StationTypes { get; set; }
+        public virtual DbSet<Stations> Stations { get; set; }
+        public virtual DbSet<StatusInfo> StatusInfo { get; set; }
+        public virtual DbSet<SystemSettings> SystemSettings { get; set; }
+        public virtual DbSet<Timers> Timers { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=RH0;DataBase=vdrControlCenter_Test;Trusted_Connection=true;");
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Channels>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.Property(e => e.Apid)
+                    .HasColumnName("APID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Caid)
+                    .HasColumnName("CAID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.ChannelId)
+                    .IsRequired()
+                    .HasColumnName("ChannelID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.ChannelName).HasMaxLength(100);
+
+                entity.Property(e => e.Modtime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(sysdatetime())");
+
+                entity.Property(e => e.Nid)
+                    .HasColumnName("NID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Parameter).HasMaxLength(50);
+
+                entity.Property(e => e.Params).HasMaxLength(256);
+
+                entity.Property(e => e.ProviderName).HasMaxLength(50);
+
+                entity.Property(e => e.Rid)
+                    .HasColumnName("RID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Sid)
+                    .HasColumnName("SID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.SignalSource).HasMaxLength(10);
+
+                entity.Property(e => e.Tid)
+                    .HasColumnName("TID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Tpid)
+                    .HasColumnName("TPID")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Vpid)
+                    .HasColumnName("VPID")
+                    .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Epg>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.ToTable("EPG");
+
+                entity.HasIndex(e => new { e.ChannelRecId, e.EventId })
+                    .HasName("NCI_EventID");
+
+                entity.HasIndex(e => new { e.ChannelRecId, e.StartTime })
+                    .HasName("NCI_ChannelRecId_StartTime");
+
+                entity.Property(e => e.EventId).HasColumnName("EventID");
+
+                entity.Property(e => e.GenreCodes).HasMaxLength(100);
+
+                entity.Property(e => e.Modtime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(sysdatetime())");
+
+                entity.Property(e => e.ShortDescription).HasMaxLength(256);
+
+                entity.Property(e => e.StartTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Stream).HasMaxLength(255);
+
+                entity.Property(e => e.TableId)
+                    .HasColumnName("TableID")
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.Title).HasMaxLength(256);
+
+                entity.Property(e => e.Version).HasMaxLength(10);
+
+                entity.Property(e => e.Vps)
+                    .HasColumnName("VPS")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.ChannelRec)
+                    .WithMany(p => p.Epg)
+                    .HasForeignKey(d => d.ChannelRecId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_EPG_Channels");
+            });
+
+            modelBuilder.Entity<Recordings>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.Property(e => e.Modtime)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(sysdatetime())");
+
+                entity.Property(e => e.RecordingPath).HasMaxLength(255);
+
+                entity.Property(e => e.RecordingTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<StationTypes>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.Property(e => e.StationType).HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<Stations>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.HasIndex(e => e.HostAddress)
+                    .HasName("IX_Stations")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.StationType)
+                    .HasName("NCI_StationType");
+
+                entity.Property(e => e.EnableWol).HasColumnName("EnableWOL");
+
+                entity.Property(e => e.HostAddress)
+                    .IsRequired()
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.MacAddress).HasMaxLength(17);
+
+                entity.Property(e => e.MachineName)
+                    .IsRequired()
+                    .HasMaxLength(15);
+
+                entity.Property(e => e.PathToRecordings).HasMaxLength(255);
+
+                entity.Property(e => e.SambaPassword).HasMaxLength(30);
+
+                entity.Property(e => e.SambaUserName).HasMaxLength(30);
+
+                entity.Property(e => e.Sshpassword)
+                    .HasColumnName("SSHPassword")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Sshport).HasColumnName("SSHPort");
+
+                entity.Property(e => e.SshuserName)
+                    .HasColumnName("SSHUserName")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Svdrpport).HasColumnName("SVDRPPort");
+
+                entity.Property(e => e.VdradminPassword)
+                    .HasColumnName("VDRAdminPassword")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.VdradminPort).HasColumnName("VDRAdminPort");
+
+                entity.Property(e => e.VdradminUserName)
+                    .HasColumnName("VDRAdminUserName")
+                    .HasMaxLength(30);
+
+                entity.HasOne(d => d.StationTypeNavigation)
+                    .WithMany(p => p.Stations)
+                    .HasForeignKey(d => d.StationType)
+                    .HasConstraintName("FK_Stations_StationTypes");
+            });
+
+            modelBuilder.Entity<StatusInfo>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.Property(e => e.UsedPercent).HasColumnType("decimal(6, 2)");
+
+                entity.HasOne(d => d.SystemSettingsRec)
+                    .WithMany(p => p.StatusInfo)
+                    .HasForeignKey(d => d.SystemSettingsRecId)
+                    .HasConstraintName("FK_StatusInfo_SystemSettingsRecId");
+            });
+
+            modelBuilder.Entity<SystemSettings>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.Property(e => e.LastUpdateChannels).HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdateEpg)
+                    .HasColumnName("LastUpdateEPG")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdateRecordings).HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdateStatus).HasColumnType("datetime");
+
+                entity.Property(e => e.LastUpdateTimers).HasColumnType("datetime");
+
+                entity.Property(e => e.MachineName)
+                    .IsRequired()
+                    .HasMaxLength(15)
+                    .HasDefaultValueSql("('')");
+            });
+
+            modelBuilder.Entity<Timers>(entity =>
+            {
+                entity.HasKey(e => e.RecId);
+
+                entity.HasIndex(e => e.ChannelRecId)
+                    .HasName("NCI_ChannelRecId");
+
+                entity.HasIndex(e => new { e.Title, e.StartTime, e.EndTime })
+                    .HasName("NCI_Title_StartTime_EndTime");
+
+                entity.Property(e => e.EndTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Modtime).HasColumnType("datetime");
+
+                entity.Property(e => e.StartTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.HasOne(d => d.ChannelRec)
+                    .WithMany(p => p.Timers)
+                    .HasForeignKey(d => d.ChannelRecId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Timers_Channels");
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    }
+}

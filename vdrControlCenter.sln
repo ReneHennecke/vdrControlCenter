@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vdrControlCenter", "vdrControlCenter\vdrControlCenter.csproj", "{F311AF49-9DD0-494C-BA06-2B3737039CF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vdrControlCenterUI", "vdrControlCenter\vdrControlCenterUI.csproj", "{F311AF49-9DD0-494C-BA06-2B3737039CF0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{C9070EB0-C381-4487-89E1-FC5C93D2B49F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F311AF49-9DD0-494C-BA06-2B3737039CF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F311AF49-9DD0-494C-BA06-2B3737039CF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F311AF49-9DD0-494C-BA06-2B3737039CF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9070EB0-C381-4487-89E1-FC5C93D2B49F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9070EB0-C381-4487-89E1-FC5C93D2B49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9070EB0-C381-4487-89E1-FC5C93D2B49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9070EB0-C381-4487-89E1-FC5C93D2B49F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
