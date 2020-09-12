@@ -29,44 +29,63 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dlgMessageBoxExtended));
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.tmTimout = new System.Windows.Forms.Timer(this.components);
+            this.tmTimer = new System.Windows.Forms.Timer(this.components);
+            this.mleMessage = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(284, 142);
+            this.btnOK.Location = new System.Drawing.Point(150, 110);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 0;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(364, 142);
+            this.btnCancel.Location = new System.Drawing.Point(230, 110);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 1;
             this.btnCancel.Text = "Abbrechen";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // tmTimout
+            // tmTimer
             // 
-            this.tmTimout.Interval = 5000;
-            this.tmTimout.Tick += new System.EventHandler(this.tmTimout_Tick);
+            this.tmTimer.Interval = 5000;
+            this.tmTimer.Tick += new System.EventHandler(this.tmTimout_Tick);
+            // 
+            // mleMessage
+            // 
+            this.mleMessage.Location = new System.Drawing.Point(8, 10);
+            this.mleMessage.Multiline = true;
+            this.mleMessage.Name = "mleMessage";
+            this.mleMessage.ReadOnly = true;
+            this.mleMessage.Size = new System.Drawing.Size(298, 94);
+            this.mleMessage.TabIndex = 2;
             // 
             // dlgMessageBoxExtended
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 175);
+            this.ClientSize = new System.Drawing.Size(317, 143);
+            this.Controls.Add(this.mleMessage);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "dlgMessageBoxExtended";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -74,6 +93,7 @@
 
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Timer tmTimout;
+        private System.Windows.Forms.Timer tmTimer;
+        private System.Windows.Forms.TextBox mleMessage;
     }
 }

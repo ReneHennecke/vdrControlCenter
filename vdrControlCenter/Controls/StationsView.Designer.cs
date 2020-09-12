@@ -43,10 +43,12 @@
             this.pcPing.Size = new System.Drawing.Size(16, 19);
             this.pcPing.TabIndex = 1;
             this.pcPing.Visible = false;
+            this.pcPing.PingReply += new vdrControlCenterUI.Controls.PingControl.PingReplyEventHandler(this.pcPing_PingReply);
             // 
             // tmTimer
             // 
-            this.tmTimer.Interval = 1000;
+            this.tmTimer.Interval = 10000;
+            this.tmTimer.Tick += new System.EventHandler(this.tmTimer_Tick);
             // 
             // livStations
             // 
@@ -64,9 +66,11 @@
             this.livStations.MultiSelect = false;
             this.livStations.Name = "livStations";
             this.livStations.OwnerDraw = true;
+            this.livStations.ShowItemToolTips = true;
             this.livStations.Size = new System.Drawing.Size(150, 150);
             this.livStations.TabIndex = 2;
             this.livStations.UseCompatibleStateImageBehavior = false;
+            this.livStations.View = System.Windows.Forms.View.Details;
             // 
             // StationsView
             // 

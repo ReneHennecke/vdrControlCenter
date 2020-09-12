@@ -1,13 +1,20 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
     using DataLayer.Models;
+    using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
+    using vdrControlCenterUI.Dialogs;
 
     public class ListViewStations : ListView
     {
+        // TODO : Schriftarten nachbearbeiten
+
+        public delegate void RefreshPingStatusCallback(List<Classes.PingReplyRaX> lpr);
+
         private ItemDesignConfig _itemDesignConfig;
         public ItemDesignConfig ItemDesignConfig
         {
@@ -24,6 +31,24 @@
             PostInit();
         }
 
+        public void RefreshPingStatus(List<PingReplyRaX> lpr)
+        {
+            if (InvokeRequired)
+            {
+                var d = new RefreshPingStatusCallback(RefreshPingStatus);
+                Invoke(d, new object[] { lpr });
+            }
+            else
+            {
+                foreach (PingReplyRaX pr in lpr)
+                {
+                    ListViewItem item = FindItemWithText(pr.PingedHostAddress.ToString());
+                    if (item != null)
+                        item.ImageIndex = pr.Reply.Status == System.Net.NetworkInformation.IPStatus.Success ? 1 : 0;
+                }
+            }
+        }
+
         private void PostInit()
         {
             _itemDesignConfig = new ItemDesignConfig()
@@ -32,7 +57,7 @@
                 BackColor = BackColor,
                 SelectedBackground1 = Color.LightGray,
                 SelectedBackground2 = Color.White,
-                Font = new Font("Calibri", 11.0f, FontStyle.Bold)
+                Font = new Font("Forte", 8.0f, FontStyle.Regular)
             };
 
             DoubleBuffered = true;
@@ -41,6 +66,7 @@
             FullRowSelect = true;
             HeaderStyle = ColumnHeaderStyle.None;
             View = View.Details;
+            ShowItemToolTips = true;
                         
             SmallImageList = Globals.LoadImageList(Enums.ImageListType.StationView);
 
@@ -72,23 +98,21 @@
 
         protected override void OnDrawSubItem(DrawListViewSubItemEventArgs e)
         {
-            using (StringFormat sf = new StringFormat())
+            if (e.Item.ImageIndex >= 0 && e.Item.ImageIndex < SmallImageList.Images.Count)
             {
-                TextFormatFlags flags = TextFormatFlags.LeftAndRightPadding | TextFormatFlags.VerticalCenter;
+                Rectangle rectangle = new Rectangle(e.Bounds.X, e.Bounds.Y, 16, 16);
+                e.Graphics.DrawImage(SmallImageList.Images[e.Item.ImageIndex], rectangle);
+            }
 
-                if (e.Item.ImageIndex >= 0 && e.Item.ImageIndex < SmallImageList.Images.Count)
-                {
-                    Rectangle rectangle = new Rectangle(e.Bounds.X, e.Bounds.Y, 16, 16);
-                    e.Graphics.DrawImage(SmallImageList.Images[e.Item.ImageIndex], rectangle);
-                }
 
-                e.DrawText(flags);
+            using (SolidBrush brush = new SolidBrush(_itemDesignConfig.ForeColor))
+            {
+                e.Graphics.DrawString(e.Item.Text, _itemDesignConfig.Font, brush, new PointF(e.Bounds.X + 30, e.Bounds.Y));
             }
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            base.OnMouseDown(e);
             if (e.Button == MouseButtons.Right)
             {
                 ListViewItem item = (ListViewItem)GetItemAt(e.X, e.Y);
@@ -101,10 +125,27 @@
                     if (macAddress?.Length == MAC_ADDRESS_LEN)
                     {
                         macAddress = macAddress.Replace("-", string.Empty).Replace(":", string.Empty);
-                        byte[] b = StringRaX.HexStringToByteArray(stations.MacAddress);
+                        byte[] b = StringRaX.HexStringToByteArray(macAddress);
                         NetworkRaX.WakeOnLan(b);
+
+                        dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("WakeOnLAN", $"Das Magic-Paket wurde an {macAddress} gesendet.", 2500);
+                        dlg.ShowDialog();
                     }
                 }
+            }
+        }
+
+        protected override void OnItemMouseHover(ListViewItemMouseHoverEventArgs e)
+        {
+            if (e.Item == null)
+                return;
+
+            Stations station = (Stations)e.Item.Tag;
+            if (station != null)
+            {
+                bool wakeOnLan = station.EnableWol.GetValueOrDefault() && !string.IsNullOrWhiteSpace(station.MacAddress);
+                if (e.Item.ImageIndex == 0 && wakeOnLan)
+                    e.Item.ToolTipText = "Rechte Maustaste = WakeOnLAN";
             }
         }
     }

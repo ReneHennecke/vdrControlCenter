@@ -12,6 +12,7 @@
     using System.Drawing.Drawing2D;
     using System.Globalization;
     using vdrControlCenterUI.Dialogs;
+    using vdrControlCenterUI.Controls;
 
     public partial class frmMain : Form
     {
@@ -41,15 +42,6 @@
 
             tabWorkspace.ImageList = imageList;
 
-            TreeNode root = new TreeNode()
-            {
-                Text = "-",
-                ImageIndex = -1,
-                SelectedImageIndex = -1,
-                Tag = -1
-            };
-            trvNavigation.Nodes.Add(root);
-
             TreeNode node = new TreeNode()
             {
                 Text = "Einstellungen",
@@ -57,7 +49,7 @@
                 SelectedImageIndex = (int)Navigation.Setup,
                 Tag = Navigation.Setup
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
             
             node = new TreeNode()
             {
@@ -66,7 +58,7 @@
                 SelectedImageIndex = (int)Navigation.SSH,
                 Tag = Navigation.SSH
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
 
             node = new TreeNode()
             {
@@ -75,7 +67,7 @@
                 SelectedImageIndex = (int)Navigation.Service,
                 Tag = Navigation.Service
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
 
             node = new TreeNode()
             {
@@ -84,7 +76,7 @@
                 SelectedImageIndex = (int)Navigation.VDRAdmin,
                 Tag = Navigation.VDRAdmin
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
 
             node = new TreeNode()
             {
@@ -93,7 +85,7 @@
                 SelectedImageIndex = (int)Navigation.SVDRP,
                 Tag = Navigation.SVDRP
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
 
             node = new TreeNode()
             {
@@ -102,7 +94,7 @@
                 SelectedImageIndex = (int)Navigation.Editor,
                 Tag = Navigation.Editor
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
 
 
             node = new TreeNode()
@@ -112,7 +104,7 @@
                 SelectedImageIndex = (int)Navigation.EPGGuide,
                 Tag = Navigation.EPGGuide
             };
-            root.Nodes.Add(node);
+            trvNavigation.Nodes.Add(node);
 
             trvNavigation.ExpandAll();
 
@@ -132,54 +124,48 @@
             }
 
             Navigation navigation = (Navigation)e.Node.Tag;
-
-            string title = string.Empty;
-            switch (navigation)
+            TabPage page = FindTabPage(navigation);
+            if (page == null)
             {
-                case Navigation.Setup:
-                    title = "Setup";
-                    break;
-                case Navigation.SSH:
-                    title = "SSH";
-                    break;
-                case Navigation.Service:
-                    title = "VDR-Service";
-                    break;
-                case Navigation.VDRAdmin:
-                    title = "VDR-Admin";
-                    break;
-                case Navigation.SVDRP:
-                    title = "SVDRP";
-                    break;
-                case Navigation.Editor:
-                    title = "Editoren";
-                    break;
-                case Navigation.EPGGuide:
-                    title = "EPG-Guide";
-                    break;
-                default:
-                    break;
-            }
-
-            if (!string.IsNullOrWhiteSpace(title))
-            {
-                TabPage page = FindTabPage(navigation);
-                if (page == null)
+                page = new TabPage()
                 {
-                    page = new TabPage()
-                    {
-                        Text = title,
-                        ImageIndex = (int)navigation,
-                        Tag = navigation
-                    };
+                    Tag = navigation
+                };
 
-                    tabWorkspace.TabPages.Add(page);
+                string title = string.Empty;
+                switch (navigation)
+                {
+                    case Navigation.Setup:
+                        page.Text = "Setup";
+                        break;
+                    case Navigation.SSH:
+                        page.Text = "SSH";
+                        break;
+                    case Navigation.Service:
+                        page.Text = "VDR-Service";
+                        break;
+                    case Navigation.VDRAdmin:
+                        page.Text = "VDR-Admin";
+                        break;
+                    case Navigation.SVDRP:
+                        page.Text = "SVDRP";
+                        SvdrpConnector svdrpConnector = new SvdrpConnector();
+                        page.Controls.Add(svdrpConnector);
+                        break;
+                    case Navigation.Editor:
+                        page.Text = "Editoren";
+                        break;
+                    case Navigation.EPGGuide:
+                        page.Text = "EPG-Guide";
+                        break;
+                    default:
+                        break;
                 }
-                else
-                    tabWorkspace.SelectedTab = page;
 
+                tabWorkspace.TabPages.Add(page);
             }
-
+            else
+                tabWorkspace.SelectedTab = page;
         }
 
         private TabPage FindTabPage(Navigation navigation)
@@ -240,6 +226,11 @@
         {
             dlgSetup dlg = new dlgSetup();
             dlg.ShowDialog();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            
         }
     }
 }
