@@ -149,8 +149,8 @@
                         break;
                     case Navigation.SVDRP:
                         page.Text = "SVDRP";
-                        SvdrpConnector svdrpConnector = new SvdrpConnector();
-                        page.Controls.Add(svdrpConnector);
+                        SvdrpController svdrpController = new SvdrpController();
+                        page.Controls.Add(svdrpController);
                         break;
                     case Navigation.Editor:
                         page.Text = "Editoren";

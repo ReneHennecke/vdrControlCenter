@@ -1,8 +1,11 @@
-﻿namespace vdrControlCenterUI.Classes
+﻿using System;
+
+namespace vdrControlCenterUI.Classes
 {
     public class SvdrpConnectionInfo
     {
         public string ConnectionString { get; private set; }
+        public Guid Id { get; private set; }
         public bool IsConnected
         {
             get { return !string.IsNullOrWhiteSpace(ConnectionString); }
@@ -13,7 +16,13 @@
             ConnectionString = string.Empty;
         }
 
-        public SvdrpConnectionInfo(string[] response)
+        public SvdrpConnectionInfo(Guid id) : base()
+        {
+            Id = id;
+        }
+
+
+        public void ParseMessage(string[] response)
         {
             if (response.Length > 0 && response[0].Length > 0)
             {

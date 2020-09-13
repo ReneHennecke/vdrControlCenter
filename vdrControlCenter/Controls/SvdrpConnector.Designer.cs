@@ -33,6 +33,7 @@
             this.lblState = new System.Windows.Forms.Label();
             this.lblStateValue = new System.Windows.Forms.Label();
             this.panBox = new System.Windows.Forms.Panel();
+            this.lblIdValue = new System.Windows.Forms.Label();
             this.btnConnect_Disconnect = new System.Windows.Forms.Button();
             this.panBox.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +63,7 @@
             this.lblState.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblState.Location = new System.Drawing.Point(374, 6);
             this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(118, 22);
+            this.lblState.Size = new System.Drawing.Size(72, 22);
             this.lblState.TabIndex = 2;
             this.lblState.Text = "Status:";
             this.lblState.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -73,10 +74,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStateValue.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblStateValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblStateValue.Location = new System.Drawing.Point(496, 6);
+            this.lblStateValue.Location = new System.Drawing.Point(692, 6);
             this.lblStateValue.Name = "lblStateValue";
-            this.lblStateValue.Size = new System.Drawing.Size(492, 22);
-            this.lblStateValue.TabIndex = 3;
+            this.lblStateValue.Size = new System.Drawing.Size(296, 22);
+            this.lblStateValue.TabIndex = 4;
             this.lblStateValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panBox
@@ -85,6 +86,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panBox.Controls.Add(this.lblIdValue);
             this.panBox.Controls.Add(this.btnConnect_Disconnect);
             this.panBox.Controls.Add(this.lblStateValue);
             this.panBox.Controls.Add(this.lblSvdrpAddress);
@@ -94,6 +96,16 @@
             this.panBox.Name = "panBox";
             this.panBox.Size = new System.Drawing.Size(996, 70);
             this.panBox.TabIndex = 0;
+            // 
+            // lblIdValue
+            // 
+            this.lblIdValue.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.lblIdValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblIdValue.Location = new System.Drawing.Point(450, 6);
+            this.lblIdValue.Name = "lblIdValue";
+            this.lblIdValue.Size = new System.Drawing.Size(240, 22);
+            this.lblIdValue.TabIndex = 3;
+            this.lblIdValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnConnect_Disconnect
             // 
@@ -126,5 +138,6 @@
         private System.Windows.Forms.Label lblStateValue;
         private System.Windows.Forms.Panel panBox;
         private System.Windows.Forms.Button btnConnect_Disconnect;
+        private System.Windows.Forms.Label lblIdValue;
     }
 }

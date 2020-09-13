@@ -5,20 +5,32 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-using vdrControlCenterUI.Enums;
 using vdrControlCenterUI.Classes;
+using vdrControlCenterUI.Enums;
+using DataLayer.Models;
+using System.Linq;
+using vdrControlCenterUI.Dialogs;
+using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Threading;
+using System.Net.Sockets;
 
 namespace vdrControlCenterUI.Controls
 {
     public partial class SvdrpController : UserControl
     {
+        private vdrControlCenterContext _context;
+
+        private SvdrpClient _client;
+
         private delegate void TranslateDataCallback(string text);
         private delegate void ShowBufferLengthCallback();
 
-        private delegate void DisconnectCallback();
-        private SvdrpRequest _enumRequest = SvdrpRequest.Undefined;
+        private SvdrpRequest _svdrpRequest = SvdrpRequest.Undefined;
         private SvdrpBuffer _svdrpBuffer;
-        private bool _isConnected;
+        private SvdrpConnectionInfo _svdrpConnectionInfo;
+
+
 
         private const string EOL = "\n";
         private const string REQ_215 = "215";
@@ -35,42 +47,190 @@ namespace vdrControlCenterUI.Controls
         private const string REQ_MSG_DELETED = "deleted";
         private const string REQ_MSG_UPD_REC = "Re-read of recordings directory triggered";
 
-        public SvdrpController Owner { get; set; }
-
-        public event RefreshConnectionEventHandler RefreshConnectionInfo;
-        public delegate void RefreshConnectionEventHandler(object sender, SvdrpConnectionInfoEventArgs e);
-
-        //public event RefreshStatusEventHandler RefreshStatusInfo;
-        //public delegate void RefreshStatusEventHandler(object sender, SvdrpStatusInfoEventArgs e);
-
-        //public event RefreshChannelListEventHandler RefreshChannelList;
-        //public delegate void RefreshChannelListEventHandler(object sender, SvdrpChannelListEventArgs e);
-
-        //public event RefreshTimerListEventHandler RefreshTimerList;
-        //public delegate void RefreshTimerListEventHandler(object sender, SvdrpTimerListEventArgs e);
-
-        //public event RefreshEPGListEventHandler RefreshEPGList;
-        //public delegate void RefreshEPGListEventHandler(object sender, SvdrpEPGListEventArgs e);
-
-        //public event RefreshRecordingListEventHandler RefreshRecordingList;
-        //public delegate void RefreshRecordingListEventHandler(object sender, SvdrpRecordingListEventArgs e);
-
-        //public event RefreshCheckEventHandler RefreshCheck;
-        //public delegate void RefreshCheckEventHandler(object sender, SvdrpCheckEventArgs e);
+        public delegate void OnConnectCallback(Guid id);
+        public delegate void OnDisconnectCallback(Guid id);
+        public delegate void OnReceiveCallback(string data);
+        public delegate void OnErrorCallback(SocketError error);
 
         public SvdrpController()
         {
             InitializeComponent();
+
+            PostInit();
         }
 
-        public void SendConnectRequest()
-        {
+        private void PostInit()
+        { 
+            Disposed += OnDispose;
 
+            if (!DesignMode)
+            {
+                _context = new vdrControlCenterContext();
+
+                if (_context.Stations.Count(station => station.Svdrpport > 0) > 1)
+                {
+                    dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP-Fehler", "Es sind mehrere Server als SVDRP-Endpunkt definiert.", 0);
+                    dlg.ShowDialog();
+
+                    return;
+                }
+                
+                svdrpConnector.LoadData(this, _context);
+
+                //svdrpStatusInfoCtrl.Owner = this;
+                //svdrpChannelCtrl.Owner = this;
+                //svdrpTimerCtrl.Owner = this;
+                //svdrpRecordingCtrl.Owner = this;
+                //svdrpEPGCtrl.Owner = this;
+
+                //_context = new DataLayer.EF.vdrControlCenterEntities();
+                //_context.Configuration.ProxyCreationEnabled = true;
+                //_context.Configuration.LazyLoadingEnabled = true;
+
+                //LoadData();
+
+                _svdrpBuffer = new SvdrpBuffer();
+#if DEBUG
+                _svdrpBuffer.EnableDebug = true;
+                grbBuffer.Visible = true;
+#else
+                grbBuffer.Visible = false;
+#endif
+
+                Stations station = _context.Stations.FirstOrDefault(s => s.Svdrpport > 0);
+                _client = new SvdrpClient(this, station.HostAddress, station.Svdrpport.GetValueOrDefault());
+            }
+        }
+
+        private void OnDispose(object sender, EventArgs e)
+        {
+            if (_client.IsConnected)
+                _client.DisconnectAndStop();
+            _context?.Dispose();
+        }
+
+        private void AddBuffer(string data)
+        {
+            if (!grbBuffer.Visible || mleBuffer.IsDisposed)
+                return;
+
+            mleBuffer.AppendText($"{data}{Environment.NewLine}");
+            mleBuffer.SelectionStart = mleBuffer.Text.Length;
+            mleBuffer.ScrollToCaret();
+
+            lblBufferLength.Text = $"{mleBuffer.Text.Length}";
+        }
+
+        #region Client Events
+        public void OnConnect(Guid id)
+        {
+            if (InvokeRequired)
+            {
+                OnConnectCallback cb = new OnConnectCallback(OnConnect);
+                Invoke(cb, new object[] { id });
+            }
+            else
+            {
+                AddBuffer($"Verbunden : {id}{Environment.NewLine}");
+
+                _svdrpConnectionInfo = new SvdrpConnectionInfo(id);
+            }
+        }
+
+        public void OnDisconnect(Guid id)
+        {
+            if (InvokeRequired)
+            {
+                OnDisconnectCallback cb = new OnDisconnectCallback(OnDisconnect);
+                Invoke(cb, new object[] { id });
+            }
+            else
+            {
+                AddBuffer($"Getrennt : {id}{Environment.NewLine}");
+
+                _svdrpConnectionInfo = new SvdrpConnectionInfo();
+                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                _svdrpRequest = SvdrpRequest.Undefined;
+            }
+        }
+
+        public void OnReceive(string data)
+        {
+            if (InvokeRequired)
+            {
+                OnReceiveCallback cb = new OnReceiveCallback(OnReceive);
+                Invoke(cb, new object[] { data });
+            }
+            else
+            {
+                AddBuffer($"{data}{Environment.NewLine}");
+
+                _svdrpBuffer.Add(data);
+                _svdrpBuffer.Save2File();
+
+                switch (_svdrpRequest)
+                {
+                    case SvdrpRequest.Connect:
+                        if (_svdrpBuffer.Content.StartsWith(REQ_220))
+                        {
+                            _svdrpConnectionInfo.ParseMessage(_svdrpBuffer.Splitter);
+                            if (_client.IsConnected)
+                                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                        }
+                        _svdrpRequest = SvdrpRequest.Undefined;
+                        break;
+                    case SvdrpRequest.Disconnect:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public void OnError(SocketError error)
+        {
+            if (InvokeRequired)
+            {
+                OnErrorCallback cb = new OnErrorCallback(OnError);
+                Invoke(cb, new object[] { error });
+            }
+            else
+                AddBuffer($"Fehler : {error.ToString()}{Environment.NewLine}");
+        }
+        #endregion 
+
+        #region Connection
+        public void SendConnectRequest() //string hostAddress, int port)
+        {
+            //MainForm.AddMessage($"CONNECT SVDRP.");
+
+            _svdrpRequest = SvdrpRequest.Connect;
+            _svdrpBuffer.Clear();
+            _client.ConnectAsync();
         }
 
         public void SendDisconnectRequest()
         {
+            //MainForm.AddMessage($"DISCONNECT SVDRP.");
 
+            _svdrpRequest = SvdrpRequest.Disconnect;
+            _svdrpBuffer.Clear();
+            _client.DisconnectAndStop();
+        }
+
+        private void svdrpCtrl_RefreshConnectionInfo(object sender, SvdrpConnectionInfoEventArgs e)
+        {
+            //svdrpConnectCtrl.ShowConnection(e.ConnectionInfo);
+            //svdrpStatusInfoCtrl.EnableRequests = svdrpChannelCtrl.EnableRequests = svdrpTimerCtrl.EnableRequests =
+            //svdrpRecordingCtrl.EnableRequests = svdrpEPGCtrl.EnableRequests = e.ConnectionInfo.IsConnected;
+        }
+
+
+        #endregion
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _client.SendAsync($"LSTE{EOL}");
         }
     }
 }

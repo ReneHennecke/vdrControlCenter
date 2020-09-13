@@ -6,6 +6,7 @@
 
     public partial class dlgMessageBoxExtended : Form
     {
+
         public dlgMessageBoxExtended(string title, string message, int timeout)
         {
             InitializeComponent();
@@ -14,9 +15,13 @@
             mleMessage.Text = message;
             if (timeout > 0)
             {
+                btnOK.Visible = btnCancel.Visible = false;
                 tmTimer.Interval = timeout;
                 tmTimer.Enabled = true;
+
             }
+            else
+                btnOKOnly.Visible = false;
         }
 
         private void tmTimout_Tick(object sender, EventArgs e)
@@ -39,6 +44,12 @@
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void btnOKOnly_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
             Close();
         }
     }

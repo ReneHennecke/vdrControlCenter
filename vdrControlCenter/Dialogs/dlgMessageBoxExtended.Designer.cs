@@ -34,6 +34,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tmTimer = new System.Windows.Forms.Timer(this.components);
             this.mleMessage = new System.Windows.Forms.TextBox();
+            this.btnOKOnly = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOK
@@ -70,11 +71,22 @@
             this.mleMessage.Size = new System.Drawing.Size(298, 94);
             this.mleMessage.TabIndex = 2;
             // 
+            // btnOKOnly
+            // 
+            this.btnOKOnly.Location = new System.Drawing.Point(118, 110);
+            this.btnOKOnly.Name = "btnOKOnly";
+            this.btnOKOnly.Size = new System.Drawing.Size(75, 23);
+            this.btnOKOnly.TabIndex = 3;
+            this.btnOKOnly.Text = "button1";
+            this.btnOKOnly.UseVisualStyleBackColor = true;
+            this.btnOKOnly.Click += new System.EventHandler(this.btnOKOnly_Click);
+            // 
             // dlgMessageBoxExtended
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(317, 143);
+            this.Controls.Add(this.btnOKOnly);
             this.Controls.Add(this.mleMessage);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -95,5 +107,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Timer tmTimer;
         private System.Windows.Forms.TextBox mleMessage;
+        private System.Windows.Forms.Button btnOKOnly;
     }
 }
