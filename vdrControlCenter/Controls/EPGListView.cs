@@ -11,6 +11,7 @@
     using System.Windows.Forms;
     using System.Windows.Forms.VisualStyles;
     using vdrControlCenterUI.Classes;
+    using vdrControlCenterUI.Dialogs;
 
     public partial class EPGListView : UserControl
     {
@@ -57,7 +58,6 @@
                 Alignment = DataGridViewContentAlignment.MiddleLeft
             };
             dgvEPG.RowsDefaultCellStyle = cellStyle;
-
 
             DataGridViewCellStyle cellCenterStyle = new DataGridViewCellStyle(cellStyle);
             cellCenterStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -181,7 +181,11 @@
 
         private void btnFind_Click(object sender, System.EventArgs e)
         {
+            dlgFindEPG dlg = new dlgFindEPG();
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
 
+            }
         }
 
         private void btnTimer_Click(object sender, System.EventArgs e)
