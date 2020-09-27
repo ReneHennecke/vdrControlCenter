@@ -1,9 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-
-namespace DataLayer.Models
+﻿namespace DataLayer.Models
 {
+    using System;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.IdentityModel.Protocols;
+    using System.Configuration;
+
     public partial class vdrControlCenterContext : DbContext
     {
         public vdrControlCenterContext()
@@ -29,8 +31,9 @@ namespace DataLayer.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=RH0;DataBase=vdrControlCenter_Test;Trusted_Connection=true;");
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(ConfigurationManager.ConnectionStrings["vdrControlCenterDatabase"].ConnectionString);
             }
         }
 
@@ -116,6 +119,8 @@ namespace DataLayer.Models
 
                 entity.Property(e => e.StartTime).HasColumnType("datetime");
 
+                entity.Property(e => e.Duration).HasColumnName("Duration");
+
                 entity.Property(e => e.Stream).HasMaxLength(255);
 
                 entity.Property(e => e.TableId)
@@ -135,7 +140,19 @@ namespace DataLayer.Models
                     .HasForeignKey(d => d.ChannelRecId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_EPG_Channels");
+
+                entity.Property(e => e.DurationComputed)
+                    .HasColumnType("int")
+                    .HasComputedColumnSql("([Duration] / (60))")
+                    .ValueGeneratedOnAddOrUpdate();
+
+                entity.Property(e => e.EndTimeComputed)
+                    .HasColumnType("datetime")
+                    .HasComputedColumnSql("(DATEADD(second, ISNULL([Duration], (0)), [StartTime])")
+                    .ValueGeneratedOnAddOrUpdate();
             });
+
+            modelBuilder.Entity<Epg>().Ignore(c => c.ChannelNameComputed);
 
             modelBuilder.Entity<Recordings>(entity =>
             {
@@ -279,5 +296,6 @@ namespace DataLayer.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+      
     }
 }

@@ -15,6 +15,7 @@ namespace vdrControlCenterUI.Controls
         private Image _connectPng;
         private Image _disconnectPng;
         private SvdrpController _controller;
+        private vdrControlCenterContext _context;
 
 
         public SvdrpConnector()
@@ -26,8 +27,8 @@ namespace vdrControlCenterUI.Controls
 
         private void PostInit()
         {
-            _connectPng = Globals.LoadImage($"{Globals.ImageFolder}{Globals.ConnectPng}");
-            _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}{Globals.DisconnectPng}");
+            _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ConnectPng}");
+            _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.DisconnectPng}");
             btnConnect_Disconnect.Image = _connectPng;
         }
 
@@ -42,7 +43,8 @@ namespace vdrControlCenterUI.Controls
         public void LoadData(SvdrpController controller, vdrControlCenterContext context)
         {
             _controller = controller;
-            Stations station =  context.Stations.FirstOrDefault(station => station.Svdrpport > 0);
+            _context = context;
+            Stations station =  _context.Stations.FirstOrDefault(station => station.Svdrpport > 0);
             if (station != null)
                 lblSvdrpAddressValue.Text = $"svdrp://{station.HostAddress}:{station.Svdrpport}";
         }

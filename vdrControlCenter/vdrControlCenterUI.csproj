@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.2.26">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NetCoreServer" Version="3.0.19" />
   </ItemGroup>
 
@@ -24,8 +28,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="app.config">
+      <TransformOnBuild>true</TransformOnBuild>
+    </None>
+    <None Update="app.Debug.config">
+      <IsTransformFile>true</IsTransformFile>
+      <DependentUpon>app.config</DependentUpon>
+    </None>
+    <None Update="app.Release.config">
+      <IsTransformFile>true</IsTransformFile>
+      <DependentUpon>app.config</DependentUpon>
+    </None>
+    <None Update="Images\actions-network-connect-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\actions-network-disconnect-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\cancel-icon16x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\clock-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Images\console-icon24x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -35,6 +59,9 @@
     </None>
     <None Update="Images\document-edit-icon24x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\get-list-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Images\green-icon16x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -56,6 +83,9 @@
     </None>
     <None Update="Images\tv-guide-icon24x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\zoom-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

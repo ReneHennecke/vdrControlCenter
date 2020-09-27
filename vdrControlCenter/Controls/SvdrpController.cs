@@ -66,6 +66,8 @@ namespace vdrControlCenterUI.Controls
             if (!DesignMode)
             {
                 _context = new vdrControlCenterContext();
+ //               _context.pr.Configuration.ProxyCreationEnabled = true;
+   //             _context.Configuration.LazyLoadingEnabled = true;
 
                 if (_context.Stations.Count(station => station.Svdrpport > 0) > 1)
                 {
@@ -76,6 +78,9 @@ namespace vdrControlCenterUI.Controls
                 }
                 
                 svdrpConnector.LoadData(this, _context);
+                svdrpEPGList.LoadData(this, _context);
+
+
 
                 //svdrpStatusInfoCtrl.Owner = this;
                 //svdrpChannelCtrl.Owner = this;
@@ -111,7 +116,8 @@ namespace vdrControlCenterUI.Controls
 
         private void AddBuffer(string data)
         {
-            if (!grbBuffer.Visible || mleBuffer.IsDisposed)
+            if (!grbBuffer.Visible || mleBuffer.IsDisposed
+                )
                 return;
 
             mleBuffer.AppendText($"{data}{Environment.NewLine}");
@@ -175,11 +181,23 @@ namespace vdrControlCenterUI.Controls
                         {
                             _svdrpConnectionInfo.ParseMessage(_svdrpBuffer.Splitter);
                             if (_client.IsConnected)
+                            {
                                 svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+
+                                svdrpEPGList.RequestEnable = true;
+                            }
                         }
                         _svdrpRequest = SvdrpRequest.Undefined;
                         break;
                     case SvdrpRequest.Disconnect:
+                        break;
+                    case SvdrpRequest.GetEPGList:
+                        if (_svdrpBuffer.Content.Contains(REQ_MSG_END_OF_EPG_DATA))
+                        {
+                            SvdrpEPGList epgList = new SvdrpEPGList();
+                            epgList.ParseMessage(_svdrpBuffer.Splitter);
+                            svdrpEPGList.RefreshEPGList(epgList);
+                        }
                         break;
                     default:
                         break;
@@ -215,12 +233,24 @@ namespace vdrControlCenterUI.Controls
 
             _svdrpRequest = SvdrpRequest.Disconnect;
             _svdrpBuffer.Clear();
+            _client.SendAsync($"QUIT{EOL}");
             _client.DisconnectAndStop();
+        }
+
+        public void SendEPGRequest()
+        {
+            //MainForm.AddMessage($"EPG Request.");
+
+            _svdrpRequest = SvdrpRequest.GetEPGList;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"LSTE{EOL}");
         }
 
         private void svdrpCtrl_RefreshConnectionInfo(object sender, SvdrpConnectionInfoEventArgs e)
         {
-            //svdrpConnectCtrl.ShowConnection(e.ConnectionInfo);
+            svdrpConnector.ShowConnection(e.ConnectionInfo);
+
+            svdrpEPGList.Enabled = true;
             //svdrpStatusInfoCtrl.EnableRequests = svdrpChannelCtrl.EnableRequests = svdrpTimerCtrl.EnableRequests =
             //svdrpRecordingCtrl.EnableRequests = svdrpEPGCtrl.EnableRequests = e.ConnectionInfo.IsConnected;
         }

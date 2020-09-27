@@ -128,7 +128,7 @@
                         byte[] b = StringRaX.HexStringToByteArray(macAddress);
                         NetworkRaX.WakeOnLan(b);
 
-                        dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("WakeOnLAN", $"Das Magic-Paket wurde an {macAddress} gesendet.", 2500);
+                        dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("WakeOnLAN", $"Das Magic-Paket wurde an {macAddress} gesendet.", 3);
                         dlg.ShowDialog();
                     }
                 }

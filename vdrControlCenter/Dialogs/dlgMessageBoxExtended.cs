@@ -6,17 +6,19 @@
 
     public partial class dlgMessageBoxExtended : Form
     {
+        private int _countDown;
 
-        public dlgMessageBoxExtended(string title, string message, int timeout)
+        public dlgMessageBoxExtended(string title, string message, int countDown)
         {
             InitializeComponent();
 
             Text = title;
             mleMessage.Text = message;
-            if (timeout > 0)
+            if (countDown > 0)
             {
+                _countDown = countDown;
                 btnOK.Visible = btnCancel.Visible = false;
-                tmTimer.Interval = timeout;
+                ShowCountDown();
                 tmTimer.Enabled = true;
 
             }
@@ -24,9 +26,12 @@
                 btnOKOnly.Visible = false;
         }
 
-        private void tmTimout_Tick(object sender, EventArgs e)
+private void tmTimout_Tick(object sender, EventArgs e)
         {
-            btnOK_Click(null, null);
+            _countDown--;
+            ShowCountDown();
+            if (_countDown == 0)
+                btnOK_Click(null, null);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -51,6 +56,11 @@
         {
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void ShowCountDown()
+        {
+            btnOKOnly.Text = $"OK ({_countDown} sec)";
         }
     }
 }

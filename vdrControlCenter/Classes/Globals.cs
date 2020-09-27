@@ -7,7 +7,7 @@ namespace vdrControlCenterUI.Classes
 {
     public class Globals
     {
-        public const string ImageFolder = "Images";
+        public const string ImageFolder = "./Images";
 
         // Navigation TreeView
         public const string NavSetupPng = "setup-icon24x24.png";
@@ -29,6 +29,12 @@ namespace vdrControlCenterUI.Classes
         public const string ConnectPng = "actions-network-connect-icon16x16.png";
         public const string DisconnectPng = "actions-network-disconnect-icon16x16.png";
 
+        // EPGListView
+        public const string FindPng = "zoom-icon16x16.png";
+        public const string TimerPng = "clock-icon16x16.png";
+        public const string RequestPng = "get-list-icon16x16.png";
+
+
         public static ImageList LoadImageList(ImageListType type)
         {
             ImageList imageList = new ImageList();
@@ -38,25 +44,25 @@ namespace vdrControlCenterUI.Classes
             {
                 case ImageListType.MainForm:
                     imageList.ImageSize = new Size(24, 24);
-                    fileName = $"{ ImageFolder}/{ NavSetupPng}";
+                    fileName = $"{ImageFolder}/{ NavSetupPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ ImageFolder}/{ NavSshPng}";
+                    fileName = $"{ImageFolder}/{ NavSshPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ ImageFolder}/{ NavServicePng}";
+                    fileName = $"{ImageFolder}/{ NavServicePng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ ImageFolder}/{ NavSvdrpPng}";
+                    fileName = $"{ImageFolder}/{ NavSvdrpPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ ImageFolder}/{ NavVdrAdminPng}";
+                    fileName = $"{ImageFolder}/{ NavVdrAdminPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ ImageFolder}/{ NavEditPng}";
+                    fileName = $"{ImageFolder}/{ NavEditPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ ImageFolder}/{ NavEpgPng}";
+                    fileName = $"{ImageFolder}/{ NavEpgPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;

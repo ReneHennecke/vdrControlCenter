@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLayer.Models
 {
@@ -20,6 +21,19 @@ namespace DataLayer.Models
         public int? ParentalRating { get; set; }
         public string Stream { get; set; }
         public DateTime? Vps { get; set; }
+        public int? DurationComputed { get; private set; }
+        public DateTime? EndTimeComputed { get; private set; }
+        public string ChannelNameComputed
+        {
+            get
+            {
+                string channelName = string.Empty;
+                if (ChannelRec != null && ChannelRec.ChannelName != null)
+                    channelName = ChannelRec.ChannelName;
+
+                return channelName;
+            }
+        }
 
         public virtual Channels ChannelRec { get; set; }
     }

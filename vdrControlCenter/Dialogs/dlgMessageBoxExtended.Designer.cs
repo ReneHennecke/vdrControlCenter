@@ -59,7 +59,7 @@
             // 
             // tmTimer
             // 
-            this.tmTimer.Interval = 5000;
+            this.tmTimer.Interval = 1000;
             this.tmTimer.Tick += new System.EventHandler(this.tmTimout_Tick);
             // 
             // mleMessage
@@ -77,7 +77,7 @@
             this.btnOKOnly.Name = "btnOKOnly";
             this.btnOKOnly.Size = new System.Drawing.Size(75, 23);
             this.btnOKOnly.TabIndex = 3;
-            this.btnOKOnly.Text = "button1";
+            this.btnOKOnly.Text = "OK";
             this.btnOKOnly.UseVisualStyleBackColor = true;
             this.btnOKOnly.Click += new System.EventHandler(this.btnOKOnly_Click);
             // 

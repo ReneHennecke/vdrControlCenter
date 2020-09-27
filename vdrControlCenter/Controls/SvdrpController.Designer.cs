@@ -33,6 +33,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.grbBuffer = new System.Windows.Forms.GroupBox();
             this.lblBufferLength = new System.Windows.Forms.Label();
+            this.svdrpEPGList = new vdrControlCenterUI.Controls.EPGListView();
             this.grbBuffer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,7 +63,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(98, 140);
+            this.button1.Location = new System.Drawing.Point(26, 118);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(86, 50);
             this.button1.TabIndex = 2;
@@ -91,10 +92,19 @@
             this.lblBufferLength.TabIndex = 2;
             this.lblBufferLength.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // svdrpEPGList
+            // 
+            this.svdrpEPGList.Location = new System.Drawing.Point(2, 260);
+            this.svdrpEPGList.Name = "svdrpEPGList";
+            this.svdrpEPGList.RequestEnable = true;
+            this.svdrpEPGList.Size = new System.Drawing.Size(684, 342);
+            this.svdrpEPGList.TabIndex = 4;
+            // 
             // SvdrpController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.svdrpEPGList);
             this.Controls.Add(this.grbBuffer);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.svdrpConnector);
@@ -113,5 +123,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox grbBuffer;
         private System.Windows.Forms.Label lblBufferLength;
+        private EPGListView svdrpEPGList;
     }
 }

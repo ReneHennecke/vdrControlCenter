@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<efcore context-namespace="Datalayer" namespace="vdrControlCenterModel" p1:name="vdrControlCenterContext" p1:Guid="6578a4c6-d79a-440f-872d-c56a0da158c2" xmlns:p1="http://devart.com/schemas/EntityDeveloper/1.0">
+  <class name="Channel" entity-set="Channels" table="Channels" schema="dbo" p1:Guid="c4d5d497-b69a-41e1-8206-783ce9da634f">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="aedfd404-0dd1-4be6-af16-5e39d472e50d">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="Modtime" type="DateTime" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="ae9a29e4-1ee3-409b-946c-7a07f9a60005">
+      <column name="Modtime" default="sysdatetime()" not-null="True" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="Number" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="2f146f43-5153-4a87-ba29-7e7b305515ed">
+      <column name="Number" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="ChannelID" type="String" p1:ValidateMaxLength="50" p1:ValidateRequired="true" p1:Guid="a0fdc949-4bf1-4204-9ab5-30d78fa48085">
+      <column name="ChannelID" not-null="True" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="ChannelName" type="String" p1:nullable="True" p1:ValidateMaxLength="100" p1:ValidateRequired="false" p1:Guid="dd5ba0fb-de08-473a-bc23-7e616a96c886">
+      <column name="ChannelName" not-null="False" length="100" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="ProviderName" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="2413538b-78f8-4b6e-8c78-7fdbf324471b">
+      <column name="ProviderName" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="Frequency" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="6c6d52fb-2eca-43a8-91c1-d3ac0d58a83e">
+      <column name="Frequency" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Parameter" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="9d020690-e12e-4029-97ac-73aef8245130">
+      <column name="Parameter" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="SignalSource" type="String" p1:nullable="True" p1:ValidateMaxLength="10" p1:ValidateRequired="false" p1:Guid="b5a564d4-fe22-4ee8-ad45-735efb00e285">
+      <column name="SignalSource" not-null="False" length="10" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="SymbolRate" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="62d48c36-8297-493b-8c6d-73f4d2b4073f">
+      <column name="SymbolRate" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="VPID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="3353b608-ec32-4a7c-85e3-29ebd617468e">
+      <column name="VPID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="APID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="c1866356-5523-4ac9-9f0b-d89c5b5d1134">
+      <column name="APID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="TPID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="8ce45b60-208c-4491-9a2d-d3ca5cd0627f">
+      <column name="TPID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="CAID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="f1dda4cc-068d-4690-be16-2dd39a61a8c0">
+      <column name="CAID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="SID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="e3aec71e-8c28-4a34-a004-08aebbcdc1d0">
+      <column name="SID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="NID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="588cac81-e519-48df-b3c3-a932e3827936">
+      <column name="NID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="TID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="3e892dcb-fe65-448a-b225-2480b843b684">
+      <column name="TID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="RID" type="String" p1:nullable="True" p1:ValidateMaxLength="50" p1:ValidateRequired="false" p1:Guid="e4adab29-615f-4aef-917a-5724abdfbfef">
+      <column name="RID" not-null="False" length="50" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="Params" type="String" p1:nullable="True" p1:ValidateMaxLength="256" p1:ValidateRequired="false" p1:Guid="8ad91d00-5808-4e9e-8360-1cc9136cc455">
+      <column name="Params" not-null="False" length="256" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="Favourite" type="Boolean" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="5871f9ff-0701-45a3-aead-961f4048e09a">
+      <column name="Favourite" not-null="False" sql-type="bit" p1:unicode="False" />
+    </property>
+  </class>
+  <class name="EPG" entity-set="EPGs" table="EPG" schema="dbo" p1:Guid="38eec94d-dd1c-45f7-ae87-ce52473e1dff">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="d982b014-2bad-4cd6-bd84-2a47f2cc67a1">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="Modtime" type="DateTime" p1:nullable="True" value-generated="OnAdd" p1:ValidateRequired="false" p1:Guid="edf9b286-8c2a-47d8-93f8-25a2ee23809e">
+      <column name="Modtime" default="sysdatetime()" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="ChannelRecId" type="Int64" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="4a2f0535-97fa-4c2e-9d90-af78e71f0f61">
+      <column name="ChannelRecId" not-null="False" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </property>
+    <property name="EventID" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="7802bab9-022c-41a4-a894-0cfa7b1ef0c5">
+      <column name="EventID" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="StartTime" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="0fc1456a-44b6-4480-b5a2-a016f3909a6b">
+      <column name="StartTime" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="Duration" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="8f0c877b-ef91-47da-8c75-2bf34eb5564a">
+      <column name="Duration" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="TableID" type="String" p1:nullable="True" p1:ValidateMaxLength="10" p1:ValidateRequired="false" p1:Guid="89345dfc-63d2-4ca5-9999-d80a2ef60f6b">
+      <column name="TableID" not-null="False" length="10" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="Version" type="String" p1:nullable="True" p1:ValidateMaxLength="10" p1:ValidateRequired="false" p1:Guid="a4362f46-3277-4f1a-bb21-8288497e55ce">
+      <column name="Version" not-null="False" length="10" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="Title" type="String" p1:nullable="True" p1:ValidateMaxLength="256" p1:ValidateRequired="false" p1:Guid="92795639-c4a4-4468-bafd-05f6e264cc51">
+      <column name="Title" not-null="False" length="256" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="ShortDescription" type="String" p1:nullable="True" p1:ValidateMaxLength="256" p1:ValidateRequired="false" p1:Guid="149cb18c-b5a5-4ade-b2f2-cee0d741a9c1">
+      <column name="ShortDescription" not-null="False" length="256" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="Description" type="String" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="885c35ac-3f5b-44d2-9098-2e4450c3be76">
+      <column name="Description" not-null="False" sql-type="nvarchar(max)" p1:unicode="True" />
+    </property>
+    <property name="GenreCodes" type="String" p1:nullable="True" p1:ValidateMaxLength="100" p1:ValidateRequired="false" p1:Guid="112a2029-afb3-4377-94a2-7fe15e8b6ebf">
+      <column name="GenreCodes" not-null="False" length="100" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="ParentalRating" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="cdaa6bc1-9a45-4055-90b1-322b7bb4c612">
+      <column name="ParentalRating" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Stream" type="String" p1:nullable="True" p1:ValidateMaxLength="255" p1:ValidateRequired="false" p1:Guid="d45c7a7b-c526-41f0-8ae2-18edb156b2ec">
+      <column name="Stream" not-null="False" length="255" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="VPS" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="c30c3c0d-c29d-4633-a2ba-2e239d63a808">
+      <column name="VPS" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+  </class>
+  <class name="Recording" entity-set="Recordings" table="Recordings" schema="dbo" p1:Guid="491f43c8-a6f8-4c73-9a20-eca4a0c35b69">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="f0aa2435-4f40-47ef-b73f-e84c174d44dd">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="Modtime" type="DateTime" p1:nullable="True" value-generated="OnAdd" p1:ValidateRequired="false" p1:Guid="26b012ca-7a1f-490b-86b6-c882bc5ca1c8">
+      <column name="Modtime" default="sysdatetime()" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="Number" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="3d20ce2b-8248-4810-bdef-ca0e287e7855">
+      <column name="Number" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="RecordingTime" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="7743f4d2-b993-4889-9f2a-8a04917727a7">
+      <column name="RecordingTime" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="Duration" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="bb917d8e-5fca-4be4-8ab9-7c75f4490191">
+      <column name="Duration" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Title" type="String" p1:nullable="True" p1:ValidateMaxLength="100" p1:ValidateRequired="false" p1:Guid="1aa212db-da11-4551-973c-b6e87492af53">
+      <column name="Title" not-null="False" length="100" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="RecordingPath" type="String" p1:nullable="True" p1:ValidateMaxLength="255" p1:ValidateRequired="false" p1:Guid="73a31140-6ef1-4481-bcba-34f944440989">
+      <column name="RecordingPath" not-null="False" length="255" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+  </class>
+  <class name="Station" entity-set="Stations" table="Stations" schema="dbo" p1:Guid="cf738bc7-1a4e-422e-a5fe-677e152d1523">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="7aeb36bb-760b-45f0-8344-d1c46a2deb9f">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="MachineName" type="String" p1:ValidateMaxLength="15" p1:ValidateRequired="true" p1:Guid="c1960817-7ede-4e1e-a9bf-593716f74e00">
+      <column name="MachineName" not-null="True" length="15" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="HostAddress" type="String" p1:ValidateMaxLength="15" p1:ValidateRequired="true" p1:Guid="03b239dc-50cf-468d-80a1-429dca28dbe3">
+      <column name="HostAddress" not-null="True" length="15" sql-type="nvarchar" unique="True" p1:unicode="True" />
+    </property>
+    <property name="StationType" type="Int32" p1:ValidateRequired="true" p1:Guid="f7899de3-38e3-4d51-9ec4-17272b000450">
+      <column name="StationType" not-null="True" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Description" type="String" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="3147e05d-8104-4917-af01-d0b8b3a6c7ab">
+      <column name="Description" not-null="False" sql-type="nvarchar(max)" p1:unicode="True" />
+    </property>
+    <property name="SSHPort" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="b55cc409-6c6e-4039-92cb-44cf6da33b1d">
+      <column name="SSHPort" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="SSHUserName" type="String" p1:nullable="True" p1:ValidateMaxLength="30" p1:ValidateRequired="false" p1:Guid="121c6749-7806-4a53-9f55-650442860bfd">
+      <column name="SSHUserName" not-null="False" length="30" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="SSHPassword" type="String" p1:nullable="True" p1:ValidateMaxLength="30" p1:ValidateRequired="false" p1:Guid="491105df-9c2d-46e0-8b64-9f86f50cf1b5">
+      <column name="SSHPassword" not-null="False" length="30" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="SVDRPPort" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="29bdfbdb-4850-44ec-b0b0-f096317fd01b">
+      <column name="SVDRPPort" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="SambaUserName" type="String" p1:nullable="True" p1:ValidateMaxLength="30" p1:ValidateRequired="false" p1:Guid="76426305-7833-4286-ab43-1ebd310233f7">
+      <column name="SambaUserName" not-null="False" length="30" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="SambaPassword" type="String" p1:nullable="True" p1:ValidateMaxLength="30" p1:ValidateRequired="false" p1:Guid="236a078b-287d-4471-b91e-8c0a4db48acf">
+      <column name="SambaPassword" not-null="False" length="30" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="PathToRecordings" type="String" p1:nullable="True" p1:ValidateMaxLength="255" p1:ValidateRequired="false" p1:Guid="a914038b-cc37-46d9-9f6f-0f54e6148c52">
+      <column name="PathToRecordings" not-null="False" length="255" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="VdrControlServicePort" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="9391ae78-1277-4d66-ba7a-4a97b254174d">
+      <column name="VdrControlServicePort" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="MacAddress" type="String" p1:nullable="True" p1:ValidateMaxLength="17" p1:ValidateRequired="false" p1:Guid="7c1529bd-3c18-43f1-8a5c-d22039304392">
+      <column name="MacAddress" not-null="False" length="17" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="EnableWOL" type="Boolean" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="39b3abbe-ba64-4d65-a23c-479a2c3a7875">
+      <column name="EnableWOL" not-null="False" sql-type="bit" p1:unicode="False" />
+    </property>
+    <property name="VDRAdminPort" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="4c697325-ae28-4693-8628-6a045c5831fb">
+      <column name="VDRAdminPort" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="VDRAdminUserName" type="String" p1:nullable="True" p1:ValidateMaxLength="30" p1:ValidateRequired="false" p1:Guid="1cec2859-66b0-49d5-8487-bd36a1d5ec00">
+      <column name="VDRAdminUserName" not-null="False" length="30" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="VDRAdminPassword" type="String" p1:nullable="True" p1:ValidateMaxLength="30" p1:ValidateRequired="false" p1:Guid="b93b9cbd-5930-4d08-b970-967b4710c92d">
+      <column name="VDRAdminPassword" not-null="False" length="30" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+  </class>
+  <class name="StationType" entity-set="StationTypes" table="StationTypes" schema="dbo" p1:Guid="94000d86-81fd-4dd1-9bca-7dfcba3edf4e">
+    <id name="RecId" type="Int32" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="17810e3c-c22b-48c9-a2a0-283c54aee7d1">
+      <column name="RecId" not-null="True" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </id>
+    <property name="StationType1" type="String" p1:nullable="True" p1:ValidateMaxLength="20" p1:ValidateRequired="false" p1:Guid="bb203c21-afad-488f-bd18-ddfa44245ee2">
+      <column name="StationType" not-null="False" length="20" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+  </class>
+  <class name="StatusInfo" entity-set="StatusInfos" table="StatusInfo" schema="dbo" p1:Guid="1fcc7903-3171-43d6-a6ad-2d7de50a0b30">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="5c31e92a-0be8-4e3a-8a8b-979e1b71e698">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="TotalDiskSpace" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="6b34a307-3dde-4800-87e3-13ef48c01c87">
+      <column name="TotalDiskSpace" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="FreeDiskSpace" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="2f526637-044f-4c5b-a120-9924ed49e747">
+      <column name="FreeDiskSpace" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="UsedPercent" type="Decimal" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="f5e3d378-0d69-4c39-8ec8-f62e1b4f93fc">
+      <column name="UsedPercent" not-null="False" precision="6" scale="2" sql-type="decimal" p1:unicode="False" />
+    </property>
+    <property name="SystemSettingsRecId" type="Int64" p1:ValidateRequired="true" p1:Guid="bd318031-a90e-4701-8240-449fe0215dd5">
+      <column name="SystemSettingsRecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </property>
+  </class>
+  <class name="SystemSetting" entity-set="SystemSettings" table="SystemSettings" schema="dbo" p1:Guid="bbdd2e69-be15-4a5b-8971-ea8be026d453">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="3d71a2bc-cbe4-45ac-9fd3-9e7b1f0c9030">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="MachineName" type="String" p1:ValidateMaxLength="15" p1:ValidateRequired="true" p1:Guid="6dfd02bd-9763-45ce-9888-190c1bf70464">
+      <column name="MachineName" default="''" not-null="True" length="15" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+    <property name="ChannelListType" type="Int16" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="18a48b2d-0e03-434a-8f3c-d4ec53f30655">
+      <column name="ChannelListType" not-null="False" precision="5" scale="0" sql-type="smallint" p1:unicode="False" />
+    </property>
+    <property name="FavouritesOnly" type="Boolean" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="c07d7209-4ea9-410c-abe2-d59019110502">
+      <column name="FavouritesOnly" not-null="False" sql-type="bit" p1:unicode="False" />
+    </property>
+    <property name="SaveBufferToFile" type="Boolean" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="b52cdd80-58aa-40b7-8ac0-8e497f89b503">
+      <column name="SaveBufferToFile" not-null="False" sql-type="bit" p1:unicode="False" />
+    </property>
+    <property name="EnableLogging" type="Boolean" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="2634e1fa-fbf8-435b-80a0-9ffd7b678f00">
+      <column name="EnableLogging" not-null="False" sql-type="bit" p1:unicode="False" />
+    </property>
+    <property name="LastUpdateChannels" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="fcf50dce-9282-4b63-bd90-f36846cb896e">
+      <column name="LastUpdateChannels" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="LastUpdateEPG" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="1dd11e01-898a-4d61-9e9a-d8058f5be97c">
+      <column name="LastUpdateEPG" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="LastUpdateTimers" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="e172beed-869a-4f2a-9efa-c30c5dcceb08">
+      <column name="LastUpdateTimers" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="LastUpdateRecordings" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="ebb38e51-e1b0-4ae4-9bef-e5cb60fa27c3">
+      <column name="LastUpdateRecordings" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="LastUpdateStatus" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="fe5b806c-1a84-4511-a7f2-a2445d105132">
+      <column name="LastUpdateStatus" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+  </class>
+  <class name="Timer" entity-set="Timers" table="Timers" schema="dbo" p1:Guid="cd61e150-c3a0-46cf-85d1-831fdf370a06">
+    <id name="RecId" type="Int64" value-generated="OnAdd" p1:ValidateRequired="true" p1:Guid="0dafa7be-d05e-4b01-ab19-44086c4c86b2">
+      <column name="RecId" not-null="True" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </id>
+    <property name="Modtime" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="d0819a75-176f-4a1f-94af-7d4f87a84d8e">
+      <column name="Modtime" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="Number" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="7c4c7c8c-4660-4727-86a5-dff4ea75bb91">
+      <column name="Number" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Active" type="Boolean" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="5e43e2e5-b0d0-4fb3-b68f-9c1963260218">
+      <column name="Active" not-null="False" sql-type="bit" p1:unicode="False" />
+    </property>
+    <property name="ChannelRecId" type="Int64" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="1729aefa-28c8-4db5-8221-06e8e6eb6101">
+      <column name="ChannelRecId" not-null="False" precision="19" scale="0" sql-type="bigint" p1:unicode="False" />
+    </property>
+    <property name="StartTime" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="55aa6c88-742c-4589-917f-ce86aaf058b9">
+      <column name="StartTime" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="EndTime" type="DateTime" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="0e3e85b8-de0b-4320-b8dd-36c45c20185d">
+      <column name="EndTime" not-null="False" sql-type="datetime" p1:unicode="False" />
+    </property>
+    <property name="Priority" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="9e0d2451-2963-4c8e-acfd-4d48fe43b8c3">
+      <column name="Priority" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Duration" type="Int32" p1:nullable="True" p1:ValidateRequired="false" p1:Guid="c238e009-788f-4355-baa6-e3a194231bed">
+      <column name="Duration" not-null="False" precision="10" scale="0" sql-type="int" p1:unicode="False" />
+    </property>
+    <property name="Title" type="String" p1:nullable="True" p1:ValidateMaxLength="100" p1:ValidateRequired="false" p1:Guid="961fcde4-042e-49e4-a7d8-40c4c29937fc">
+      <column name="Title" not-null="False" length="100" sql-type="nvarchar" p1:unicode="True" />
+    </property>
+  </class>
+  <associations>
+    <association name="Channel_EPG" cardinality="OneToMany" on-delete="Cascade" p1:Guid="bea84543-d4dc-4e84-af52-96b69dec8d0b">
+      <end1 multiplicity="ZeroOrOne" name="Channel" class="EPG" relation-class="Channel" constrained="True" lazy="False" p1:Guid="d8c77de1-8c04-41ac-9889-fadc267836a6">
+        <property name="RecId" />
+      </end1>
+      <end2 multiplicity="Many" name="EPGs" class="Channel" relation-class="EPG" lazy="False" p1:Guid="79d60c29-70b2-4d79-99c0-bf80fc10fdd5">
+        <property name="ChannelRecId" />
+      </end2>
+    </association>
+    <association name="StationType_Station" cardinality="OneToMany" on-delete="Cascade" p1:Guid="827ad904-c5ad-4720-b788-4c2fa96ee7fa">
+      <end1 multiplicity="One" name="StationType1" class="Station" relation-class="StationType" constrained="True" lazy="False" p1:Guid="1b947a88-52c5-4bc3-b1db-374494b4c37b">
+        <property name="RecId" />
+      </end1>
+      <end2 multiplicity="Many" name="Stations" class="StationType" relation-class="Station" lazy="False" p1:Guid="34bb8385-bf9e-4f84-8788-96e06e4eafa7">
+        <property name="StationType" />
+      </end2>
+    </association>
+    <association name="SystemSetting_StatusInfo" cardinality="OneToMany" on-delete="Cascade" p1:Guid="45d4e36d-90ab-4036-ac85-2ef6ae4c9061">
+      <end1 multiplicity="One" name="SystemSetting" class="StatusInfo" relation-class="SystemSetting" constrained="True" lazy="False" p1:Guid="892f812a-84d1-459b-92d8-03296826f159">
+        <property name="RecId" />
+      </end1>
+      <end2 multiplicity="Many" name="StatusInfos" class="SystemSetting" relation-class="StatusInfo" lazy="False" p1:Guid="e07354ee-0d4d-410d-8ab2-7b8cb66111e1">
+        <property name="SystemSettingsRecId" />
+      </end2>
+    </association>
+    <association name="Channel_Timer" cardinality="OneToMany" on-delete="Cascade" p1:Guid="6332cd20-9206-43cf-b879-89a8b7a3f60e">
+      <end1 multiplicity="ZeroOrOne" name="Channel" class="Timer" relation-class="Channel" constrained="True" lazy="False" p1:Guid="9643907c-9fce-410a-a8d4-d305a75638f1">
+        <property name="RecId" />
+      </end1>
+      <end2 multiplicity="Many" name="Timers" class="Channel" relation-class="Timer" lazy="False" p1:Guid="c4f0c5b7-508c-4aa7-aad5-dccd42d507ca">
+        <property name="ChannelRecId" />
+      </end2>
+    </association>
+  </associations>
+</efcore>
