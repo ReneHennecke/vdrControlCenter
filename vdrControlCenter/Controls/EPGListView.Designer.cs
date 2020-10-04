@@ -69,6 +69,7 @@
             this.dgvEPG.TabIndex = 0;
             this.dgvEPG.Text = "dataGridView1";
             this.dgvEPG.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEPG_CellFormatting);
+            this.dgvEPG.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvEPG_CellPainting);
             // 
             // btnRequest
             // 

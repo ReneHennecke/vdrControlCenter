@@ -33,6 +33,7 @@
             this.grbBuffer = new System.Windows.Forms.GroupBox();
             this.lblBufferLength = new System.Windows.Forms.Label();
             this.svdrpEPGList = new vdrControlCenterUI.Controls.EPGListView();
+            this.svdrpStatusInfo = new vdrControlCenterUI.Controls.StatusInfoView();
             this.grbBuffer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -89,10 +90,19 @@
             this.svdrpEPGList.Size = new System.Drawing.Size(684, 342);
             this.svdrpEPGList.TabIndex = 4;
             // 
+            // svdrpStatusInfo
+            // 
+            this.svdrpStatusInfo.Location = new System.Drawing.Point(2, 82);
+            this.svdrpStatusInfo.Name = "svdrpStatusInfo";
+            this.svdrpStatusInfo.RequestEnable = false;
+            this.svdrpStatusInfo.Size = new System.Drawing.Size(175, 123);
+            this.svdrpStatusInfo.TabIndex = 5;
+            // 
             // SvdrpController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.svdrpStatusInfo);
             this.Controls.Add(this.svdrpEPGList);
             this.Controls.Add(this.grbBuffer);
             this.Controls.Add(this.svdrpConnector);
@@ -111,5 +121,6 @@
         private System.Windows.Forms.GroupBox grbBuffer;
         private System.Windows.Forms.Label lblBufferLength;
         private EPGListView svdrpEPGList;
+        private StatusInfoView svdrpStatusInfo;
     }
 }

@@ -33,6 +33,8 @@ namespace vdrControlCenterUI.Classes
         public const string FindPng = "zoom-icon16x16.png";
         public const string TimerPng = "clock-icon16x16.png";
         public const string RequestPng = "get-list-icon16x16.png";
+        public const string FavouritesPng = "favourites-icon16x16.png";
+        public const string RecordPng = "actions-media-record-icon16x16.png";
 
 
         // dlgFindEPG
@@ -40,6 +42,8 @@ namespace vdrControlCenterUI.Classes
         public const string Find_OkPng = "ok-icon16x16.png";
         public const string Find_CancelPng = ClosePng;
 
+        // Allgemein
+        public const string EmptyPng = "empty16x16.png";
 
         public static ImageList LoadImageList(ImageListType type)
         {
@@ -78,6 +82,21 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     fileName = $"{ImageFolder}/{GreenPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    break;
+                case ImageListType.EPGListView:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{EmptyPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{FavouritesPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{TimerPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{RecordPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;

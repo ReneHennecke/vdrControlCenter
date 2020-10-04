@@ -1,12 +1,15 @@
 ﻿using System;
 namespace vdrControlCenterUI.Dialogs
 {
+    using DataLayer.Models;
     using System.Drawing;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
     public partial class dlgFindEPG : Form
     {
+        private ImageList _imageList;
+
         public dlgFindEPG()
         {
             InitializeComponent();
@@ -19,6 +22,9 @@ namespace vdrControlCenterUI.Dialogs
             dgvFind.AutoGenerateColumns = false;
             dgvFind.RowTemplate.Height = 25;
             dgvFind.AllowUserToResizeRows = false;
+
+            _imageList = Globals.LoadImageList(Enums.ImageListType.EPGListView);
+
 
             DataGridViewCellStyle headerStyle = new DataGridViewCellStyle()
             {
@@ -42,16 +48,24 @@ namespace vdrControlCenterUI.Dialogs
             };
             dgvFind.RowsDefaultCellStyle = cellStyle;
 
-
             DataGridViewCellStyle cellCenterStyle = new DataGridViewCellStyle(cellStyle);
             cellCenterStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
+            DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
+            imageColumn.HeaderText = "·";
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
+            imageColumn.Name = "DisplaySymbol";
+            imageColumn.Width = 30;
+            imageColumn.DisplayIndex = 0;
+            imageColumn.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.EmptyPng}");
+            dgvFind.Columns.Add(imageColumn);
+
             DataGridViewTextBoxColumn textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Kanal";
-            textColumn.DataPropertyName = "ChannelNameComputed";
+            textColumn.DataPropertyName = "ChannelName";
             textColumn.Name = "ChannelName";
             textColumn.Width = 150;
-            textColumn.DisplayIndex = 0;
+            textColumn.DisplayIndex = 1;
             dgvFind.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
@@ -59,51 +73,136 @@ namespace vdrControlCenterUI.Dialogs
             textColumn.DataPropertyName = "StartTime";
             textColumn.Name = "StartTime";
             textColumn.Width = 120;
-            textColumn.DisplayIndex = 1;
-            dgvFind.Columns.Add(textColumn);
-
-            textColumn = new DataGridViewTextBoxColumn();
-            textColumn.HeaderText = "Ende";
-            textColumn.DataPropertyName = "EndTimeComputed";
-            textColumn.Name = "EndTimeComputed";
-            textColumn.Width = 120;
             textColumn.DisplayIndex = 2;
             dgvFind.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Dauer";
-            textColumn.DataPropertyName = "DurationComputed";
-            textColumn.Name = "DurationComputed";
+            textColumn.DataPropertyName = "DurationMinutes";
+            textColumn.Name = "DurationMinutes";
             textColumn.Width = 70;
-            textColumn.DisplayIndex = 3;
+            textColumn.DisplayIndex = 4;
             dgvFind.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Titel";
             textColumn.DataPropertyName = "Title";
             textColumn.Name = "Title";
-            textColumn.Width = 250;
-            textColumn.DisplayIndex = 4;
+            textColumn.Width = 350;
+            textColumn.DisplayIndex = 5;
+            dgvFind.Columns.Add(textColumn);
+
+            textColumn = new DataGridViewTextBoxColumn();
+            textColumn.HeaderText = "Kurzbeschreibung";
+            textColumn.DataPropertyName = "ShortDescription";
+            textColumn.Name = "ShortDescription";
+            textColumn.Width = 550;
+            textColumn.DisplayIndex = 6;
+            dgvFind.Columns.Add(textColumn);
+
+            textColumn = new DataGridViewTextBoxColumn();
+            textColumn.DataPropertyName = "RecId";
+            textColumn.Width = 100;
+            textColumn.DisplayIndex = 7;
+            textColumn.Visible = false;
+            dgvFind.Columns.Add(textColumn);
+
+            textColumn = new DataGridViewTextBoxColumn();
+            textColumn.DataPropertyName = "SymbolIndex";
+            textColumn.Name = "SymbolIndex";
+            textColumn.Width = 100;
+            textColumn.DisplayIndex = 8;
+            textColumn.Visible = false;
             dgvFind.Columns.Add(textColumn);
 
             btnFind.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_FindPng}");
             btnOK.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_OkPng}");
             btnCancel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_CancelPng}");
+
+            tbFind_TextChanged(null, null);
         }
 
         private void btnFind_Click(object sender, EventArgs e)
         {
+            dgvFind.DataSource = null;
 
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            {
+                dgvFind.DataSource = context.FindEntries(tbFind.Text,
+                                                         dtpStartTime.Value,
+                                                         chbTitle.Checked,
+                                                         chbSortDescription.Checked,
+                                                         chbDescription.Checked,
+                                                         chbTimers.Checked,
+                                                         chbRecordings.Checked,
+                                                         chbFindInPast.Checked);
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
 
+        private void dgvFind_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value == null)
+                return;
+
+            if (e.ColumnIndex == dgvFind.Columns["DurationMinutes"].Index)
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            }
+            else if (e.ColumnIndex == dgvFind.Columns["StartTime"].Index)
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+        }
+
+        private void dgvFind_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex == dgvFind.Columns["DisplaySymbol"].Index)
+            {
+
+                int i = (int)dgvFind.Rows[e.RowIndex].Cells["SymbolIndex"].Value;
+                if (i < 0 || i >= _imageList.Images.Count)
+                    i = 0;
+
+                Image cellImage = _imageList.Images[i];
+                if (cellImage != null)
+                {
+                    SolidBrush gridBrush = new SolidBrush(dgvFind.GridColor);
+                    Pen gridLinePen = new Pen(gridBrush);
+                    SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
+                    e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                    // Draw lines over cell  
+                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
+                    // Draw the image over cell at specific location.  
+                    Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
+                    e.Graphics.DrawImage(cellImage, point);
+                    dgvFind.Rows[e.RowIndex].Cells["DisplaySymbol"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
+                }
+
+                e.Handled = true;
+            }
+        }
+
+        private void tbFind_TextChanged(object sender, EventArgs e)
+        {
+            btnFind.Enabled = (tbFind.Text.Length > 0);
+        }
+
+        private void chbFindInPast_CheckedChanged(object sender, EventArgs e)
+        {
+            dtpStartTime.Enabled = (!chbFindInPast.Checked);
         }
     }
 }

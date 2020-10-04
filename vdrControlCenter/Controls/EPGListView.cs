@@ -1,15 +1,11 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
     using DataLayer.Models;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Internal;
     using Microsoft.EntityFrameworkCore.Storage;
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
-    using System.Windows.Forms.VisualStyles;
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Dialogs;
 
@@ -17,6 +13,7 @@
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
+        private ImageList _imageList;
 
         public bool RequestEnable
         {
@@ -28,11 +25,15 @@
         {
             InitializeComponent();
 
-            PostInit();
+            if (!DesignMode)
+                PostInit();
         }
 
         private void PostInit()
         {
+            _imageList = Globals.LoadImageList(Enums.ImageListType.EPGListView);
+
+
             dgvEPG.AutoGenerateColumns = false;
             dgvEPG.RowTemplate.Height = 25;
             dgvEPG.AllowUserToResizeRows = false;
@@ -64,14 +65,16 @@
 
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn.HeaderText = "·";
-            imageColumn.Name = "ImageComputed";
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
+            imageColumn.Name = "DisplaySymbol";
             imageColumn.Width = 30;
             imageColumn.DisplayIndex = 0;
+            imageColumn.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.EmptyPng}");
             dgvEPG.Columns.Add(imageColumn);
 
             DataGridViewTextBoxColumn textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Kanal";
-            textColumn.DataPropertyName = "ChannelNameComputed";
+            textColumn.DataPropertyName = "ChannelName";
             textColumn.Name = "ChannelName";
             textColumn.Width = 150;
             textColumn.DisplayIndex = 1;
@@ -88,16 +91,16 @@
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Ende";
-            textColumn.DataPropertyName = "EndTimeComputed";
-            textColumn.Name = "EndTimeComputed";
+            textColumn.DataPropertyName = "EndTime";
+            textColumn.Name = "EndTime";
             textColumn.Width = 120;
             textColumn.DisplayIndex = 3;
             dgvEPG.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Dauer";
-            textColumn.DataPropertyName = "DurationComputed";
-            textColumn.Name = "DurationComputed";
+            textColumn.DataPropertyName = "DurationMinutes";
+            textColumn.Name = "DurationMinutes";
             textColumn.Width = 70;
             textColumn.DisplayIndex = 4;
             dgvEPG.Columns.Add(textColumn);
@@ -119,10 +122,17 @@
             dgvEPG.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
-            textColumn.HeaderText = "RecId";
             textColumn.DataPropertyName = "RecId";
             textColumn.Width = 100;
             textColumn.DisplayIndex = 7;
+            textColumn.Visible = false;
+            dgvEPG.Columns.Add(textColumn);
+
+            textColumn = new DataGridViewTextBoxColumn();
+            textColumn.DataPropertyName = "SymbolIndex";
+            textColumn.Name = "SymbolIndex";
+            textColumn.Width = 100;
+            textColumn.DisplayIndex = 8;
             textColumn.Visible = false;
             dgvEPG.Columns.Add(textColumn);
 
@@ -131,17 +141,17 @@
             btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
         }
 
-        public void LoadData(SvdrpController controller, vdrControlCenterContext context)
+        public void LoadData(SvdrpController controller, vdrControlCenterContext con)
         {
             _controller = controller;
-            _context = context;
+            _context = con;
 
             ReLoad();
 
             btnRequest.Enabled = false;
         }
 
-        public async void RefreshEPGList(SvdrpEPGList epgList)
+        public async void RefreshData(SvdrpEPGList epgList)
         {
             bool reload = false;
             using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
@@ -203,11 +213,7 @@
             if (e.Value == null)
                 return;
 
-            if (e.ColumnIndex == dgvEPG.Columns["ChannelName"].Index)
-            {
-
-            }
-            else if (e.ColumnIndex == dgvEPG.Columns["DurationComputed"].Index)
+            if (e.ColumnIndex == dgvEPG.Columns["DurationMinutes"].Index)
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
@@ -215,7 +221,7 @@
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
-            else if (e.ColumnIndex == dgvEPG.Columns["EndTimeComputed"].Index)
+            else if (e.ColumnIndex == dgvEPG.Columns["EndTime"].Index)
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
@@ -224,10 +230,40 @@
         private void ReLoad()
         {
             dgvEPG.DataSource = null;
-            dgvEPG.DataSource = _context.Epg
-                                    .Where(e => DateTime.Compare(e.StartTime.Value, DateTime.Now) >= 0)
-                                    .OrderBy(e => e.StartTime)
-                                    .ToList();
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            {
+                dgvEPG.DataSource = context.GetFakeEpgs(DateTime.Now, 0, false);
+            }
         }
+
+        private void dgvEPG_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex > -1 && e.ColumnIndex == dgvEPG.Columns["DisplaySymbol"].Index)
+            {
+
+                int i = (int)dgvEPG.Rows[e.RowIndex].Cells["SymbolIndex"].Value;
+                if (i < 0 || i >= _imageList.Images.Count)
+                    i = 0;
+
+                Image cellImage = _imageList.Images[i];
+                if (cellImage != null)
+                {
+                    SolidBrush gridBrush = new SolidBrush(dgvEPG.GridColor);
+                    Pen gridLinePen = new Pen(gridBrush);
+                    SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
+                    e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                    // Draw lines over cell  
+                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
+                    // Draw the image over cell at specific location.  
+                    Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
+                    e.Graphics.DrawImage(cellImage, point);
+                    dgvEPG.Rows[e.RowIndex].Cells["DisplaySymbol"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
+                }
+
+                e.Handled = true;
+            }
+        }
+
     }
 }

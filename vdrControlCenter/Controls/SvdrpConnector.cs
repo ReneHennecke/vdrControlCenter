@@ -40,27 +40,32 @@ namespace vdrControlCenterUI.Controls
                 _controller.SendDisconnectRequest();
         }
 
-        public void LoadData(SvdrpController controller, vdrControlCenterContext context)
+        public void LoadData(SvdrpController controller, vdrControlCenterContext con)
         {
             _controller = controller;
-            _context = context;
-            Stations station =  _context.Stations.FirstOrDefault(station => station.Svdrpport > 0);
-            if (station != null)
-                lblSvdrpAddressValue.Text = $"svdrp://{station.HostAddress}:{station.Svdrpport}";
+            _context = con;
+
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            {
+                Stations station = _context.Stations.FirstOrDefault(station => station.Svdrpport > 0);
+                if (station != null)
+                    lblSvdrpAddressValue.Text = $"svdrp://{station.HostAddress}:{station.Svdrpport}";
+            }
         }
 
         public void ShowConnection(SvdrpConnectionInfo connectionInfo)
         {
-            lblStateValue.Text = connectionInfo.ConnectionString;
             if (connectionInfo.IsConnected)
             {
                 lblIdValue.Text = $"{connectionInfo.Id}";
+                lblStateValue.Text = $"{connectionInfo.ConnectionString}";
                 btnConnect_Disconnect.Text = _disconnect;
                 btnConnect_Disconnect.Image = _disconnectPng;
             }
             else
             {
                 lblIdValue.Text = string.Empty;
+                lblStateValue.Text = string.Empty;
                 btnConnect_Disconnect.Text = _connect;
                 btnConnect_Disconnect.Image = _connectPng;
             }

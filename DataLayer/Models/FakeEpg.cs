@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace DataLayer.Models
 {
-    public partial class Epg
+    public partial class FakeEpg
     {
         public long RecId { get; set; }
         public DateTime? Modtime { get; set; }
@@ -22,20 +22,14 @@ namespace DataLayer.Models
         public string Stream { get; set; }
         public DateTime? Vps { get; set; }
         public bool? Favourite { get; set; }
-        public int? DurationComputed { get; private set; }
-        public DateTime? EndTimeComputed { get; private set; }
-        public string ChannelNameComputed
-        {
-            get
-            {
-                string channelName = string.Empty;
-                if (ChannelRec != null && ChannelRec.ChannelName != null)
-                    channelName = ChannelRec.ChannelName;
-
-                return channelName;
-            }
-        }
-
-        public virtual Channels ChannelRec { get; set; }
+        public DateTime? EndTime { get; set; }
+        public int? DurationMinutes { get; set; }
+        public string ChannelId { get; set; }
+        public string ChannelName { get; set; }
+        public long ChannelsRecId { get; set; }
+        public string VPID { get; set; }
+        public long TimersRecId { get; set; }
+        public long RecordingsRecId { get; set; }
+        public int SymbolIndex { get; set; }
     }
 }

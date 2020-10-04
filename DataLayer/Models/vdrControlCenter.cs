@@ -16,6 +16,7 @@
         public vdrControlCenterContext(DbContextOptions<vdrControlCenterContext> options)
             : base(options)
         {
+            
         }
 
         public virtual DbSet<Channels> Channels { get; set; }
@@ -31,9 +32,11 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
+                //optionsBuilder
+                //    .UseLazyLoadingProxies()
+                //    .UseSqlServer(ConfigurationManager.ConnectionStrings["vdrControlCenterDatabase"].ConnectionString);
                 optionsBuilder
-                    .UseLazyLoadingProxies()
-                    .UseSqlServer(ConfigurationManager.ConnectionStrings["vdrControlCenterDatabase"].ConnectionString);
+                    .UseSqlServer("Server=RH0;DataBase=vdrControlCenter_Test;Trusted_Connection=true;MultipleActiveResultSets=True;");
             }
         }
 
@@ -135,6 +138,10 @@
                     .HasColumnName("VPS")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.Favourite)
+                    .HasColumnName("Favourite")
+                    .HasColumnType("bit");
+
                 entity.HasOne(d => d.ChannelRec)
                     .WithMany(p => p.Epg)
                     .HasForeignKey(d => d.ChannelRecId)
@@ -148,7 +155,7 @@
 
                 entity.Property(e => e.EndTimeComputed)
                     .HasColumnType("datetime")
-                    .HasComputedColumnSql("(DATEADD(second, ISNULL([Duration], (0)), [StartTime])")
+                    .HasComputedColumnSql("(dateadd(second, isnull([Duration], (0)), [StartTime])")
                     .ValueGeneratedOnAddOrUpdate();
             });
 

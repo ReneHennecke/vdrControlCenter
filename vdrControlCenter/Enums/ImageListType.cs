@@ -3,6 +3,7 @@
     public enum ImageListType
     {
         MainForm,
-        StationView
+        StationView,
+        EPGListView
     }
 }

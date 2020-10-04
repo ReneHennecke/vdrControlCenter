@@ -66,19 +66,21 @@ namespace vdrControlCenterUI.Controls
             if (!DesignMode)
             {
                 _context = new vdrControlCenterContext();
- //               _context.pr.Configuration.ProxyCreationEnabled = true;
-   //             _context.Configuration.LazyLoadingEnabled = true;
+                //               _context.pr.Configuration.ProxyCreationEnabled = true;
+                //             _context.Configuration.LazyLoadingEnabled = true;
 
-                if (_context.Stations.Count(station => station.Svdrpport > 0) > 1)
+                using (vdrControlCenterContext context = new vdrControlCenterContext())
                 {
-                    dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP-Fehler", "Es sind mehrere Server als SVDRP-Endpunkt definiert.", 0);
-                    dlg.ShowDialog();
+                    if (_context.Stations.Count(station => station.Svdrpport > 0) > 1)
+                    {
+                        dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP-Fehler", "Es sind mehrere Server als SVDRP-Endpunkt definiert.", 0);
+                        dlg.ShowDialog();
 
-                    return;
+                        return;
+                    }
                 }
-                
-                svdrpConnector.LoadData(this, _context);
-                svdrpEPGList.LoadData(this, _context);
+
+                ReloadData();
 
 
 
@@ -102,9 +104,19 @@ namespace vdrControlCenterUI.Controls
                 grbBuffer.Visible = false;
 #endif
 
-                Stations station = _context.Stations.FirstOrDefault(s => s.Svdrpport > 0);
-                _client = new SvdrpClient(this, station.HostAddress, station.Svdrpport.GetValueOrDefault());
+                using (vdrControlCenterContext context = new vdrControlCenterContext())
+                {
+                    Stations station = context.Stations.FirstOrDefault(s => s.Svdrpport > 0);
+                    _client = new SvdrpClient(this, station.HostAddress, station.Svdrpport.GetValueOrDefault());
+                }
             }
+        }
+
+        private void ReloadData()
+        {
+            svdrpConnector.LoadData(this, _context);
+            svdrpStatusInfo.LoadData(this, _context);
+            svdrpEPGList.LoadData(this, _context);
         }
 
         private void OnDispose(object sender, EventArgs e)
@@ -125,6 +137,12 @@ namespace vdrControlCenterUI.Controls
             mleBuffer.ScrollToCaret();
 
             lblBufferLength.Text = $"{mleBuffer.Text.Length}";
+        }
+
+        private void RefreshRequestControls(bool enabled)
+        {
+            svdrpStatusInfo.RequestEnable = enabled;
+            svdrpEPGList.RequestEnable = enabled;
         }
 
         #region Client Events
@@ -184,19 +202,32 @@ namespace vdrControlCenterUI.Controls
                             {
                                 svdrpConnector.ShowConnection(_svdrpConnectionInfo);
 
-                                svdrpEPGList.RequestEnable = true;
+                                RefreshRequestControls(true);
                             }
                         }
                         _svdrpRequest = SvdrpRequest.Undefined;
                         break;
                     case SvdrpRequest.Disconnect:
+                        RefreshRequestControls(false);
+                        break;
+                    case SvdrpRequest.GetStatusInfo:
+                        SvdrpStatusInfo statusInfo = new SvdrpStatusInfo();
+                        statusInfo.ParseMessage(_svdrpBuffer.Splitter);
+
+                        svdrpStatusInfo.RefreshData(statusInfo);
+                        RefreshRequestControls(true);
+                        
+                        _svdrpRequest = SvdrpRequest.Undefined;
                         break;
                     case SvdrpRequest.GetEPGList:
                         if (_svdrpBuffer.Content.Contains(REQ_MSG_END_OF_EPG_DATA))
                         {
                             SvdrpEPGList epgList = new SvdrpEPGList();
                             epgList.ParseMessage(_svdrpBuffer.Splitter);
-                            svdrpEPGList.RefreshEPGList(epgList);
+                            
+                            svdrpEPGList.RefreshData(epgList);
+                            RefreshRequestControls(true);
+                            _svdrpRequest = SvdrpRequest.Undefined;
                         }
                         break;
                     default:
@@ -220,6 +251,8 @@ namespace vdrControlCenterUI.Controls
         #region Connection
         public void SendConnectRequest() //string hostAddress, int port)
         {
+            if (_client.IsConnected)
+                return;
             //MainForm.AddMessage($"CONNECT SVDRP.");
 
             _svdrpRequest = SvdrpRequest.Connect;
@@ -229,6 +262,9 @@ namespace vdrControlCenterUI.Controls
 
         public void SendDisconnectRequest()
         {
+            if (!_client.IsConnected)
+                return;
+
             //MainForm.AddMessage($"DISCONNECT SVDRP.");
 
             _svdrpRequest = SvdrpRequest.Disconnect;
@@ -237,8 +273,25 @@ namespace vdrControlCenterUI.Controls
             _client.DisconnectAndStop();
         }
 
+        public void SendStatusInfoRequest()
+        {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
+            //MainForm.AddMessage($"GET StatusInfo.");
+            _svdrpRequest = SvdrpRequest.GetStatusInfo;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"STAT disk{EOL}");
+        }
+
+
         public void SendEPGRequest()
         {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
             //MainForm.AddMessage($"EPG Request.");
 
             _svdrpRequest = SvdrpRequest.GetEPGList;
@@ -254,6 +307,7 @@ namespace vdrControlCenterUI.Controls
             //svdrpStatusInfoCtrl.EnableRequests = svdrpChannelCtrl.EnableRequests = svdrpTimerCtrl.EnableRequests =
             //svdrpRecordingCtrl.EnableRequests = svdrpEPGCtrl.EnableRequests = e.ConnectionInfo.IsConnected;
         }
+
 
 
         #endregion
