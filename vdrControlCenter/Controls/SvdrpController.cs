@@ -280,7 +280,6 @@ namespace vdrControlCenterUI.Controls
 
             using (vdrControlCenterContext context = new vdrControlCenterContext())
             {
-                int id = 1; // Letzte ID noch ermitteln
                 foreach (long item in selectedItems)
                 {
                     Epg epg = context.Epg.FirstOrDefault(e => e.RecId == item);
@@ -292,15 +291,13 @@ namespace vdrControlCenterUI.Controls
 
                         DateTime dayOfMonth = epg.StartTime.Value;
 
-                        string timer = $"{id}:" +
+                        string timer = "1:" +   // Aktiv
                                        $"{channel.Number}:{dayOfMonth:yyyy-MM-dd}:" +
                                        $"{epg.StartTime:HHmm}:" +
                                        $"{epg.StartTime.Value.AddSeconds((double)epg.Duration):HHmm}:" +
                                        "51:" +
                                        "50:" +
                                        $"{epg.Title}:";
-
-                        id++;
 
                         _svdrpRequest = SvdrpRequest.AddTimer;
                         _svdrpBuffer.Clear();

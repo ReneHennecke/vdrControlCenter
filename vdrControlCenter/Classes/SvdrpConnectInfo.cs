@@ -30,7 +30,7 @@ namespace vdrControlCenterUI.Classes
                 prm = prm.Substring(prm.IndexOf(' ') + 1);
                 if (response.Length > 0)
                 {
-                    ConnectionString = prm;
+                    ConnectionString = prm.Substring(0, prm.Length - 1);
                 }
             }
         }
