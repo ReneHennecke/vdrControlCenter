@@ -60,6 +60,7 @@
             this.dgvEPG.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEPG.EnableHeadersVisualStyles = false;
             this.dgvEPG.Location = new System.Drawing.Point(2, 2);
+            this.dgvEPG.MultiSelect = false;
             this.dgvEPG.Name = "dgvEPG";
             this.dgvEPG.ReadOnly = true;
             this.dgvEPG.RowHeadersVisible = false;

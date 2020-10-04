@@ -3,6 +3,7 @@
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore.Storage;
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
@@ -18,7 +19,9 @@
         public bool RequestEnable
         {
             get { return btnRequest.Enabled; }
-            set { btnRequest.Enabled = value; }
+            set { 
+                    btnRequest.Enabled = btnTimer.Enabled = value;
+                }
         }
 
         public EPGListView()
@@ -123,6 +126,7 @@
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.DataPropertyName = "RecId";
+            textColumn.Name = "RecId";
             textColumn.Width = 100;
             textColumn.DisplayIndex = 7;
             textColumn.Visible = false;
@@ -148,7 +152,7 @@
 
             ReLoad();
 
-            btnRequest.Enabled = false;
+            btnRequest.Enabled = btnTimer.Enabled = false;
         }
 
         public async void RefreshData(SvdrpEPGList epgList)
@@ -193,14 +197,15 @@
         {
             dlgFindEPG dlg = new dlgFindEPG();
             if (dlg.ShowDialog() == DialogResult.OK)
-            {
-
-            }
+                SaveTimers(dlg.SelectedItems);
         }
 
         private void btnTimer_Click(object sender, System.EventArgs e)
         {
-            btnRequest.Enabled = false;
+            DataGridViewRow currentRow = dgvEPG.CurrentRow;
+            List<long> selectedItems = new List<long>();
+            selectedItems.Add((long)dgvEPG.Rows[currentRow.Index].Cells["RecId"].Value);
+            SaveTimers(selectedItems);
         }
 
         private void btnRequest_Click(object sender, System.EventArgs e)
@@ -265,5 +270,9 @@
             }
         }
 
+        private void SaveTimers(List<long> selectedItems)
+        {
+            _controller.SendAddTimerRequest(selectedItems);
+        }
     }
 }

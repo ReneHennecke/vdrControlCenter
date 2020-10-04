@@ -43,7 +43,7 @@
             this.dgvFind = new System.Windows.Forms.DataGridView();
             this.tbFind = new System.Windows.Forms.TextBox();
             this.lblFind = new System.Windows.Forms.Label();
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnTimer = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panEPGFind.SuspendLayout();
             this.grbBox.SuspendLayout();
@@ -184,6 +184,7 @@
             this.dgvFind.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvFind.EnableHeadersVisualStyles = false;
             this.dgvFind.Location = new System.Drawing.Point(4, 172);
+            this.dgvFind.MultiSelect = false;
             this.dgvFind.Name = "dgvFind";
             this.dgvFind.ReadOnly = true;
             this.dgvFind.RowHeadersVisible = false;
@@ -192,6 +193,7 @@
             this.dgvFind.TabIndex = 7;
             this.dgvFind.Text = "dataGridView1";
             this.dgvFind.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvFind_CellFormatting);
+            this.dgvFind.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvFind_CellMouseDoubleClick);
             this.dgvFind.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvFind_CellPainting);
             // 
             // tbFind
@@ -213,19 +215,18 @@
             this.lblFind.Text = "Suche nach:";
             this.lblFind.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnOK
+            // btnTimer
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Enabled = false;
-            this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOK.Location = new System.Drawing.Point(950, 456);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(94, 23);
-            this.btnOK.TabIndex = 1;
-            this.btnOK.Text = "OK";
-            this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.btnTimer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTimer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnTimer.Location = new System.Drawing.Point(950, 456);
+            this.btnTimer.Name = "btnTimer";
+            this.btnTimer.Size = new System.Drawing.Size(94, 23);
+            this.btnTimer.TabIndex = 1;
+            this.btnTimer.Text = "Timer";
+            this.btnTimer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnTimer.UseVisualStyleBackColor = true;
+            this.btnTimer.Click += new System.EventHandler(this.btnTimer_Click);
             // 
             // btnCancel
             // 
@@ -246,7 +247,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1148, 490);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.btnTimer);
             this.Controls.Add(this.panEPGFind);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -271,7 +272,7 @@
         private System.Windows.Forms.CheckBox chbSortDescription;
         private System.Windows.Forms.TextBox tbFind;
         private System.Windows.Forms.Label lblFind;
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnTimer;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.DataGridView dgvFind;
         private System.Windows.Forms.GroupBox grbBox;

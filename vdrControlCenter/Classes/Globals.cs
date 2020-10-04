@@ -35,11 +35,12 @@ namespace vdrControlCenterUI.Classes
         public const string RequestPng = "get-list-icon16x16.png";
         public const string FavouritesPng = "favourites-icon16x16.png";
         public const string RecordPng = "actions-media-record-icon16x16.png";
+        public const string SelectPng = "ok-icon16x16.png";
 
 
         // dlgFindEPG
         public const string Find_FindPng = FindPng;
-        public const string Find_OkPng = "ok-icon16x16.png";
+        public const string Find_TimerPng = TimerPng;
         public const string Find_CancelPng = ClosePng;
 
         // Allgemein
@@ -97,6 +98,9 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     fileName = $"{ImageFolder}/{RecordPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{SelectPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;

@@ -30,8 +30,6 @@ namespace vdrControlCenterUI.Controls
         private SvdrpBuffer _svdrpBuffer;
         private SvdrpConnectionInfo _svdrpConnectionInfo;
 
-
-
         private const string EOL = "\n";
         private const string REQ_215 = "215";
         private const string REQ_220 = "220";
@@ -66,8 +64,6 @@ namespace vdrControlCenterUI.Controls
             if (!DesignMode)
             {
                 _context = new vdrControlCenterContext();
-                //               _context.pr.Configuration.ProxyCreationEnabled = true;
-                //             _context.Configuration.LazyLoadingEnabled = true;
 
                 using (vdrControlCenterContext context = new vdrControlCenterContext())
                 {
@@ -81,20 +77,6 @@ namespace vdrControlCenterUI.Controls
                 }
 
                 ReloadData();
-
-
-
-                //svdrpStatusInfoCtrl.Owner = this;
-                //svdrpChannelCtrl.Owner = this;
-                //svdrpTimerCtrl.Owner = this;
-                //svdrpRecordingCtrl.Owner = this;
-                //svdrpEPGCtrl.Owner = this;
-
-                //_context = new DataLayer.EF.vdrControlCenterEntities();
-                //_context.Configuration.ProxyCreationEnabled = true;
-                //_context.Configuration.LazyLoadingEnabled = true;
-
-                //LoadData();
 
                 _svdrpBuffer = new SvdrpBuffer();
 #if DEBUG
@@ -230,6 +212,12 @@ namespace vdrControlCenterUI.Controls
                             _svdrpRequest = SvdrpRequest.Undefined;
                         }
                         break;
+                    case SvdrpRequest.AddTimer:
+                        if (_svdrpBuffer.Content.StartsWith(REQ_250))
+                        {
+
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -285,6 +273,43 @@ namespace vdrControlCenterUI.Controls
             _client.SendAsync($"STAT disk{EOL}");
         }
 
+        public void SendAddTimerRequest(List<long> selectedItems)
+        {
+            if (!_client.IsConnected)
+                return;
+
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            {
+                int id = 1; // Letzte ID noch ermitteln
+                foreach (long item in selectedItems)
+                {
+                    Epg epg = context.Epg.FirstOrDefault(e => e.RecId == item);
+                    if (epg != null)
+                    {
+                        Channels channel = context.Channels.FirstOrDefault(e => e.RecId == epg.ChannelRecId);
+                        if (channel == null || channel.Number == 0)
+                            continue;
+
+                        DateTime dayOfMonth = epg.StartTime.Value;
+
+                        string timer = $"{id}:" +
+                                       $"{channel.Number}:{dayOfMonth:yyyy-MM-dd}:" +
+                                       $"{epg.StartTime:HHmm}:" +
+                                       $"{epg.StartTime.Value.AddSeconds((double)epg.Duration):HHmm}:" +
+                                       "51:" +
+                                       "50:" +
+                                       $"{epg.Title}:";
+
+                        id++;
+
+                        _svdrpRequest = SvdrpRequest.AddTimer;
+                        _svdrpBuffer.Clear();
+
+                        _client.SendAsync($"NEWT {timer}{EOL}");
+                    }
+                }
+            }
+        }
 
         public void SendEPGRequest()
         {
@@ -298,20 +323,6 @@ namespace vdrControlCenterUI.Controls
             _svdrpBuffer.Clear();
             _client.SendAsync($"LSTE{EOL}");
         }
-
-        private void svdrpCtrl_RefreshConnectionInfo(object sender, SvdrpConnectionInfoEventArgs e)
-        {
-            svdrpConnector.ShowConnection(e.ConnectionInfo);
-
-            svdrpEPGList.Enabled = true;
-            //svdrpStatusInfoCtrl.EnableRequests = svdrpChannelCtrl.EnableRequests = svdrpTimerCtrl.EnableRequests =
-            //svdrpRecordingCtrl.EnableRequests = svdrpEPGCtrl.EnableRequests = e.ConnectionInfo.IsConnected;
-        }
-
-
-
         #endregion
-
-       
     }
 }

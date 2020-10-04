@@ -76,7 +76,7 @@
             this.lblStateValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblStateValue.Location = new System.Drawing.Point(692, 6);
             this.lblStateValue.Name = "lblStateValue";
-            this.lblStateValue.Size = new System.Drawing.Size(296, 22);
+            this.lblStateValue.Size = new System.Drawing.Size(441, 22);
             this.lblStateValue.TabIndex = 4;
             this.lblStateValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -94,7 +94,7 @@
             this.panBox.Controls.Add(this.lblSvdrpAddressValue);
             this.panBox.Location = new System.Drawing.Point(2, 4);
             this.panBox.Name = "panBox";
-            this.panBox.Size = new System.Drawing.Size(996, 70);
+            this.panBox.Size = new System.Drawing.Size(1141, 70);
             this.panBox.TabIndex = 0;
             // 
             // lblIdValue
@@ -124,7 +124,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panBox);
             this.Name = "SvdrpConnector";
-            this.Size = new System.Drawing.Size(1003, 79);
+            this.Size = new System.Drawing.Size(1148, 79);
             this.panBox.ResumeLayout(false);
             this.ResumeLayout(false);
 

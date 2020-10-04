@@ -43,7 +43,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.svdrpConnector.Location = new System.Drawing.Point(2, 2);
             this.svdrpConnector.Name = "svdrpConnector";
-            this.svdrpConnector.Size = new System.Drawing.Size(1218, 79);
+            this.svdrpConnector.Size = new System.Drawing.Size(1394, 79);
             this.svdrpConnector.TabIndex = 0;
             // 
             // mleBuffer
@@ -66,7 +66,7 @@
             this.grbBuffer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.grbBuffer.Controls.Add(this.lblBufferLength);
             this.grbBuffer.Controls.Add(this.mleBuffer);
-            this.grbBuffer.Location = new System.Drawing.Point(814, 358);
+            this.grbBuffer.Location = new System.Drawing.Point(990, 358);
             this.grbBuffer.Name = "grbBuffer";
             this.grbBuffer.Size = new System.Drawing.Size(406, 244);
             this.grbBuffer.TabIndex = 3;
@@ -107,7 +107,7 @@
             this.Controls.Add(this.grbBuffer);
             this.Controls.Add(this.svdrpConnector);
             this.Name = "SvdrpController";
-            this.Size = new System.Drawing.Size(1228, 607);
+            this.Size = new System.Drawing.Size(1404, 607);
             this.grbBuffer.ResumeLayout(false);
             this.grbBuffer.PerformLayout();
             this.ResumeLayout(false);
