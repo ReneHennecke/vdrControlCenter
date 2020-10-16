@@ -4,6 +4,10 @@
     {
         MainForm,
         StationView,
+        ChannelsViewLeft,
+        ChannelsViewRight,
+        TimersView,
+        RecordingsView,
         EPGListView
     }
 }

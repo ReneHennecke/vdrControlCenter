@@ -96,9 +96,9 @@ namespace vdrControlCenterUI.Controls
 
         private void ReloadData()
         {
-            svdrpConnector.LoadData(this, _context);
-            svdrpStatusInfo.LoadData(this, _context);
-            svdrpEPGList.LoadData(this, _context);
+            //svdrpConnector.LoadData(this);
+           // svdrpStatusInfo.LoadData(this, _context);
+            // svdrpEPGList.LoadData(this, _context);
         }
 
         private void OnDispose(object sender, EventArgs e)
@@ -123,8 +123,8 @@ namespace vdrControlCenterUI.Controls
 
         private void RefreshRequestControls(bool enabled)
         {
-            svdrpStatusInfo.RequestEnable = enabled;
-            svdrpEPGList.RequestEnable = enabled;
+            //svdrpStatusInfo.RequestEnable = enabled;
+            //svdrpEPGList.RequestEnable = enabled;
         }
 
         #region Client Events
@@ -155,7 +155,7 @@ namespace vdrControlCenterUI.Controls
                 AddBuffer($"Getrennt : {id}{Environment.NewLine}");
 
                 _svdrpConnectionInfo = new SvdrpConnectionInfo();
-                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                //svdrpConnector.ShowConnection(_svdrpConnectionInfo);
                 _svdrpRequest = SvdrpRequest.Undefined;
             }
         }
@@ -182,7 +182,7 @@ namespace vdrControlCenterUI.Controls
                             _svdrpConnectionInfo.ParseMessage(_svdrpBuffer.Splitter);
                             if (_client.IsConnected)
                             {
-                                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                                //svdrpConnector.ShowConnection(_svdrpConnectionInfo);
 
                                 RefreshRequestControls(true);
                             }
@@ -196,10 +196,17 @@ namespace vdrControlCenterUI.Controls
                         SvdrpStatusInfo statusInfo = new SvdrpStatusInfo();
                         statusInfo.ParseMessage(_svdrpBuffer.Splitter);
 
-                        svdrpStatusInfo.RefreshData(statusInfo);
+                        //svdrpStatusInfo.RefreshData(statusInfo);
                         RefreshRequestControls(true);
                         
                         _svdrpRequest = SvdrpRequest.Undefined;
+                        break;
+                    case SvdrpRequest.GetChannelList:
+                        if (_svdrpBuffer.Content.StartsWith(REQ_250))
+                        {
+                            tmTimeOut.Interval = 2000;
+                            tmTimeOut.Enabled = true;
+                        }
                         break;
                     case SvdrpRequest.GetEPGList:
                         if (_svdrpBuffer.Content.Contains(REQ_MSG_END_OF_EPG_DATA))
@@ -207,7 +214,7 @@ namespace vdrControlCenterUI.Controls
                             SvdrpEPGList epgList = new SvdrpEPGList();
                             epgList.ParseMessage(_svdrpBuffer.Splitter);
                             
-                            svdrpEPGList.RefreshData(epgList);
+                            //svdrpEPGList.RefreshData(epgList);
                             RefreshRequestControls(true);
                             _svdrpRequest = SvdrpRequest.Undefined;
                         }
@@ -260,7 +267,9 @@ namespace vdrControlCenterUI.Controls
             _client.SendAsync($"QUIT{EOL}");
             _client.DisconnectAndStop();
         }
+        #endregion
 
+        #region StatusInfo
         public void SendStatusInfoRequest()
         {
             if (!_client.IsConnected)
@@ -272,7 +281,24 @@ namespace vdrControlCenterUI.Controls
             _svdrpBuffer.Clear();
             _client.SendAsync($"STAT disk{EOL}");
         }
+        #endregion
 
+        #region Channels
+        public void SendGetChannelListRequest()
+        {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
+            //MainForm.AddMessage($"EPG Request.");
+
+            _svdrpRequest = SvdrpRequest.GetChannelList;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"LSTC{EOL}");
+        }
+        #endregion
+
+        #region Timers
         public void SendAddTimerRequest(List<long> selectedItems)
         {
             if (!_client.IsConnected)
@@ -307,7 +333,24 @@ namespace vdrControlCenterUI.Controls
                 }
             }
         }
+        #endregion
 
+        #region Channels
+        public void SendGetRecordingsRequest()
+        {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
+            //MainForm.AddMessage($"EPG Request.");
+
+            _svdrpRequest = SvdrpRequest.GetRecordings;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"LSTR{EOL}");
+        }
+        #endregion
+
+        #region  EPG
         public void SendEPGRequest()
         {
             if (!_client.IsConnected)
@@ -321,5 +364,21 @@ namespace vdrControlCenterUI.Controls
             _client.SendAsync($"LSTE{EOL}");
         }
         #endregion
+
+        private void tmTimeOut_Tick(object sender, EventArgs e)
+        {
+            tmTimeOut.Enabled = false;
+
+            switch (_svdrpRequest)
+            {
+                case SvdrpRequest.GetChannelList:
+                    SvdrpChannelList svdrpChannelList = new SvdrpChannelList();
+                    svdrpChannelList.ParseMessage(_svdrpBuffer.Splitter);
+
+
+                   
+                    break;
+            }
+        }
     }
 }

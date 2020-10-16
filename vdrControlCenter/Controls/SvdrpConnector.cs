@@ -1,10 +1,9 @@
-﻿using System;
-namespace vdrControlCenterUI.Controls
+﻿namespace vdrControlCenterUI.Controls
 {
+    using System;
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
     using System.Drawing;
-    using System.Linq;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
@@ -22,11 +21,14 @@ namespace vdrControlCenterUI.Controls
         {
             InitializeComponent();
 
-            PostInit();
+            if (!DesignMode)
+                PostInit();
         }
 
         private void PostInit()
         {
+            _context = new vdrControlCenterContext();
+
             _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ConnectPng}");
             _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.DisconnectPng}");
             btnConnect_Disconnect.Image = _connectPng;
@@ -40,17 +42,13 @@ namespace vdrControlCenterUI.Controls
                 _controller.SendDisconnectRequest();
         }
 
-        public void LoadData(SvdrpController controller, vdrControlCenterContext con)
+        public async void LoadData(SvdrpController controller)
         {
             _controller = controller;
-            _context = con;
 
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            {
-                Stations station = _context.Stations.FirstOrDefault(station => station.Svdrpport > 0);
-                if (station != null)
-                    lblSvdrpAddressValue.Text = $"svdrp://{station.HostAddress}:{station.Svdrpport}";
-            }
+            Stations station = await _context.Stations.FirstOrDefaultAsync(station => station.Svdrpport > 0);
+            if (station != null)
+                lblSvdrpAddressValue.Text = $"svdrp://{station.HostAddress}:{station.Svdrpport}";
         }
 
         public void ShowConnection(SvdrpConnectionInfo connectionInfo)

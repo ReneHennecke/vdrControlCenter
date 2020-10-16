@@ -85,6 +85,9 @@
     <None Update="Images\ok-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Images\radio-icon16.x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\red-icon16x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -99,6 +102,9 @@
     </None>
     <None Update="Images\tv-guide-icon24x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\tv-set-retro-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Images\zoom-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

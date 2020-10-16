@@ -29,6 +29,15 @@ namespace vdrControlCenterUI.Classes
         public const string ConnectPng = "actions-network-connect-icon16x16.png";
         public const string DisconnectPng = "actions-network-disconnect-icon16x16.png";
 
+        // SvdrpChannelsViewLeft
+        public const string ScvlRadioPng = "radio-icon16.x16.png";
+        public const string ScvlTvPng = "tv-set-retro-icon16x16.png";
+
+        // SvdrpChannelsViewRight
+        public const string ScvrEmptyPng = "empty16x16.png";
+        public const string ScvrFavouritesPng = "favourites-icon16x16.png";
+
+
         // EPGListView
         public const string FindPng = "zoom-icon16x16.png";
         public const string TimerPng = "clock-icon16x16.png";
@@ -74,6 +83,42 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     fileName = $"{ImageFolder}/{ NavEpgPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    break;
+                case ImageListType.ChannelsViewLeft:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{ScvlRadioPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{ScvlTvPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    break;
+                case ImageListType.ChannelsViewRight:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{ScvrEmptyPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{ScvrFavouritesPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    break;
+                case ImageListType.TimersView:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{RedPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{GreenPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    break;
+                case ImageListType.RecordingsView:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{RedPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{GreenPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
