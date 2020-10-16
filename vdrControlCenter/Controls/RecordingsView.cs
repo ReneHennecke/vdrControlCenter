@@ -27,15 +27,8 @@
         {
             InitializeComponent();
 
-            Disposed += OnDispose;
-
             if (!DesignMode)
                 PostInit();
-        }
-
-        private void OnDispose(object sender, EventArgs e)
-        {
-            _context?.DisposeAsync();
         }
 
         private void PostInit()
@@ -124,13 +117,14 @@
             btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.FindPng}");
             btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.TimerPng}");
             btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
-
-            _context = new vdrControlCenterContext();
         }
 
         public void LoadData(SvdrpController controller)
         {
             _controller = controller;
+
+            if (_context == null)
+                _context = new vdrControlCenterContext();
 
             ReLoad();
 
@@ -140,24 +134,22 @@
         public async void RefreshData(SvdrpRecordingList recordingList)
         {
             bool reload = false;
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            using (IDbContextTransaction transaction = context.Database.BeginTransaction())
+            using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Recordings];");
+                    await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Recordings];");
 
-                    await context.Recordings.AddRangeAsync(recordingList.Recordings);
-                    await context.SaveChangesAsync();
+                    await _context.Recordings.AddRangeAsync(recordingList.Recordings);
 
-                    SystemSettings settings = context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
+                    SystemSettings settings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
                     if (settings != null)
                     {
                         settings.LastUpdateRecordings = DateTime.Now;
-                        context.Entry(settings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-                        await context.SaveChangesAsync();
+                        _context.Entry(settings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     }
+
+                    await _context.SaveChangesAsync();
 
                     await transaction.CommitAsync();
 
@@ -179,18 +171,17 @@
             _controller.SendGetRecordingsRequest();
         }
 
-        private void ReLoad()
+        private async void ReLoad()
         {
             dgvRecordings.DataSource = null;
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
+            if (systemSettings != null)
             {
-                SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
-                if (systemSettings != null)
-                    lblRequestInfo.Text = $"{systemSettings.LastUpdateRecordings:dd.MM.yyyy HH:mm:ss}";
+                lblRequestInfo.Text = $"{systemSettings.LastUpdateRecordings:dd.MM.yyyy HH:mm:ss}";
 
-                dgvRecordings.DataSource = context.Recordings.OrderBy(e => e.RecordingPath)
-                                                             .ThenBy(e => e.Title)
-                                                             .ToList();
+                dgvRecordings.DataSource = await _context.Recordings.OrderBy(e => e.RecordingPath)
+                                                                    .ThenBy(e => e.Title)
+                                                                    .ToListAsync();
             }
         }
 

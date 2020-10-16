@@ -1,6 +1,7 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
     using DataLayer.Models;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage;
     using Microsoft.Extensions.Configuration;
     using System;
@@ -29,10 +30,12 @@
                 PostInit();
         }
 
-        public void LoadData(SvdrpController controller, vdrControlCenterContext con)
+        public void LoadData(SvdrpController controller)
         {
             _controller = controller;
-            _context = con;
+
+            if (_context == null)
+                _context = new vdrControlCenterContext();
 
             ReLoad();
 
@@ -46,18 +49,16 @@
             {
                 try
                 {
-                    SystemSettings systemSettings = _context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
+                    SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
                     if (systemSettings != null)
                     {
-                        StatusInfo statusInfo = _context.StatusInfo.FirstOrDefault(e => e.SystemSettingsRecId == systemSettings.RecId);
+                        StatusInfo statusInfo = await _context.StatusInfo.FirstOrDefaultAsync(e => e.SystemSettingsRecId == systemSettings.RecId);
                         if (statusInfo != null)
                         {
                             statusInfo.TotalDiskSpace = svdrpStatusInfo.Total;
                             statusInfo.FreeDiskSpace = svdrpStatusInfo.Free;
                             statusInfo.UsedPercent = svdrpStatusInfo.Percent;
                             _context.Entry(statusInfo).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-                            await _context.SaveChangesAsync();
 
                             systemSettings.LastUpdateStatus = DateTime.Now;
                             _context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
@@ -100,34 +101,31 @@
             lblRed.Width = _width;
         }
 
-        private void ReLoad()
+        private async void ReLoad()
         {
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
+            if (systemSettings != null)
             {
-                SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
-                if (systemSettings != null)
+                StatusInfo statusInfo = await _context.StatusInfo.FirstOrDefaultAsync(e => e.SystemSettingsRecId == systemSettings.RecId);
+                if (systemSettings.LastUpdateStatus.HasValue &&
+                    statusInfo.TotalDiskSpace.HasValue &&
+                    statusInfo.FreeDiskSpace.HasValue &&
+                    statusInfo.UsedPercent.HasValue)
                 {
-                    StatusInfo statusInfo = context.StatusInfo.FirstOrDefault(e => e.SystemSettingsRecId == systemSettings.RecId);
-                    if (systemSettings.LastUpdateStatus.HasValue &&
-                        statusInfo.TotalDiskSpace.HasValue &&
-                        statusInfo.FreeDiskSpace.HasValue &&
-                        statusInfo.UsedPercent.HasValue)
-                    {
-                        lblGreen.Visible = true;
-                        lblRed.Visible = true;
+                    lblGreen.Visible = true;
+                    lblRed.Visible = true;
 
-                        lblTotalValue.Text = $"{statusInfo.TotalDiskSpace / 1024:0,0} GB";
-                        lblFreeValue.Text = $"{statusInfo.FreeDiskSpace / 1024:0,0} GB";
-                        lblPercentValue.Text = $"{statusInfo.UsedPercent:0.0} %";
+                    lblTotalValue.Text = $"{statusInfo.TotalDiskSpace / 1024:0,0} GB";
+                    lblFreeValue.Text = $"{statusInfo.FreeDiskSpace / 1024:0,0} GB";
+                    lblPercentValue.Text = $"{statusInfo.UsedPercent:0.0} %";
 
-                        int maxLength = lblPercentValue.Size.Width;
-                        int height = lblRed.Size.Height;
-                        int calcRed = (int)(maxLength * statusInfo.UsedPercent / 100);
+                    int maxLength = lblPercentValue.Size.Width;
+                    int height = lblRed.Size.Height;
+                    int calcRed = (int)(maxLength * statusInfo.UsedPercent / 100);
 
-                        lblRed.Size = new Size(calcRed - 1, height);
-                        lblGreen.Location = new Point(lblGreen.Location.X + calcRed + 1, lblGreen.Location.Y);
-                        lblGreen.Size = new Size(maxLength - calcRed - 2, height);
-                    }
+                    lblRed.Size = new Size(calcRed - 1, height);
+                    lblGreen.Location = new Point(lblGreen.Location.X + calcRed + 1, lblGreen.Location.Y);
+                    lblGreen.Size = new Size(maxLength - calcRed - 2, height);
                 }
             }
         }

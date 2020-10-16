@@ -1,6 +1,7 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
     using DataLayer.Models;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage;
     using System;
     using System.Collections.Generic;
@@ -35,7 +36,6 @@
         private void PostInit()
         {
             _imageList = Globals.LoadImageList(Enums.ImageListType.EPGListView);
-
 
             dgvEPG.AutoGenerateColumns = false;
             dgvEPG.RowTemplate.Height = 25;
@@ -145,10 +145,12 @@
             btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
         }
 
-        public void LoadData(SvdrpController controller, vdrControlCenterContext con)
+        public void LoadData(SvdrpController controller)
         {
             _controller = controller;
-            _context = con;
+
+            if (_context == null)
+                _context = new vdrControlCenterContext();
 
             ReLoad();
 
@@ -164,20 +166,19 @@
                 {
                     // EPG-Liste von zukünftigen Einträgen bereinigen
                     _context.RemoveRange(_context.Epg.Where(e => e.StartTime.Value.CompareTo(DateTime.Now) >= 0));
+
                     await _context.SaveChangesAsync();
 
                     _context.Epg.AddRange(epgList.EPGList);
-                    await _context.SaveChangesAsync();
 
                     SystemSettings settings = _context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
                     if (settings != null)
                     {
                         settings.LastUpdateEpg = DateTime.Now;
                         _context.Entry(settings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-                        await _context.SaveChangesAsync();
                     }
 
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
                     reload = true;
@@ -232,12 +233,16 @@
             }
         }
 
-        private void ReLoad()
+        private async void ReLoad()
         {
             dgvEPG.DataSource = null;
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+
+            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
+            if (systemSettings != null)
             {
-                dgvEPG.DataSource = context.GetFakeEpgs(DateTime.Now, 0, false);
+                lblRequestInfo.Text = $"{systemSettings.LastUpdateEpg:dd.MM.yyyy HH:mm:ss}";
+
+                dgvEPG.DataSource = _context.GetFakeEpgs(DateTime.Now, 0, false);
             }
         }
 

@@ -96,6 +96,7 @@
             this.MinimizeBox = false;
             this.Name = "dlgMessageBoxExtended";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Shown += new System.EventHandler(this.dlgMessageBoxExtended_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

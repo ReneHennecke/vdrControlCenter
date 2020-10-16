@@ -7,7 +7,7 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
-    public partial class SvdrpConnector : UserControl
+    public partial class ConnectorView : UserControl
     {
         private const string _connect = "Verbinden";
         private const string _disconnect = "Trennen";
@@ -17,7 +17,7 @@
         private vdrControlCenterContext _context;
 
 
-        public SvdrpConnector()
+        public ConnectorView()
         {
             InitializeComponent();
 
@@ -25,10 +25,8 @@
                 PostInit();
         }
 
-        private void PostInit()
+        public void PostInit()
         {
-            _context = new vdrControlCenterContext();
-
             _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ConnectPng}");
             _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.DisconnectPng}");
             btnConnect_Disconnect.Image = _connectPng;
@@ -45,6 +43,9 @@
         public async void LoadData(SvdrpController controller)
         {
             _controller = controller;
+
+            if (_context == null)
+                _context = new vdrControlCenterContext();
 
             Stations station = await _context.Stations.FirstOrDefaultAsync(station => station.Svdrpport > 0);
             if (station != null)

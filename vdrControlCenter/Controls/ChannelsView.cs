@@ -1,6 +1,7 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
     using DataLayer.Models;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage;
     using System;
     using System.Collections.Generic;
@@ -35,8 +36,6 @@
 
         private void PostInit()
         {
-            _context = new vdrControlCenterContext();
-
             _imageListLeft = Globals.LoadImageList(Enums.ImageListType.ChannelsViewLeft);
             _imageListRight = Globals.LoadImageList(Enums.ImageListType.ChannelsViewRight);
 
@@ -126,6 +125,9 @@
         {
             _controller = controller;
 
+            if (_context == null)
+                _context = new vdrControlCenterContext();
+
             ReLoad();
 
             btnNew.Enabled = btnDel.Enabled = btnRequest.Enabled = false;
@@ -134,12 +136,11 @@
         public async void RefreshData(SvdrpChannelList channelList)
         {
             bool reload = false;
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            using (IDbContextTransaction transaction = context.Database.BeginTransaction())
+            using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    List<Channels> existingChannels = context.Channels.ToList();
+                    List<Channels> existingChannels = await _context.Channels.ToListAsync();
 
                     foreach (Channels channel in channelList.Channels)
                     {
@@ -173,22 +174,19 @@
                         entry.Vpid = channel.Vpid;
 
                         if (!found)
-                            context.Channels.Add(entry);
+                            _context.Channels.Add(entry);
                         else
-                            context.Entry(existingChannels).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                            _context.Entry(existingChannels).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     }
-
-                    await context.SaveChangesAsync();
 
                     SystemSettings settings = _context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
                     if (settings != null)
                     {
                         settings.LastUpdateChannels = DateTime.Now;
-                        context.Entry(settings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-
-                        await context.SaveChangesAsync();
+                        _context.Entry(settings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     }
 
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
                     reload = true;
@@ -204,22 +202,21 @@
 
         }
 
-
         private void btnRequest_Click(object sender, System.EventArgs e)
         {
             _controller.SendGetChannelListRequest();
         }
 
-        private void ReLoad()
+        private async void ReLoad()
         {
             dgvChannels.DataSource = null;
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            
+            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
+            if (systemSettings != null)
             {
-                SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
-                if (systemSettings != null)
-                    lblRequestInfo.Text = $"{systemSettings.LastUpdateChannels:dd.MM.yyyy HH:mm:ss}";
+                lblRequestInfo.Text = $"{systemSettings.LastUpdateChannels:dd.MM.yyyy HH:mm:ss}";
 
-                dgvChannels.DataSource = context.Channels.OrderBy(e => e.ChannelName).ToList();
+                dgvChannels.DataSource = await _context.Channels.OrderBy(e => e.ChannelName).ToListAsync();
             }
         }
 

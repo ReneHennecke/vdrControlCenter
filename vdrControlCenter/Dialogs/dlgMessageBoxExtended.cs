@@ -20,13 +20,12 @@
                 btnOK.Visible = btnCancel.Visible = false;
                 ShowCountDown();
                 tmTimer.Enabled = true;
-
             }
             else
                 btnOKOnly.Visible = false;
         }
 
-private void tmTimout_Tick(object sender, EventArgs e)
+        private void tmTimout_Tick(object sender, EventArgs e)
         {
             _countDown--;
             ShowCountDown();
@@ -61,6 +60,14 @@ private void tmTimout_Tick(object sender, EventArgs e)
         private void ShowCountDown()
         {
             btnOKOnly.Text = $"OK ({_countDown} sec)";
+        }
+
+        private void dlgMessageBoxExtended_Shown(object sender, EventArgs e)
+        {
+            if (btnOKOnly.Visible)
+                btnOKOnly.Focus();
+            else
+                btnOK.Focus();
         }
     }
 }

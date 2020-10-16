@@ -28,26 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panBox = new System.Windows.Forms.Panel();
+            this.lblRequestInfo = new System.Windows.Forms.Label();
             this.dgvEPG = new System.Windows.Forms.DataGridView();
             this.btnRequest = new System.Windows.Forms.Button();
             this.btnTimer = new System.Windows.Forms.Button();
             this.btnFind = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
+            this.panBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEPG)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // panBox
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.dgvEPG);
-            this.panel1.Controls.Add(this.btnRequest);
-            this.panel1.Controls.Add(this.btnTimer);
-            this.panel1.Controls.Add(this.btnFind);
-            this.panel1.Location = new System.Drawing.Point(2, 2);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(678, 336);
-            this.panel1.TabIndex = 1;
+            this.panBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panBox.Controls.Add(this.lblRequestInfo);
+            this.panBox.Controls.Add(this.dgvEPG);
+            this.panBox.Controls.Add(this.btnRequest);
+            this.panBox.Controls.Add(this.btnTimer);
+            this.panBox.Controls.Add(this.btnFind);
+            this.panBox.Location = new System.Drawing.Point(2, 2);
+            this.panBox.Name = "panBox";
+            this.panBox.Size = new System.Drawing.Size(678, 336);
+            this.panBox.TabIndex = 1;
+            // 
+            // lblRequestInfo
+            // 
+            this.lblRequestInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblRequestInfo.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblRequestInfo.Location = new System.Drawing.Point(2, 310);
+            this.lblRequestInfo.Name = "lblRequestInfo";
+            this.lblRequestInfo.Size = new System.Drawing.Size(142, 16);
+            this.lblRequestInfo.TabIndex = 1;
+            this.lblRequestInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // dgvEPG
             // 
@@ -116,20 +131,21 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panBox);
             this.Name = "EPGListView";
             this.Size = new System.Drawing.Size(684, 342);
-            this.panel1.ResumeLayout(false);
+            this.panBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEPG)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panBox;
         private System.Windows.Forms.Button btnRequest;
         private System.Windows.Forms.Button btnTimer;
         private System.Windows.Forms.Button btnFind;
         private System.Windows.Forms.DataGridView dgvEPG;
+        private System.Windows.Forms.Label lblRequestInfo;
     }
 }

@@ -150,6 +150,7 @@
                     case Navigation.SVDRP:
                         page.Text = "SVDRP";
                         SvdrpController svdrpController = new SvdrpController();
+                        svdrpController.Dock = DockStyle.Fill;
                         page.Controls.Add(svdrpController);
                         break;
                     case Navigation.Editor:

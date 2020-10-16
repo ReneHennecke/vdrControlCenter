@@ -54,51 +54,45 @@ namespace vdrControlCenterUI.Controls
         {
             InitializeComponent();
 
-            PostInit();
+            if (!DesignMode)
+                PostInit();
         }
 
-        private void PostInit()
+        private async void PostInit()
         { 
-            Disposed += OnDispose;
-
-            if (!DesignMode)
-            {
+            if (_context == null)
                 _context = new vdrControlCenterContext();
 
-                using (vdrControlCenterContext context = new vdrControlCenterContext())
-                {
-                    if (_context.Stations.Count(station => station.Svdrpport > 0) > 1)
-                    {
-                        dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP-Fehler", "Es sind mehrere Server als SVDRP-Endpunkt definiert.", 0);
-                        dlg.ShowDialog();
+            if (await _context.Stations.CountAsync(station => station.Svdrpport > 0) > 1)
+            {
+                dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP-Fehler", "Es sind mehrere Server als SVDRP-Endpunkt definiert.", 0);
+                dlg.ShowDialog();
 
-                        return;
-                    }
-                }
+                return;
+            }
 
-                ReloadData();
+            ReloadData();
 
-                _svdrpBuffer = new SvdrpBuffer();
+            _svdrpBuffer = new SvdrpBuffer();
 #if DEBUG
-                _svdrpBuffer.EnableDebug = true;
-                grbBuffer.Visible = true;
+            _svdrpBuffer.EnableDebug = true;
+            grbBuffer.Visible = true;
 #else
-                grbBuffer.Visible = false;
+            grbBuffer.Visible = false;
 #endif
 
-                using (vdrControlCenterContext context = new vdrControlCenterContext())
-                {
-                    Stations station = context.Stations.FirstOrDefault(s => s.Svdrpport > 0);
-                    _client = new SvdrpClient(this, station.HostAddress, station.Svdrpport.GetValueOrDefault());
-                }
-            }
+            Stations station = await _context.Stations.FirstOrDefaultAsync(s => s.Svdrpport > 0);
+            _client = new SvdrpClient(this, station.HostAddress, station.Svdrpport.GetValueOrDefault());
         }
 
         private void ReloadData()
         {
-            //svdrpConnector.LoadData(this);
-           // svdrpStatusInfo.LoadData(this, _context);
-            // svdrpEPGList.LoadData(this, _context);
+            svdrpConnector.LoadData(this);
+            svdrpChannelsView.LoadData(this);
+            svdrpTimersView.LoadData(this);
+            svdrpRecordingsView.LoadData(this);
+            svdrpStatusInfoView.LoadData(this);
+            svdrpEpgListView.LoadData(this);
         }
 
         private void OnDispose(object sender, EventArgs e)
@@ -123,8 +117,11 @@ namespace vdrControlCenterUI.Controls
 
         private void RefreshRequestControls(bool enabled)
         {
-            //svdrpStatusInfo.RequestEnable = enabled;
-            //svdrpEPGList.RequestEnable = enabled;
+            svdrpChannelsView.RequestEnable = enabled;
+            svdrpTimersView.RequestEnable = enabled;
+            svdrpRecordingsView.RequestEnable = enabled;
+            svdrpStatusInfoView.RequestEnable = enabled;
+            svdrpEpgListView.RequestEnable = enabled;
         }
 
         #region Client Events
@@ -155,7 +152,7 @@ namespace vdrControlCenterUI.Controls
                 AddBuffer($"Getrennt : {id}{Environment.NewLine}");
 
                 _svdrpConnectionInfo = new SvdrpConnectionInfo();
-                //svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
                 _svdrpRequest = SvdrpRequest.Undefined;
             }
         }
@@ -182,7 +179,7 @@ namespace vdrControlCenterUI.Controls
                             _svdrpConnectionInfo.ParseMessage(_svdrpBuffer.Splitter);
                             if (_client.IsConnected)
                             {
-                                //svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
 
                                 RefreshRequestControls(true);
                             }
@@ -196,7 +193,7 @@ namespace vdrControlCenterUI.Controls
                         SvdrpStatusInfo statusInfo = new SvdrpStatusInfo();
                         statusInfo.ParseMessage(_svdrpBuffer.Splitter);
 
-                        //svdrpStatusInfo.RefreshData(statusInfo);
+                        svdrpStatusInfoView.RefreshData(statusInfo);
                         RefreshRequestControls(true);
                         
                         _svdrpRequest = SvdrpRequest.Undefined;
@@ -208,13 +205,34 @@ namespace vdrControlCenterUI.Controls
                             tmTimeOut.Enabled = true;
                         }
                         break;
+                    case SvdrpRequest.GetTimerList:
+                        if (_svdrpBuffer.Content.Contains(REQ_MSG_NO_TIMERS_DEFINED))
+                        {
+                            dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("Timer", "Es sind keine Timer definiert.", 3);
+                            dlg.ShowDialog();
+
+                            RefreshRequestControls(true);
+                        }
+                        else if (_svdrpBuffer.Content.StartsWith(REQ_250))
+                        {
+                            tmTimeOut.Interval = 2000;
+                            tmTimeOut.Enabled = true;
+                        }
+                        break;
+                    case SvdrpRequest.GetRecordings:
+                        if (_svdrpBuffer.Content.StartsWith(REQ_250))
+                        {
+                            tmTimeOut.Interval = 2000;
+                            tmTimeOut.Enabled = true;
+                        }
+                        break;
                     case SvdrpRequest.GetEPGList:
                         if (_svdrpBuffer.Content.Contains(REQ_MSG_END_OF_EPG_DATA))
                         {
-                            SvdrpEPGList epgList = new SvdrpEPGList();
-                            epgList.ParseMessage(_svdrpBuffer.Splitter);
+                            SvdrpEPGList svdrpEPGList = new SvdrpEPGList();
+                            svdrpEPGList.ParseMessage(_svdrpBuffer.Splitter);
                             
-                            //svdrpEPGList.RefreshData(epgList);
+                            svdrpEpgListView.RefreshData(svdrpEPGList);
                             RefreshRequestControls(true);
                             _svdrpRequest = SvdrpRequest.Undefined;
                         }
@@ -299,6 +317,19 @@ namespace vdrControlCenterUI.Controls
         #endregion
 
         #region Timers
+        public void SendGetTimerListRequest()
+        {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
+            //MainForm.AddMessage($"EPG Request.");
+
+            _svdrpRequest = SvdrpRequest.GetTimerList;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"LSTT{EOL}");
+        }
+
         public void SendAddTimerRequest(List<long> selectedItems)
         {
             if (!_client.IsConnected)
@@ -335,7 +366,7 @@ namespace vdrControlCenterUI.Controls
         }
         #endregion
 
-        #region Channels
+        #region Recordings
         public void SendGetRecordingsRequest()
         {
             if (!_client.IsConnected)
@@ -375,10 +406,30 @@ namespace vdrControlCenterUI.Controls
                     SvdrpChannelList svdrpChannelList = new SvdrpChannelList();
                     svdrpChannelList.ParseMessage(_svdrpBuffer.Splitter);
 
+                    if (svdrpChannelList != null)
+                        svdrpChannelsView.RefreshData(svdrpChannelList);
+        
+                    break;
+                case SvdrpRequest.GetTimerList:
+                    SvdrpTimerList svdrpTimerList = new SvdrpTimerList();
+                    svdrpTimerList.ParseMessage(_svdrpBuffer.Splitter);
 
-                   
+                    if (svdrpTimerList != null)
+                        svdrpTimersView.RefreshData(svdrpTimerList);
+
+                    break;
+                case SvdrpRequest.GetRecordings:
+                    SvdrpRecordingList svdrpRecordingList = new SvdrpRecordingList();
+                    svdrpRecordingList.ParseMessage(_svdrpBuffer.Splitter);
+
+                    if (svdrpRecordingList != null)
+                        svdrpRecordingsView.RefreshData(svdrpRecordingList);
+
                     break;
             }
+
+            RefreshRequestControls(true);
+            _svdrpRequest = SvdrpRequest.Undefined;
         }
     }
 }
