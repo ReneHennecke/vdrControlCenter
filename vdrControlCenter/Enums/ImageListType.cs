@@ -4,10 +4,11 @@
     {
         MainForm,
         StationView,
-        ChannelsViewLeft,
-        ChannelsViewRight,
-        TimersView,
-        RecordingsView,
-        EPGListView
+        SvdrpChannelsViewLeft,
+        SvdrpChannelsViewRight,
+        SvdrpChannelLogos,
+        SvdrpTimersView,
+        SvdrpRecordingsView,
+        SvdrpEpgView
     }
 }

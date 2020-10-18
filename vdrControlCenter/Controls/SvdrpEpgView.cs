@@ -11,7 +11,7 @@
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Dialogs;
 
-    public partial class EPGListView : UserControl
+    public partial class SvdrpEpgView : UserControl
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
@@ -25,7 +25,7 @@
                 }
         }
 
-        public EPGListView()
+        public SvdrpEpgView()
         {
             InitializeComponent();
 
@@ -35,7 +35,7 @@
 
         private void PostInit()
         {
-            _imageList = Globals.LoadImageList(Enums.ImageListType.EPGListView);
+            _imageList = Globals.LoadImageList(Enums.ImageListType.SvdrpEpgView);
 
             dgvEPG.AutoGenerateColumns = false;
             dgvEPG.RowTemplate.Height = 25;
@@ -140,9 +140,9 @@
             textColumn.Visible = false;
             dgvEPG.Columns.Add(textColumn);
 
-            btnFind.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.FindPng}");
-            btnTimer.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.TimerPng}");
-            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
+            btnFind.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SevFindPng}");
+            btnTimer.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SevTimerPng}");
+            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SevRequestPng}");
         }
 
         public void LoadData(SvdrpController controller)

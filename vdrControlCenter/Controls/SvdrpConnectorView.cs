@@ -7,7 +7,7 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
-    public partial class ConnectorView : UserControl
+    public partial class SvdrpConnectorView : UserControl
     {
         private const string _connect = "Verbinden";
         private const string _disconnect = "Trennen";
@@ -17,7 +17,7 @@
         private vdrControlCenterContext _context;
 
 
-        public ConnectorView()
+        public SvdrpConnectorView()
         {
             InitializeComponent();
 

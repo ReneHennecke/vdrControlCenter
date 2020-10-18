@@ -33,12 +33,12 @@
             this.mleBuffer = new System.Windows.Forms.TextBox();
             this.lblBufferLength = new System.Windows.Forms.Label();
             this.grbBuffer = new System.Windows.Forms.GroupBox();
-            this.svdrpConnector = new vdrControlCenterUI.Controls.ConnectorView();
-            this.svdrpChannelsView = new vdrControlCenterUI.Controls.ChannelsView();
-            this.svdrpTimersView = new vdrControlCenterUI.Controls.TimersView();
-            this.svdrpRecordingsView = new vdrControlCenterUI.Controls.RecordingsView();
-            this.svdrpEpgListView = new vdrControlCenterUI.Controls.EPGListView();
-            this.svdrpStatusInfoView = new vdrControlCenterUI.Controls.StatusInfoView();
+            this.svdrpConnector = new vdrControlCenterUI.Controls.SvdrpConnectorView();
+            this.svdrpChannelsView = new vdrControlCenterUI.Controls.SvdrpChannelsView();
+            this.svdrpTimersView = new vdrControlCenterUI.Controls.SvdrpTimersView();
+            this.svdrpRecordingsView = new vdrControlCenterUI.Controls.SvdrpRecordingsView();
+            this.svdrpEpgListView = new vdrControlCenterUI.Controls.SvdrpEpgView();
+            this.svdrpStatusInfoView = new vdrControlCenterUI.Controls.SvdrpStatusInfoView();
             this.grbBuffer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,7 +73,8 @@
             // 
             // grbBuffer
             // 
-            this.grbBuffer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.grbBuffer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.grbBuffer.Controls.Add(this.lblBufferLength);
             this.grbBuffer.Controls.Add(this.mleBuffer);
             this.grbBuffer.Location = new System.Drawing.Point(1086, 470);
@@ -158,11 +159,11 @@
         private System.Windows.Forms.TextBox mleBuffer;
         private System.Windows.Forms.Label lblBufferLength;
         private System.Windows.Forms.GroupBox grbBuffer;
-        private ConnectorView svdrpConnector;
-        private ChannelsView svdrpChannelsView;
-        private TimersView svdrpTimersView;
-        private RecordingsView svdrpRecordingsView;
-        private EPGListView svdrpEpgListView;
-        private StatusInfoView svdrpStatusInfoView;
+        private SvdrpConnectorView svdrpConnector;
+        private SvdrpChannelsView svdrpChannelsView;
+        private SvdrpTimersView svdrpTimersView;
+        private SvdrpRecordingsView svdrpRecordingsView;
+        private SvdrpEpgView svdrpEpgListView;
+        private SvdrpStatusInfoView svdrpStatusInfoView;
     }
 }

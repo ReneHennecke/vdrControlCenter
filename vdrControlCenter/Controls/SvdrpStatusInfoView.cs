@@ -10,7 +10,7 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
-    public partial class StatusInfoView : UserControl
+    public partial class SvdrpStatusInfoView : UserControl
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
@@ -22,7 +22,7 @@
             set { btnRequest.Enabled = value; }
         }
 
-        public StatusInfoView()
+        public SvdrpStatusInfoView()
         {
             InitializeComponent();
 
@@ -85,7 +85,7 @@
         {
             _width = lblRed.Width;
             Reset();
-            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
+            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SsivRequestPng}");
         }
 
         private void btnRequest_Click(object sender, System.EventArgs e)

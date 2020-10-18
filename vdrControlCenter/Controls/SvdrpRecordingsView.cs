@@ -9,7 +9,7 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
-    public partial class RecordingsView : UserControl
+    public partial class SvdrpRecordingsView : UserControl
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
@@ -23,7 +23,7 @@
                 }
         }
 
-        public RecordingsView()
+        public SvdrpRecordingsView()
         {
             InitializeComponent();
 
@@ -33,7 +33,7 @@
 
         private void PostInit()
         {
-            _imageList = Globals.LoadImageList(Enums.ImageListType.RecordingsView);
+            _imageList = Globals.LoadImageList(Enums.ImageListType.SvdrpRecordingsView);
 
             dgvRecordings.AutoGenerateColumns = false;
             dgvRecordings.RowTemplate.Height = 25;
@@ -114,9 +114,9 @@
             dgvRecordings.Columns.Add(textColumn);
 
 
-            btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.FindPng}");
-            btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.TimerPng}");
-            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
+            btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SrvNewPng}");
+            btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SrvDelPng}");
+            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SrvRequestPng}");
         }
 
         public void LoadData(SvdrpController controller)

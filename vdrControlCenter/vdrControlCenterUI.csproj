@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Diga.WebView2.Interop" Version="6.0.1" />
+    <PackageReference Include="Diga.WebView2.WinForms" Version="6.0.1" />
+    <PackageReference Include="Diga.WebView2.Wrapper" Version="6.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,7 +27,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NetCoreServer" Version="3.0.19" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="0.9.628-prerelease" />
+    <PackageReference Include="NetCoreServer" Version="3.0.20" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +46,9 @@
     <None Update="app.Release.config">
       <IsTransformFile>true</IsTransformFile>
       <DependentUpon>app.config</DependentUpon>
+    </None>
+    <None Update="Images\actions-edit-cut-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Images\actions-media-record-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -82,10 +89,16 @@
     <None Update="Images\network-service-icon24x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Images\new-file-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\ok-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Images\radio-icon16.x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\recycle-bin-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Images\red-icon16x16.png">

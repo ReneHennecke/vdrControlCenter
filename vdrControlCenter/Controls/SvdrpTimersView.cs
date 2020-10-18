@@ -9,7 +9,7 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
-    public partial class TimersView : UserControl
+    public partial class SvdrpTimersView : UserControl
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
@@ -23,7 +23,7 @@
                 }
         }
 
-        public TimersView()
+        public SvdrpTimersView()
         {
             InitializeComponent();
 
@@ -33,7 +33,7 @@
 
         private void PostInit()
         {
-            _imageList = Globals.LoadImageList(Enums.ImageListType.EPGListView);
+            _imageList = Globals.LoadImageList(Enums.ImageListType.SvdrpTimersView);
 
             dgvTimers.AutoGenerateColumns = false;
             dgvTimers.RowTemplate.Height = 25;
@@ -128,9 +128,9 @@
             textColumn.Visible = false;
             dgvTimers.Columns.Add(textColumn);
 
-            btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.FindPng}");
-            btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.TimerPng}");
-            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
+            btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.StvNewPng}");
+            btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.StvDelPng}");
+            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.StvRequestPng}");
         }
 
         public void LoadData(SvdrpController controller)

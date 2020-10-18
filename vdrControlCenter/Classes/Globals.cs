@@ -29,28 +29,48 @@ namespace vdrControlCenterUI.Classes
         public const string ConnectPng = "actions-network-connect-icon16x16.png";
         public const string DisconnectPng = "actions-network-disconnect-icon16x16.png";
 
-        // SvdrpChannelsViewLeft
+        // SvdrpChannelsView
+        // Left
         public const string ScvlRadioPng = "radio-icon16.x16.png";
         public const string ScvlTvPng = "tv-set-retro-icon16x16.png";
-
-        // SvdrpChannelsViewRight
+        // Right
         public const string ScvrEmptyPng = "empty16x16.png";
         public const string ScvrFavouritesPng = "favourites-icon16x16.png";
+        // Rest
+        public const string ScvNewPng = "new-file-icon16x16.png";
+        public const string ScvDelPng = "recycle-bin-icon16x16.png";
+        public const string ScvRequestPng = "get-list-icon16x16.png";
+        public const string ScvNoLogoPng = "empty16x16.png";
 
+        // SvdrpTimersView
+        public const string StvPassivePng = "cancel-icon16x16.png";
+        public const string StvActivePng = "ok-icon16x16.png";
+        public const string StvNewPng = "new-file-icon16x16.png";
+        public const string StvDelPng = "recycle-bin-icon16x16.png";
+        public const string StvRequestPng = "get-list-icon16x16.png";
 
-        // EPGListView
-        public const string FindPng = "zoom-icon16x16.png";
-        public const string TimerPng = "clock-icon16x16.png";
-        public const string RequestPng = "get-list-icon16x16.png";
-        public const string FavouritesPng = "favourites-icon16x16.png";
-        public const string RecordPng = "actions-media-record-icon16x16.png";
-        public const string SelectPng = "ok-icon16x16.png";
+        // SvdrpRecordingsView
+        public const string SrvEmptyPng = "empty16x16.png";
+        public const string SrvCutPng = "actions-edit-cut-icon16x16.png";
+        public const string SrvNewPng = "new-file-icon16x16.png";
+        public const string SrvDelPng = "recycle-bin-icon16x16.png";
+        public const string SrvRequestPng = "get-list-icon16x16.png";
 
+        // SvdrpEpgView
+        public const string SevFindPng = "zoom-icon16x16.png";
+        public const string SevTimerPng = "clock-icon16x16.png";
+        public const string SevRequestPng = "get-list-icon16x16.png";
+        public const string SevFavouritesPng = "favourites-icon16x16.png";
+        public const string SevRecordPng = "actions-media-record-icon16x16.png";
+        public const string SevSelectPng = "ok-icon16x16.png";
+
+        // SvdrpStatusInfoView
+        public const string SsivRequestPng = "get-list-icon16x16.png";
 
         // dlgFindEPG
-        public const string Find_FindPng = FindPng;
-        public const string Find_TimerPng = TimerPng;
-        public const string Find_CancelPng = ClosePng;
+        public const string Find_FindPng = "zoom-icon16x16.png";
+        public const string Find_TimerPng = "clock-icon16x16.png";
+        public const string Find_CancelPng = "cancel-icon16x16.png";
 
         // Allgemein
         public const string EmptyPng = "empty16x16.png";
@@ -86,7 +106,7 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
-                case ImageListType.ChannelsViewLeft:
+                case ImageListType.SvdrpChannelsViewLeft:
                     imageList.ImageSize = new Size(16, 16);
                     fileName = $"{ImageFolder}/{ScvlRadioPng}";
                     if (File.Exists(fileName))
@@ -95,7 +115,7 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
-                case ImageListType.ChannelsViewRight:
+                case ImageListType.SvdrpChannelsViewRight:
                     imageList.ImageSize = new Size(16, 16);
                     fileName = $"{ImageFolder}/{ScvrEmptyPng}";
                     if (File.Exists(fileName))
@@ -104,21 +124,30 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
-                case ImageListType.TimersView:
+                case ImageListType.SvdrpChannelLogos:
                     imageList.ImageSize = new Size(16, 16);
-                    fileName = $"{ImageFolder}/{RedPng}";
+                    DirectoryInfo di = new DirectoryInfo("D:\\channellogos");
+                    foreach (FileInfo fi in di.GetFiles("*.png"))
+                    {
+                        Image image = Image.FromFile(fi.FullName);
+                        imageList.Images.Add(fi.Name.ToLower(), image);
+                    }
+                    break;
+                case ImageListType.SvdrpTimersView:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{StvActivePng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{GreenPng}";
+                    fileName = $"{ImageFolder}/{StvPassivePng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
-                case ImageListType.RecordingsView:
+                case ImageListType.SvdrpRecordingsView:
                     imageList.ImageSize = new Size(16, 16);
-                    fileName = $"{ImageFolder}/{RedPng}";
+                    fileName = $"{ImageFolder}/{SrvEmptyPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{GreenPng}";
+                    fileName = $"{ImageFolder}/{SrvCutPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
@@ -131,21 +160,21 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
-                case ImageListType.EPGListView:
+                case ImageListType.SvdrpEpgView:
                     imageList.ImageSize = new Size(16, 16);
                     fileName = $"{ImageFolder}/{EmptyPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{FavouritesPng}";
+                    fileName = $"{ImageFolder}/{SevFavouritesPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{TimerPng}";
+                    fileName = $"{ImageFolder}/{SevTimerPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{RecordPng}";
+                    fileName = $"{ImageFolder}/{SevRecordPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{SelectPng}";
+                    fileName = $"{ImageFolder}/{SevSelectPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;

@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class StatusInfoView
+    partial class SvdrpStatusInfoView
     {
         /// <summary> 
         /// Erforderliche Designervariable.

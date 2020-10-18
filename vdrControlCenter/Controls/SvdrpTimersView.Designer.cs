@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class TimersView
+    partial class SvdrpTimersView
     {
         /// <summary> 
         /// Erforderliche Designervariable.

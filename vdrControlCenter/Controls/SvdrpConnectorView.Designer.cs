@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class ConnectorView
+    partial class SvdrpConnectorView
     {
         /// <summary> 
         /// Erforderliche Designervariable.

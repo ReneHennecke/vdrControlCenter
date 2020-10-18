@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class EPGListView
+    partial class SvdrpEpgView
     {
         /// <summary> 
         /// Erforderliche Designervariable.

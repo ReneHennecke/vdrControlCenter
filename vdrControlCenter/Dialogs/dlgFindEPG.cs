@@ -32,7 +32,7 @@ namespace vdrControlCenterUI.Dialogs
             dgvFind.RowTemplate.Height = 25;
             dgvFind.AllowUserToResizeRows = false;
 
-            _imageList = Globals.LoadImageList(Enums.ImageListType.EPGListView);
+            _imageList = Globals.LoadImageList(Enums.ImageListType.SvdrpEpgView);
 
 
             DataGridViewCellStyle headerStyle = new DataGridViewCellStyle()

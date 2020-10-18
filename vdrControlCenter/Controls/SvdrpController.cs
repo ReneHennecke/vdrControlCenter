@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using vdrControlCenterUI.Classes;
-using vdrControlCenterUI.Enums;
-using DataLayer.Models;
-using System.Linq;
-using vdrControlCenterUI.Dialogs;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Threading;
-using System.Net.Sockets;
-
-namespace vdrControlCenterUI.Controls
+﻿namespace vdrControlCenterUI.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Windows.Forms;
+    using vdrControlCenterUI.Classes;
+    using vdrControlCenterUI.Enums;
+    using DataLayer.Models;
+    using System.Linq;
+    using vdrControlCenterUI.Dialogs;
+    using Microsoft.EntityFrameworkCore;
+    using System.Net.Sockets;
+
     public partial class SvdrpController : UserControl
     {
         private vdrControlCenterContext _context;
@@ -44,6 +38,9 @@ namespace vdrControlCenterUI.Controls
         private const string REQ_MSG_TIMER = "Timer";
         private const string REQ_MSG_DELETED = "deleted";
         private const string REQ_MSG_UPD_REC = "Re-read of recordings directory triggered";
+
+        private int _received = 0;
+        private System.Drawing.Size _bufferControlSize;
 
         public delegate void OnConnectCallback(Guid id);
         public delegate void OnDisconnectCallback(Guid id);
@@ -74,6 +71,10 @@ namespace vdrControlCenterUI.Controls
             ReloadData();
 
             _svdrpBuffer = new SvdrpBuffer();
+
+            grbBuffer.MouseClick += grbBuffer_MouseClick;
+            _bufferControlSize = grbBuffer.Size;
+
 #if DEBUG
             _svdrpBuffer.EnableDebug = true;
             grbBuffer.Visible = true;
@@ -398,6 +399,13 @@ namespace vdrControlCenterUI.Controls
 
         private void tmTimeOut_Tick(object sender, EventArgs e)
         {
+            int received = Convert.ToInt32(lblBufferLength.Text ?? "0");
+            if (received != _received)
+            { 
+                _received = received;
+                return;
+            }
+
             tmTimeOut.Enabled = false;
 
             switch (_svdrpRequest)
@@ -430,6 +438,15 @@ namespace vdrControlCenterUI.Controls
 
             RefreshRequestControls(true);
             _svdrpRequest = SvdrpRequest.Undefined;
+        }
+
+        private void grbBuffer_MouseClick(object sender, EventArgs e)
+        {
+            int height = grbBuffer.Size.Height;
+            if (height > 15)
+                grbBuffer.Size = new System.Drawing.Size(150, 15);
+            else
+                grbBuffer.Size = _bufferControlSize;
         }
     }
 }

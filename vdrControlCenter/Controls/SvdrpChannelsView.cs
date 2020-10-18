@@ -6,17 +6,20 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Dialogs;
 
-    public partial class ChannelsView : UserControl
+    public partial class SvdrpChannelsView : UserControl
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
         private ImageList _imageListLeft;
         private ImageList _imageListRight;
+        private ImageList _imageLogo;
+        private Image _imageNoLogo;
 
         public bool RequestEnable
         {
@@ -26,7 +29,7 @@
                 }
         }
 
-        public ChannelsView()
+        public SvdrpChannelsView()
         {
             InitializeComponent();
 
@@ -36,8 +39,11 @@
 
         private void PostInit()
         {
-            _imageListLeft = Globals.LoadImageList(Enums.ImageListType.ChannelsViewLeft);
-            _imageListRight = Globals.LoadImageList(Enums.ImageListType.ChannelsViewRight);
+            _imageListLeft = Globals.LoadImageList(Enums.ImageListType.SvdrpChannelsViewLeft);
+            _imageListRight = Globals.LoadImageList(Enums.ImageListType.SvdrpChannelsViewRight);
+            _imageLogo = Globals.LoadImageList(Enums.ImageListType.SvdrpChannelLogos);
+
+            _imageNoLogo = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ScvNoLogoPng}");
 
             dgvChannels.AutoGenerateColumns = false;
             dgvChannels.RowTemplate.Height = 25;
@@ -84,19 +90,27 @@
             imageColumn.DisplayIndex = 1;
             dgvChannels.Columns.Add(imageColumn);
 
+            imageColumn = new DataGridViewImageColumn();
+            imageColumn.HeaderText = "·";
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
+            imageColumn.Name = "DisplayLogo";
+            imageColumn.Width = 30;
+            imageColumn.DisplayIndex = 2;
+            dgvChannels.Columns.Add(imageColumn);
+
             DataGridViewTextBoxColumn textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Kanal";
             textColumn.DataPropertyName = "ChannelName";
             textColumn.Name = "ChannelName";
             textColumn.Width = 350;
-            textColumn.DisplayIndex = 2;
+            textColumn.DisplayIndex = 3;
             dgvChannels.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.DataPropertyName = "RecId";
             textColumn.Name = "RecId";
             textColumn.Width = 100;
-            textColumn.DisplayIndex = 3;
+            textColumn.DisplayIndex = 4;
             textColumn.Visible = false;
             dgvChannels.Columns.Add(textColumn);
 
@@ -104,7 +118,7 @@
             textColumn.DataPropertyName = "VPID";
             textColumn.Name = "VPID";
             textColumn.Width = 100;
-            textColumn.DisplayIndex = 4;
+            textColumn.DisplayIndex = 5;
             textColumn.Visible = false;
             dgvChannels.Columns.Add(textColumn);
 
@@ -112,13 +126,13 @@
             textColumn.DataPropertyName = "Favourite";
             textColumn.Name = "Favourite";
             textColumn.Width = 100;
-            textColumn.DisplayIndex = 5;
+            textColumn.DisplayIndex = 6;
             textColumn.Visible = false;
             dgvChannels.Columns.Add(textColumn);
 
-            btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.FindPng}");
-            btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.TimerPng}");
-            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.RequestPng}");
+            btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ScvNewPng}");
+            btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ScvDelPng}");
+            btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ScvRequestPng}");
         }
 
         public void LoadData(SvdrpController controller)
@@ -256,6 +270,23 @@
                     e.Graphics.DrawImage(favourite ? _imageListRight.Images[1] : _imageListRight.Images[0], point);
                     dgvChannels.Rows[e.RowIndex].Cells["DisplayFavourite"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
 
+                    e.Handled = true;
+                }
+                else if (e.ColumnIndex == dgvChannels.Columns["DisplayLogo"].Index)
+                {
+                    string name = (string)dgvChannels.Rows[e.RowIndex].Cells["ChannelName"].Value;
+                    int index = _imageLogo.Images.IndexOfKey(name.ToLower() + ".png");
+                    SolidBrush gridBrush = new SolidBrush(dgvChannels.GridColor);
+                    Pen gridLinePen = new Pen(gridBrush);
+                    SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
+                    e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                    // Draw lines over cell  
+                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
+                    // Draw the image over cell at specific location.  
+                    Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
+                    e.Graphics.DrawImage(index == -1 ? _imageNoLogo : _imageLogo.Images[index], point);
+                    dgvChannels.Rows[e.RowIndex].Cells["DisplayFavourite"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
 
                     e.Handled = true;
                 }

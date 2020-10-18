@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class ChannelsView
+    partial class SvdrpChannelsView
     {
         /// <summary> 
         /// Erforderliche Designervariable.

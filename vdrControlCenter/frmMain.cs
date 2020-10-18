@@ -146,9 +146,14 @@
                         break;
                     case Navigation.VDRAdmin:
                         page.Text = "VDR-Admin";
+                        page.ImageIndex = (int)Navigation.VDRAdmin;
+                        VDRAdmindView admindView = new VDRAdmindView();
+                        admindView.Dock = DockStyle.Fill;
+                        page.Controls.Add(admindView);
                         break;
                     case Navigation.SVDRP:
                         page.Text = "SVDRP";
+                        page.ImageIndex = (int)Navigation.SVDRP;
                         SvdrpController svdrpController = new SvdrpController();
                         svdrpController.Dock = DockStyle.Fill;
                         page.Controls.Add(svdrpController);
