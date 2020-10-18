@@ -20,7 +20,8 @@ namespace vdrControlCenterUI.Controls
 
         private void PostInit()
         {
-            //wcWebViewer.Navigate("about:blank");
+            //wcWebViewer.Navigate("about:blank");   
+            //.mdslkjskjlksd
         }
     }
 }
