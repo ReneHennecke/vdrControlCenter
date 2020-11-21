@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using DataLayer.Classes;
+using DataLayer.Models;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using vdrControlCenterUI.Enums;
@@ -124,16 +126,7 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
-                case ImageListType.SvdrpChannelLogos:
-                    imageList.ImageSize = new Size(16, 16);
-                    DirectoryInfo di = new DirectoryInfo("D:\\channellogos");
-                    foreach (FileInfo fi in di.GetFiles("*.png"))
-                    {
-                        Image image = Image.FromFile(fi.FullName);
-                        imageList.Images.Add(fi.Name.ToLower(), image);
-                    }
-                    break;
-                case ImageListType.SvdrpTimersView:
+                 case ImageListType.SvdrpTimersView:
                     imageList.ImageSize = new Size(16, 16);
                     fileName = $"{ImageFolder}/{StvActivePng}";
                     if (File.Exists(fileName))
@@ -189,6 +182,11 @@ namespace vdrControlCenterUI.Classes
             if (File.Exists(fileName))
                 image = Image.FromFile(fileName);
             return image;
+        }
+
+        public static string LogoFolder
+        {
+            get { return ModelHelper.PathToChannelLogos; }
         }
     }
 }

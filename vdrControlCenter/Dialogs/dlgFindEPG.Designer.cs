@@ -45,6 +45,7 @@
             this.lblFind = new System.Windows.Forms.Label();
             this.btnTimer = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.panEPGFind.SuspendLayout();
             this.grbBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFind)).BeginInit();
@@ -241,11 +242,22 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // btnOK
+            // 
+            this.btnOK.Location = new System.Drawing.Point(750, 462);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(82, 26);
+            this.btnOK.TabIndex = 3;
+            this.btnOK.Text = "Markieren";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
             // dlgFindEPG
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1148, 490);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnTimer);
             this.Controls.Add(this.panEPGFind);
@@ -281,5 +293,6 @@
         private System.Windows.Forms.CheckBox chbRecordings;
         private System.Windows.Forms.DateTimePicker dtpStartTime;
         private System.Windows.Forms.Label lblStartTime;
+        private System.Windows.Forms.Button btnOK;
     }
 }

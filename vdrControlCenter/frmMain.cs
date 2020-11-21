@@ -2,15 +2,9 @@
 {
     using System;
     using System.Drawing;
-    using System.IO;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Enums;
-    using System.Linq;
-    using DataLayer.Models;
-    using Microsoft.EntityFrameworkCore;
-    using System.Drawing.Drawing2D;
-    using System.Globalization;
     using vdrControlCenterUI.Dialogs;
     using vdrControlCenterUI.Controls;
 
@@ -137,12 +131,18 @@
                 {
                     case Navigation.Setup:
                         page.Text = "Setup";
+                        page.ImageIndex = (int)Navigation.Setup;
                         break;
                     case Navigation.SSH:
                         page.Text = "SSH";
+                        page.ImageIndex = (int)Navigation.SSH;
+                        SshController sshController = new SshController();
+                        sshController.Dock = DockStyle.Fill;
+                        page.Controls.Add(sshController);
                         break;
                     case Navigation.Service:
                         page.Text = "VDR-Service";
+                        page.ImageIndex = (int)Navigation.Service;
                         break;
                     case Navigation.VDRAdmin:
                         page.Text = "VDR-Admin";
@@ -160,9 +160,14 @@
                         break;
                     case Navigation.Editor:
                         page.Text = "Editoren";
+                        page.ImageIndex = (int)Navigation.Editor;
                         break;
                     case Navigation.EPGGuide:
                         page.Text = "EPG-Guide";
+                        page.ImageIndex = (int)Navigation.EPGGuide;
+                        EpgGuideLineController epgGuideLineController = new EpgGuideLineController();
+                        epgGuideLineController.Dock = DockStyle.Fill;
+                        page.Controls.Add(epgGuideLineController);
                         break;
                     default:
                         break;
@@ -170,8 +175,8 @@
 
                 tabWorkspace.TabPages.Add(page);
             }
-            else
-                tabWorkspace.SelectedTab = page;
+
+            tabWorkspace.SelectedTab = page;
         }
 
         private TabPage FindTabPage(Navigation navigation)
@@ -212,15 +217,24 @@
 
         private void tabWorkspace_DrawItem(object sender, DrawItemEventArgs e)
         {
-            Image img = new Bitmap(_closeImage);
+            
             Rectangle r = e.Bounds;
             r = tabWorkspace.GetTabRect(e.Index);
             r.Offset(2, 2);
             Brush TitleBrush = new SolidBrush(Color.Black);
             Font f = Font;
             string title = tabWorkspace.TabPages[e.Index].Text;
-            e.Graphics.DrawString(title, f, TitleBrush, new PointF(r.X, r.Y));
+            e.Graphics.DrawString(title, f, TitleBrush, new PointF(r.X + 30, r.Y + 2));
+
+            Image img = new Bitmap(_closeImage);
             e.Graphics.DrawImage(img, new Point(r.X + (tabWorkspace.GetTabRect(e.Index).Width - _imageLocation.X), _imageLocation.Y));
+
+            TabPage page = tabWorkspace.TabPages[e.Index];
+            if (page.ImageIndex > -1)
+            {
+                img = tabWorkspace.ImageList.Images[page.ImageIndex];
+                e.Graphics.DrawImage(img, new Point(r.X, _imageLocation.Y));
+            }
         }
 
         private void LoadData()

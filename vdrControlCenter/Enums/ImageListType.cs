@@ -6,7 +6,6 @@
         StationView,
         SvdrpChannelsViewLeft,
         SvdrpChannelsViewRight,
-        SvdrpChannelLogos,
         SvdrpTimersView,
         SvdrpRecordingsView,
         SvdrpEpgView

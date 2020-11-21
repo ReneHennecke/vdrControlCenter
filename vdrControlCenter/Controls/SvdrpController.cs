@@ -331,7 +331,7 @@
             _client.SendAsync($"LSTT{EOL}");
         }
 
-        public void SendAddTimerRequest(List<long> selectedItems)
+        public async void SendAddTimerRequest(List<long> selectedItems)
         {
             if (!_client.IsConnected)
                 return;
@@ -340,10 +340,10 @@
             {
                 foreach (long item in selectedItems)
                 {
-                    Epg epg = context.Epg.FirstOrDefault(e => e.RecId == item);
+                    Epg epg = await context.Epg.FirstOrDefaultAsync(e => e.RecId == item);
                     if (epg != null)
                     {
-                        Channels channel = context.Channels.FirstOrDefault(e => e.RecId == epg.ChannelRecId);
+                        Channels channel = await context.Channels.FirstOrDefaultAsync(e => e.RecId == epg.ChannelRecId);
                         if (channel == null || channel.Number == 0)
                             continue;
 

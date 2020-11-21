@@ -7,6 +7,7 @@
     using Serilog;
     using Serilog.Enrichers;
     using Serilog.Events;
+    using Serilog.Sinks.SystemConsole.Themes;
     using System;
     using System.IO;
     using System.Net;
@@ -25,8 +26,8 @@
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.With(new ThreadIdEnricher())
                 .Enrich.FromLogContext()
-                .WriteTo.ColoredConsole()
-                //.WriteTo.Console(LogEventLevel.Information, loggerTemplate, theme: AnsiConsoleTheme.Literate)
+                //.WriteTo.ColoredConsole()
+                .WriteTo.Console(LogEventLevel.Information, loggerTemplate, theme: AnsiConsoleTheme.Literate)
                 .WriteTo.File(logfile, LogEventLevel.Information, loggerTemplate,
                     rollingInterval: RollingInterval.Day, retainedFileCountLimit: 90)
                 .CreateLogger();

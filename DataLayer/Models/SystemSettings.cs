@@ -21,7 +21,7 @@ namespace DataLayer.Models
         public DateTime? LastUpdateTimers { get; set; }
         public DateTime? LastUpdateRecordings { get; set; }
         public DateTime? LastUpdateStatus { get; set; }
-
+        public string PathToChannelLogos { get; set; }
         public virtual ICollection<StatusInfo> StatusInfo { get; set; }
     }
 }

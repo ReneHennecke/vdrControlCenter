@@ -9,14 +9,40 @@ namespace vdrControlCenterUI.Dialogs
 
     public partial class dlgFindEPG : Form
     {
-        private ImageList _imageList;
-        private const int _unselected = 0;
-        private const int _selected = 4;
-        private List<long> _selectedItems;
+        private const int ENTRY_UNSELECTED = 0;
+        private const int ENTRY_SELECTED = 4;
+        private const int IS_EPG_ENTRY = 0;
         
+        private ImageList _imageList;
+        private List<long> _selectedItems;
+
         public List<long> SelectedItems
         {
             get { return _selectedItems; }
+        }
+        
+        public List<Epg> FoundList
+        {
+            get
+            {
+                List<Epg> epgs = new List<Epg>();
+
+                foreach (DataGridViewRow row in dgvFind.Rows)
+                {
+                    long recId = (long)row.Cells["RecId"].Value;
+                    string channelName = (string)row.Cells["ChannelName"].Value;
+                    if (!string.IsNullOrWhiteSpace(channelName))
+                    {
+                        Epg epg = new Epg()
+                        { 
+                            RecId = recId
+                        };
+                        epgs.Add(epg);
+                    }
+                }
+
+                return epgs;
+            }
         }
 
         public dlgFindEPG()
@@ -211,7 +237,7 @@ namespace vdrControlCenterUI.Dialogs
             _selectedItems = new List<long>();
             foreach (DataGridViewRow row in dgvFind.Rows)
             {
-                if ((int)row.Cells["SymbolIndex"].Value == _selected)
+                if ((int)row.Cells["SymbolIndex"].Value == ENTRY_SELECTED)
                     _selectedItems.Add((long)row.Cells["RecId"].Value);
             }
 
@@ -224,13 +250,18 @@ namespace vdrControlCenterUI.Dialogs
             if (e.RowIndex > -1)
             {
                 int i = (int)dgvFind.Rows[e.RowIndex].Cells["SymbolIndex"].Value;
-                if (i == _selected || i == _unselected)
+                if (i == ENTRY_SELECTED || i == ENTRY_UNSELECTED)
                 {
-                    dgvFind.Rows[e.RowIndex].Cells["SymbolIndex"].Value = (i == _unselected ? _selected : _unselected);
+                    dgvFind.Rows[e.RowIndex].Cells["SymbolIndex"].Value = (i == ENTRY_UNSELECTED ? ENTRY_SELECTED : ENTRY_UNSELECTED);
 
                     dgvFind.InvalidateCell(dgvFind.Rows[e.RowIndex].Cells["DisplaySymbol"]);
                 }
             }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
         }
     }
 }

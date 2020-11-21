@@ -23,7 +23,7 @@ namespace DataLayer.Models
         public int? VdradminPort { get; set; }
         public string VdradminUserName { get; set; }
         public string VdradminPassword { get; set; }
-
+        public string PathToChannelLogos { get; set; }
         public virtual StationTypes StationTypeNavigation { get; set; }
     }
 }

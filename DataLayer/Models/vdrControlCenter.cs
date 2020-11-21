@@ -234,6 +234,8 @@
                     .HasColumnName("VDRAdminUserName")
                     .HasMaxLength(30);
 
+                entity.Property(e => e.PathToChannelLogos).HasMaxLength(255);
+
                 entity.HasOne(d => d.StationTypeNavigation)
                     .WithMany(p => p.Stations)
                     .HasForeignKey(d => d.StationType)
@@ -272,6 +274,8 @@
                     .IsRequired()
                     .HasMaxLength(15)
                     .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.PathToChannelLogos).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Timers>(entity =>

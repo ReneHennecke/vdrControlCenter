@@ -59,7 +59,8 @@
                 SelectionBackColor = Color.LightGray,
                 SelectionForeColor = Color.Black,
                 Font = new Font("Segoe UI", 8.0f, FontStyle.Regular),
-                Alignment = DataGridViewContentAlignment.MiddleLeft
+                Alignment = DataGridViewContentAlignment.MiddleLeft,
+                NullValue = string.Empty
             };
             dgvEPG.RowsDefaultCellStyle = cellStyle;
 
@@ -90,6 +91,7 @@
             textColumn.Name = "StartTime";
             textColumn.Width = 120;
             textColumn.DisplayIndex = 2;
+            textColumn.DefaultCellStyle.Format = "dd.MM.yyyy HH:mm";
             dgvEPG.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
@@ -98,6 +100,7 @@
             textColumn.Name = "EndTime";
             textColumn.Width = 120;
             textColumn.DisplayIndex = 3;
+            textColumn.DefaultCellStyle.Format = "dd.MM.yyyy HH:mm";
             dgvEPG.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
@@ -164,6 +167,8 @@
             {
                 try
                 {
+                    // Jüngsten Eintrag in empfangener Liste feststellen
+
                     // EPG-Liste von zukünftigen Einträgen bereinigen
                     _context.RemoveRange(_context.Epg.Where(e => e.StartTime.Value.CompareTo(DateTime.Now) >= 0));
 
@@ -242,7 +247,11 @@
             {
                 lblRequestInfo.Text = $"{systemSettings.LastUpdateEpg:dd.MM.yyyy HH:mm:ss}";
 
-                dgvEPG.DataSource = _context.GetFakeEpgs(DateTime.Now, 0, false);
+                DateTime date = DateTime.Now;
+                if (dtpDate.Value.Date.CompareTo(date.Date) != 0)
+                    date = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+
+                dgvEPG.DataSource = _context.GetFakeEpgs(date, 0, false);
             }
         }
 
@@ -278,6 +287,11 @@
         private void SaveTimers(List<long> selectedItems)
         {
             _controller.SendAddTimerRequest(selectedItems);
+        }
+
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        {
+            ReLoad();
         }
     }
 }

@@ -31,7 +31,6 @@
             this.panBox = new System.Windows.Forms.Panel();
             this.lblAddressValue = new System.Windows.Forms.Label();
             this.lblAddress = new System.Windows.Forms.Label();
-            this.wcWebViewer = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.panBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,24 +66,10 @@
             this.lblAddress.Text = "Addresse:";
             this.lblAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // wcWebViewer
-            // 
-            this.wcWebViewer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.wcWebViewer.Location = new System.Drawing.Point(4, 38);
-            this.wcWebViewer.Name = "wcWebViewer";
-            this.wcWebViewer.Size = new System.Drawing.Size(1200, 522);
-            this.wcWebViewer.Source = new System.Uri("about:blank", System.UriKind.Absolute);
-            this.wcWebViewer.TabIndex = 1;
-            this.wcWebViewer.Text = "webView21";
-            this.wcWebViewer.ZoomFactor = 1D;
-            // 
             // VDRAdmindView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.wcWebViewer);
             this.Controls.Add(this.panBox);
             this.Name = "VDRAdmindView";
             this.Size = new System.Drawing.Size(1207, 563);
@@ -98,6 +83,5 @@
         private System.Windows.Forms.Panel panBox;
         private System.Windows.Forms.Label lblAddress;
         private System.Windows.Forms.Label lblAddressValue;
-        private Microsoft.Web.WebView2.WinForms.WebView2 wcWebViewer;
     }
 }

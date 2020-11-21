@@ -34,6 +34,7 @@
             this.btnRequest = new System.Windows.Forms.Button();
             this.btnTimer = new System.Windows.Forms.Button();
             this.btnFind = new System.Windows.Forms.Button();
+            this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.panBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEPG)).BeginInit();
             this.SuspendLayout();
@@ -44,6 +45,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panBox.Controls.Add(this.dtpDate);
             this.panBox.Controls.Add(this.lblRequestInfo);
             this.panBox.Controls.Add(this.dgvEPG);
             this.panBox.Controls.Add(this.btnRequest);
@@ -127,12 +129,21 @@
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
-            // EPGListView
+            // dtpDate
+            // 
+            this.dtpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dtpDate.Location = new System.Drawing.Point(200, 306);
+            this.dtpDate.Name = "dtpDate";
+            this.dtpDate.Size = new System.Drawing.Size(196, 23);
+            this.dtpDate.TabIndex = 4;
+            this.dtpDate.ValueChanged += new System.EventHandler(this.dtpDate_ValueChanged);
+            // 
+            // SvdrpEpgView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panBox);
-            this.Name = "EPGListView";
+            this.Name = "SvdrpEpgView";
             this.Size = new System.Drawing.Size(684, 342);
             this.panBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEPG)).EndInit();
@@ -147,5 +158,6 @@
         private System.Windows.Forms.Button btnFind;
         private System.Windows.Forms.DataGridView dgvEPG;
         private System.Windows.Forms.Label lblRequestInfo;
+        private System.Windows.Forms.DateTimePicker dtpDate;
     }
 }

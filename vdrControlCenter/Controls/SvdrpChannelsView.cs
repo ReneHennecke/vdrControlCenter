@@ -3,6 +3,7 @@
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage;
+    using Svg;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -18,7 +19,6 @@
         private vdrControlCenterContext _context;
         private ImageList _imageListLeft;
         private ImageList _imageListRight;
-        private ImageList _imageLogo;
         private Image _imageNoLogo;
 
         public bool RequestEnable
@@ -39,14 +39,13 @@
 
         private void PostInit()
         {
-            _imageListLeft = Globals.LoadImageList(Enums.ImageListType.SvdrpChannelsViewLeft);
-            _imageListRight = Globals.LoadImageList(Enums.ImageListType.SvdrpChannelsViewRight);
-            _imageLogo = Globals.LoadImageList(Enums.ImageListType.SvdrpChannelLogos);
+            _imageListLeft = Globals.LoadImageList(vdrControlCenterUI.Enums.ImageListType.SvdrpChannelsViewLeft);
+            _imageListRight = Globals.LoadImageList(vdrControlCenterUI.Enums.ImageListType.SvdrpChannelsViewRight);
 
             _imageNoLogo = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ScvNoLogoPng}");
 
             dgvChannels.AutoGenerateColumns = false;
-            dgvChannels.RowTemplate.Height = 25;
+            dgvChannels.RowTemplate.Height = 32;
             dgvChannels.AllowUserToResizeRows = false;
 
             DataGridViewCellStyle headerStyle = new DataGridViewCellStyle()
@@ -86,7 +85,7 @@
             imageColumn.HeaderText = "·";
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
             imageColumn.Name = "DisplayFavourite";
-            imageColumn.Width = 30;
+            imageColumn.Width = 34;
             imageColumn.DisplayIndex = 1;
             dgvChannels.Columns.Add(imageColumn);
 
@@ -94,8 +93,9 @@
             imageColumn.HeaderText = "·";
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
             imageColumn.Name = "DisplayLogo";
-            imageColumn.Width = 30;
+            imageColumn.Width = 40;
             imageColumn.DisplayIndex = 2;
+            imageColumn.Image = _imageNoLogo;
             dgvChannels.Columns.Add(imageColumn);
 
             DataGridViewTextBoxColumn textColumn = new DataGridViewTextBoxColumn();
@@ -238,54 +238,47 @@
         {
             if (e.RowIndex > -1)
             {
-                if (e.ColumnIndex == dgvChannels.Columns["DisplayType"].Index)
+                if (e.ColumnIndex >= 0 && e.ColumnIndex < 3)
                 {
-                    string vpid = (string)dgvChannels.Rows[e.RowIndex].Cells["VPID"].Value;
                     SolidBrush gridBrush = new SolidBrush(dgvChannels.GridColor);
                     Pen gridLinePen = new Pen(gridBrush);
                     SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
-                    e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                    // Draw lines over cell  
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
-                    // Draw the image over cell at specific location.  
-                    Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(vpid == "0" ? _imageListLeft.Images[0] : _imageListLeft.Images[1], point);
-                    dgvChannels.Rows[e.RowIndex].Cells["DisplayType"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
 
-                    e.Handled = true;
-                }
-                else if (e.ColumnIndex == dgvChannels.Columns["DisplayFavourite"].Index)
-                {
-                    bool favourite = (bool)dgvChannels.Rows[e.RowIndex].Cells["Favourite"].Value;
-                    SolidBrush gridBrush = new SolidBrush(dgvChannels.GridColor);
-                    Pen gridLinePen = new Pen(gridBrush);
-                    SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
+                    // Fill rectangle
                     e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
                     // Draw lines over cell  
                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
-                    // Draw the image over cell at specific location.  
+                    // Draw the image over cell at specific location.                      
                     Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(favourite ? _imageListRight.Images[1] : _imageListRight.Images[0], point);
-                    dgvChannels.Rows[e.RowIndex].Cells["DisplayFavourite"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
 
-                    e.Handled = true;
-                }
-                else if (e.ColumnIndex == dgvChannels.Columns["DisplayLogo"].Index)
-                {
-                    string name = (string)dgvChannels.Rows[e.RowIndex].Cells["ChannelName"].Value;
-                    int index = _imageLogo.Images.IndexOfKey(name.ToLower() + ".png");
-                    SolidBrush gridBrush = new SolidBrush(dgvChannels.GridColor);
-                    Pen gridLinePen = new Pen(gridBrush);
-                    SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
-                    e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                    // Draw lines over cell  
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
-                    // Draw the image over cell at specific location.  
-                    Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(index == -1 ? _imageNoLogo : _imageLogo.Images[index], point);
+                    if (e.ColumnIndex == dgvChannels.Columns["DisplayType"].Index)
+                    {
+                        string vpid = (string)dgvChannels.Rows[e.RowIndex].Cells["VPID"].Value;
+
+                        e.Graphics.DrawImage(vpid == "0" ? _imageListLeft.Images[0] : _imageListLeft.Images[1], point);
+                    }
+                    else if (e.ColumnIndex == dgvChannels.Columns["DisplayFavourite"].Index)
+                    {
+                        bool favourite = (bool)dgvChannels.Rows[e.RowIndex].Cells["Favourite"].Value;
+
+                        e.Graphics.DrawImage(favourite ? _imageListRight.Images[1] : _imageListRight.Images[0], point);
+                    }
+                    else if (e.ColumnIndex == dgvChannels.Columns["DisplayLogo"].Index)
+                    {
+                        string name = (string)dgvChannels.Rows[e.RowIndex].Cells["ChannelName"].Value;
+                        string svg = $"{Globals.LogoFolder}{name}.svg";
+                        if (File.Exists(svg))
+                        {
+                            SvgDocument svgDocument = SvgDocument.Open(svg);
+                            if (svg != null)
+                            {
+                                Bitmap img = svgDocument.Draw(20, 15);
+                                if (img != null)
+                                    e.Graphics.DrawImage(img, point);
+                            }
+                        }
+                    }
                     dgvChannels.Rows[e.RowIndex].Cells["DisplayFavourite"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
 
                     e.Handled = true;
