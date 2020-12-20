@@ -17,6 +17,11 @@
         private List<string> _commandList;
         private int _currentCommand;
         
+        private frmMain frmMain;
+        public frmMain MainForm
+        {
+            set { frmMain = value; }
+        }
 
         public SshController()
         {

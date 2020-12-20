@@ -58,10 +58,10 @@
                             statusInfo.TotalDiskSpace = svdrpStatusInfo.Total;
                             statusInfo.FreeDiskSpace = svdrpStatusInfo.Free;
                             statusInfo.UsedPercent = svdrpStatusInfo.Percent;
-                            _context.Entry(statusInfo).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                            _context.Entry(statusInfo).State = EntityState.Modified;
 
                             systemSettings.LastUpdateStatus = DateTime.Now;
-                            _context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                            _context.Entry(systemSettings).State = EntityState.Modified;
 
                             await _context.SaveChangesAsync();
 
@@ -118,7 +118,7 @@
                     lblTotalValue.Text = $"{statusInfo.TotalDiskSpace / 1024:0,0} GB";
                     lblFreeValue.Text = $"{statusInfo.FreeDiskSpace / 1024:0,0} GB";
                     lblPercentValue.Text = $"{statusInfo.UsedPercent:0.0} %";
-
+                    
                     int maxLength = lblPercentValue.Size.Width;
                     int height = lblRed.Size.Height;
                     int calcRed = (int)(maxLength * statusInfo.UsedPercent / 100);
@@ -127,6 +127,8 @@
                     lblGreen.Location = new Point(lblGreen.Location.X + calcRed + 1, lblGreen.Location.Y);
                     lblGreen.Size = new Size(maxLength - calcRed - 2, height);
                 }
+
+                lblRequestInfo.Text = $"{systemSettings.LastUpdateStatus:dd.MM.yyyy HH:mm:ss}";
             }
         }
     }

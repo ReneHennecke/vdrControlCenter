@@ -176,7 +176,7 @@
 
                     _context.Epg.AddRange(epgList.EPGList);
 
-                    SystemSettings settings = _context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
+                    SystemSettings settings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
                     if (settings != null)
                     {
                         settings.LastUpdateEpg = DateTime.Now;

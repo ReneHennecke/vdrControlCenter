@@ -10,10 +10,13 @@
 
     public partial class frmMain : Form
     {
-        private bool _inInit;
         private Point _imageLocation = new Point(20, 4);
         private Point _imgHitArea = new Point(20, 4);
         private Image _closeImage;
+
+
+        private delegate void AddMessageCallback(string msg);
+
 
         public frmMain()
         {
@@ -100,83 +103,11 @@
             };
             trvNavigation.Nodes.Add(node);
 
-            trvNavigation.ExpandAll();
-
+            trvNavigation.SelectedNode = null;
+            
             viewStations.PopulateData();
 
             LoadData();
-
-            _inInit = true;
-        }
-
-        private void trvNavigation_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            if (_inInit)
-            {
-                _inInit = false;
-                return;
-            }
-
-            Navigation navigation = (Navigation)e.Node.Tag;
-            TabPage page = FindTabPage(navigation);
-            if (page == null)
-            {
-                page = new TabPage()
-                {
-                    Tag = navigation
-                };
-
-                string title = string.Empty;
-                switch (navigation)
-                {
-                    case Navigation.Setup:
-                        page.Text = "Setup";
-                        page.ImageIndex = (int)Navigation.Setup;
-                        break;
-                    case Navigation.SSH:
-                        page.Text = "SSH";
-                        page.ImageIndex = (int)Navigation.SSH;
-                        SshController sshController = new SshController();
-                        sshController.Dock = DockStyle.Fill;
-                        page.Controls.Add(sshController);
-                        break;
-                    case Navigation.Service:
-                        page.Text = "VDR-Service";
-                        page.ImageIndex = (int)Navigation.Service;
-                        break;
-                    case Navigation.VDRAdmin:
-                        page.Text = "VDR-Admin";
-                        page.ImageIndex = (int)Navigation.VDRAdmin;
-                        VDRAdmindView admindView = new VDRAdmindView();
-                        admindView.Dock = DockStyle.Fill;
-                        page.Controls.Add(admindView);
-                        break;
-                    case Navigation.SVDRP:
-                        page.Text = "SVDRP";
-                        page.ImageIndex = (int)Navigation.SVDRP;
-                        SvdrpController svdrpController = new SvdrpController();
-                        svdrpController.Dock = DockStyle.Fill;
-                        page.Controls.Add(svdrpController);
-                        break;
-                    case Navigation.Editor:
-                        page.Text = "Editoren";
-                        page.ImageIndex = (int)Navigation.Editor;
-                        break;
-                    case Navigation.EPGGuide:
-                        page.Text = "EPG-Guide";
-                        page.ImageIndex = (int)Navigation.EPGGuide;
-                        EpgGuideLineController epgGuideLineController = new EpgGuideLineController();
-                        epgGuideLineController.Dock = DockStyle.Fill;
-                        page.Controls.Add(epgGuideLineController);
-                        break;
-                    default:
-                        break;
-                }
-
-                tabWorkspace.TabPages.Add(page);
-            }
-
-            tabWorkspace.SelectedTab = page;
         }
 
         private TabPage FindTabPage(Navigation navigation)
@@ -242,15 +173,99 @@
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void AddMessage(string msg)
         {
-            dlgSetup dlg = new dlgSetup();
-            dlg.ShowDialog();
+            if (teMessages.InvokeRequired)
+            {
+                AddMessageCallback amcb = new AddMessageCallback(AddMessage);
+                Invoke(amcb, new object[] { msg });
+            }
+            else
+            {
+                teMessages.Text += $"{DateTime.Now:dd.MM.yyyy HH:mm:ss}:{msg}{Environment.NewLine}";
+                teMessages.SelectionStart = teMessages.Text.Length;
+                teMessages.ScrollToCaret();
+            }
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void trvNavigation_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            
+            Navigation navigation = (Navigation)e.Node.Tag;
+            TabPage page = FindTabPage(navigation);
+            if (page == null)
+            {
+                page = new TabPage()
+                {
+                    Tag = navigation
+                };
+
+                string title = string.Empty;
+                switch (navigation)
+                {
+                    case Navigation.Setup:
+                        page.Text = "Setup";
+                        page.ImageIndex = (int)Navigation.Setup;
+                        SystemSettingsView systemSettingsView = new SystemSettingsView();
+                        systemSettingsView.MainForm = this;
+                        systemSettingsView.Dock = DockStyle.Fill;
+                        page.Controls.Add(systemSettingsView);
+                        break;
+                    case Navigation.SSH:
+                        page.Text = "SSH";
+                        page.ImageIndex = (int)Navigation.SSH;
+                        SshController sshController = new SshController();
+                        sshController.MainForm = this;
+                        sshController.Dock = DockStyle.Fill;
+                        page.Controls.Add(sshController);
+                        break;
+                    case Navigation.Service:
+                        page.Text = "VDR-Service";
+                        page.ImageIndex = (int)Navigation.Service;
+                        break;
+                    case Navigation.VDRAdmin:
+                        page.Text = "VDR-Admin";
+                        page.ImageIndex = (int)Navigation.VDRAdmin;
+                        VDRAdmindView admindView = new VDRAdmindView();
+                        admindView.Dock = DockStyle.Fill;
+                        page.Controls.Add(admindView);
+                        break;
+                    case Navigation.SVDRP:
+                        page.Text = "SVDRP";
+                        page.ImageIndex = (int)Navigation.SVDRP;
+                        SvdrpController svdrpController = new SvdrpController();
+                        svdrpController.MainForm = this;
+                        svdrpController.Dock = DockStyle.Fill;
+                        page.Controls.Add(svdrpController);
+                        break;
+                    case Navigation.Editor:
+                        page.Text = "Editoren";
+                        page.ImageIndex = (int)Navigation.Editor;
+                        break;
+                    case Navigation.EPGGuide:
+                        page.Text = "EPG-Guide";
+                        page.ImageIndex = (int)Navigation.EPGGuide;
+                        EpgGuideLineController epgGuideLineController = new EpgGuideLineController();
+                        epgGuideLineController.MainForm = this;
+                        epgGuideLineController.Dock = DockStyle.Fill;
+                        page.Controls.Add(epgGuideLineController);
+                        break;
+                    default:
+                        break;
+                }
+
+                tabWorkspace.TabPages.Add(page);
+            }
+
+            tabWorkspace.SelectedTab = page;
+        }
+
+        private void trvNavigation_BeforeSelect(object sender, TreeViewCancelEventArgs e)
+        {
+            // Prevent node selection by any other means than the user
+            if (e.Action != TreeViewAction.ByMouse && e.Action != TreeViewAction.ByKeyboard)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

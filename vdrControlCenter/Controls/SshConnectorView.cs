@@ -27,8 +27,8 @@
 
         private void PostInit()
         {
-            _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ConnectPng}");
-            _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.DisconnectPng}");
+            _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SshConnectPng}");
+            _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SshDisconnectPng}");
             btnConnect_Disconnect.Image = _connectPng;
         }
 

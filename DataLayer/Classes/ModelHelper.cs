@@ -16,13 +16,8 @@
                 using (vdrControlCenterContext context = new vdrControlCenterContext())
                 {
                     string p;
-                    Stations stations = context.Stations.FirstOrDefault(x => x.MachineName == Environment.MachineName);
-                    p = stations?.PathToChannelLogos;
-                    if (string.IsNullOrWhiteSpace(p))
-                    {
-                        SystemSettings systemSettings = context.SystemSettings.FirstOrDefault();
-                        p = systemSettings?.PathToChannelLogos;
-                    }
+                    SystemSettings systemSettings = context.SystemSettings.FirstOrDefault();
+                    p = systemSettings?.PathToChannelLogos;
 
                     if (!string.IsNullOrWhiteSpace(p) && Directory.Exists(p))
                         retval = p + (p.EndsWith("/") ? string.Empty : "/");

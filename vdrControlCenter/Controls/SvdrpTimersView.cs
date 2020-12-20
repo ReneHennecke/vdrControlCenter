@@ -156,7 +156,7 @@
 
                     await _context.Timers.AddRangeAsync(timerList.Timers);
 
-                    SystemSettings settings = _context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
+                    SystemSettings settings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
                     if (settings != null)
                     {
                         settings.LastUpdateTimers = DateTime.Now;

@@ -27,9 +27,19 @@ namespace vdrControlCenterUI.Classes
         public const string RedPng = "red-icon16x16.png";
         public const string GreenPng = "green-icon16x16.png";
 
+        // SystemSettingsView
+        public const string SystemSettingsNewPng = "new-file-icon16x16.png";
+        public const string SystemSettingsEditPng = "document-edit-icon24x24.png";
+        public const string SystemSettingsDelPng = "recycle-bin-icon16x16.png";
+        public const string SystemSettingsFindPng = "zoom-icon16x16.png";
+
+        // SshConnectorView
+        public const string SshConnectPng = "actions-network-connect-icon16x16.png";
+        public const string SshDisconnectPng = "actions-network-disconnect-icon16x16.png";
+
         // SvdrpConnector
-        public const string ConnectPng = "actions-network-connect-icon16x16.png";
-        public const string DisconnectPng = "actions-network-disconnect-icon16x16.png";
+        public const string SvdrpConnectPng = "actions-network-connect-icon16x16.png";
+        public const string SvdrpDisconnectPng = "actions-network-disconnect-icon16x16.png";
 
         // SvdrpChannelsView
         // Left
@@ -76,6 +86,11 @@ namespace vdrControlCenterUI.Classes
 
         // Allgemein
         public const string EmptyPng = "empty16x16.png";
+        public const string ExclamationPng = "exclamation-mark-icon16x16.png";
+
+        // Dialog
+        public const string DlgCancelPng = "cancel-icon16x16.png";
+        public const string DlgOkPng = "ok-icon16x16.png";
 
         public static ImageList LoadImageList(ImageListType type)
         {

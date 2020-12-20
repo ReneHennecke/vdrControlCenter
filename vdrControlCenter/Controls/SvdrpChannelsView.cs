@@ -12,6 +12,7 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Dialogs;
+    using vdrControlCenterUI.Enums;
 
     public partial class SvdrpChannelsView : UserControl
     {
@@ -193,11 +194,11 @@
                             _context.Entry(existingChannels).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     }
 
-                    SystemSettings settings = _context.SystemSettings.FirstOrDefault(e => e.MachineName == Environment.MachineName);
-                    if (settings != null)
+                    SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
+                    if (systemSettings != null)
                     {
-                        settings.LastUpdateChannels = DateTime.Now;
-                        _context.Entry(settings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        systemSettings.LastUpdateChannels = DateTime.Now;
+                        _context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     }
 
                     await _context.SaveChangesAsync();
@@ -230,7 +231,14 @@
             {
                 lblRequestInfo.Text = $"{systemSettings.LastUpdateChannels:dd.MM.yyyy HH:mm:ss}";
 
-                dgvChannels.DataSource = await _context.Channels.OrderBy(e => e.ChannelName).ToListAsync();
+                List<Channels> channelList = await _context.Channels.OrderBy(e => e.ChannelName).ToListAsync();
+
+                if (systemSettings.ChannelListType == (short)ChannelType.TV)
+                    channelList = channelList.Where(x => x.Vpid.Contains("=")).ToList();
+                else if (systemSettings.ChannelListType == (short)ChannelType.Radio)
+                    channelList = channelList.Where(x => x.Vpid.Contains("=")).ToList();
+
+                dgvChannels.DataSource = channelList;
             }
         }
 

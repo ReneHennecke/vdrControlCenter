@@ -2,7 +2,6 @@
 {
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
-    //using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -25,7 +24,11 @@
 
         private const int EPG_GUIDE_LINE_HEIGHT = 30;
 
-        public frmMain MainForm { get; set; }
+        private frmMain frmMain;
+        public frmMain MainForm
+        {
+            set { frmMain = value; }
+        }
 
         public bool EnableRequest
         {
@@ -39,12 +42,6 @@
                     timeLine.EnableRequest = _enableRequest;
                 }
             }
-        }
-
-        public bool InInit
-        {
-            get { return _init; }
-            set { _init = value; }
         }
 
         public EpgGuideLineController()
@@ -61,13 +58,15 @@
 
             //Disposed += OnDispose;
 
+
             _enableRequest = true;
 
             // Nur das Datum ist interessant
             _currentDateTime = DateTime.Now.Date;
             _lastChannelIndex = 0;
 
-            _context = new vdrControlCenterContext();
+            if (_context == null)
+                _context = new vdrControlCenterContext();
 
             LoadChannels();
         }
@@ -117,6 +116,9 @@
 
         private async void DrawTimeLines()
         {
+            if (_channelList == null)
+                return;
+
             panTimeLineControls.SuspendLayout();
             ClearTimeLineControls();
 
@@ -148,31 +150,29 @@
 
             List<Epg> epg;
 
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            for (int i = _lastChannelIndex; i < ende; i++)
             {
-                for (int i = _lastChannelIndex; i < ende; i++)
-                {
-                    long channelRecId = _channelList[i].RecId;
+                long channelRecId = _channelList[i].RecId;
 
-                    epg = await context.Epg.Where(x => x.ChannelRecId == channelRecId && x.StartTime >= dtStart && x.StartTime <= dtEnde)
-                                            .ToListAsync();
+                epg = await _context.Epg.Where(x => x.ChannelRecId == channelRecId && x.StartTime >= dtStart && x.StartTime <= dtEnde)
+                                        .ToListAsync();
 
-                    EpgGuideLine timeLine = new EpgGuideLine();
-                    timeLine.ChannelName = _channelList[i].ChannelName;
-                    timeLine.Location = new Point(2, y);
-                    timeLine.TabIndex = i;
-                    timeLine.EnableRequest = _enableRequest;
-                    timeLine.ChannelRecId = channelRecId;
-                    timeLine.TimerList = await context.Timers.Where(x => x.ChannelRecId == channelRecId).ToListAsync();
-                    timeLine.RecordingList = await context.Recordings.ToListAsync();
-                    timeLine.FoundList = _foundList;
-                    timeLine.EpgList = epg;
+                EpgGuideLine timeLine = new EpgGuideLine();
+                timeLine.ChannelName = _channelList[i].ChannelName;
+                timeLine.Location = new Point(2, y);
+                timeLine.TabIndex = i;
+                timeLine.EnableRequest = _enableRequest;
+                timeLine.ChannelRecId = channelRecId;
+                timeLine.TimerList = await _context.Timers.Where(x => x.ChannelRecId == channelRecId).ToListAsync();
+                timeLine.RecordingList = await _context.Recordings.ToListAsync();
+                timeLine.FoundList = _foundList;
+                timeLine.EpgList = epg;
 
-                    panTimeLineControls.Controls.Add(timeLine);
+                panTimeLineControls.Controls.Add(timeLine);
 
-                    y += timeLine.Size.Height + 2;
-                }
+                y += timeLine.Size.Height + 2;
             }
+
             btnDown.Enabled = _lastChannelIndex >= 0;
             btnUp.Enabled = _lastChannelIndex + _countTimeLines < _channelList.Count - 1;
 
@@ -181,17 +181,18 @@
             RefreshTimeLines();
         }
 
-        public async void LoadChannels()
+        private void LoadChannels()
         {
             CleanUp();
 
+            // Muss synchron sein, da sonst _channelLiost == null
             _channelList = _context.Channels.OrderBy(x => x.ChannelName).ToList();
 
-            SystemSettings systemSetting = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-            //if (systemSetting.ChannelListType == (short)DataLayer.Enums.ChannelType.Video)
-            //    _channelList = _channelList.Where(x => x.ChannelType == DataLayer.Enums.ChannelType.Video).ToList();
-            //else if (systemSetting.ChannelListType == (short)DataLayer.Enums.ChannelType.Audio)
-            //    _channelList = _channelList.Where(x => x.ChannelType == DataLayer.Enums.ChannelType.Audio).ToList();
+            SystemSettings systemSettings = _context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
+            if (systemSettings.ChannelListType == (short)Enums.ChannelType.TV)
+                _channelList = _channelList.Where(x => x.Vpid.Contains("=")).ToList();
+            else if (systemSettings.ChannelListType == (short)Enums.ChannelType.Radio)
+                _channelList = _channelList.Where(x => !x.Vpid.Contains("=")).ToList();
         }
 
         private void CalcCountTimeLines()
@@ -205,7 +206,7 @@
         {
             foreach (EpgGuideLine timeLine in panTimeLineControls.Controls)
             {
-            //    MainForm.AddMessage($"EPG-Daten von {timeLine.ChannelName}...");
+                frmMain.AddMessage($"EPG-Daten » {timeLine.ChannelName}");
                 await Task.Run(() => timeLine.DrawTimeLineEntries());
             }
         }

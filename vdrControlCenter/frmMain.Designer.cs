@@ -34,7 +34,7 @@
             this.trvNavigation = new System.Windows.Forms.TreeView();
             this.spcBottom = new System.Windows.Forms.SplitContainer();
             this.viewStations = new vdrControlCenterUI.Controls.StationsView();
-            this.mleMessages = new System.Windows.Forms.TextBox();
+            this.teMessages = new System.Windows.Forms.TextBox();
             this.tabWorkspace = new System.Windows.Forms.TabControl();
             ((System.ComponentModel.ISupportInitialize)(this.spcMain)).BeginInit();
             this.spcMain.Panel1.SuspendLayout();
@@ -95,7 +95,8 @@
             this.trvNavigation.ShowNodeToolTips = true;
             this.trvNavigation.Size = new System.Drawing.Size(250, 331);
             this.trvNavigation.TabIndex = 0;
-            this.trvNavigation.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvNavigation_AfterSelect);
+            this.trvNavigation.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.trvNavigation_BeforeSelect);
+            this.trvNavigation.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.trvNavigation_NodeMouseClick);
             // 
             // spcBottom
             // 
@@ -110,7 +111,7 @@
             // 
             // spcBottom.Panel2
             // 
-            this.spcBottom.Panel2.Controls.Add(this.mleMessages);
+            this.spcBottom.Panel2.Controls.Add(this.teMessages);
             this.spcBottom.Size = new System.Drawing.Size(250, 371);
             this.spcBottom.SplitterDistance = 200;
             this.spcBottom.TabIndex = 0;
@@ -125,16 +126,17 @@
             this.viewStations.Size = new System.Drawing.Size(250, 200);
             this.viewStations.TabIndex = 0;
             // 
-            // mleMessages
+            // teMessages
             // 
-            this.mleMessages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mleMessages.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.mleMessages.Location = new System.Drawing.Point(0, 0);
-            this.mleMessages.Multiline = true;
-            this.mleMessages.Name = "mleMessages";
-            this.mleMessages.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.mleMessages.Size = new System.Drawing.Size(250, 167);
-            this.mleMessages.TabIndex = 0;
+            this.teMessages.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.teMessages.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.teMessages.ForeColor = System.Drawing.Color.CadetBlue;
+            this.teMessages.Location = new System.Drawing.Point(0, 0);
+            this.teMessages.Multiline = true;
+            this.teMessages.Name = "teMessages";
+            this.teMessages.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.teMessages.Size = new System.Drawing.Size(250, 167);
+            this.teMessages.TabIndex = 0;
             // 
             // tabWorkspace
             // 
@@ -181,7 +183,7 @@
         private System.Windows.Forms.SplitContainer spcBottom;
         private System.Windows.Forms.TreeView trvNavigation;
         private System.Windows.Forms.TabControl tabWorkspace;
-        private System.Windows.Forms.TextBox mleMessages;
+        private System.Windows.Forms.TextBox teMessages;
         private Controls.StationsView viewStations;
     }
 }

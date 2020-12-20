@@ -27,8 +27,8 @@
 
         public void PostInit()
         {
-            _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ConnectPng}");
-            _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.DisconnectPng}");
+            _connectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SvdrpConnectPng}");
+            _disconnectPng = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SvdrpDisconnectPng}");
             btnConnect_Disconnect.Image = _connectPng;
         }
 

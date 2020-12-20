@@ -33,6 +33,6 @@ namespace DataLayer.Models
         public bool? Favourite { get; set; }
 
         public virtual ICollection<Epg> Epg { get; set; }
-        public virtual ICollection<Timers> Timers { get; set; }
+        public virtual ICollection<Timers> Timers { get; set; }       
     }
 }

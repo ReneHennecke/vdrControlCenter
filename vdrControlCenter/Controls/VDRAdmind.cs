@@ -32,7 +32,7 @@
             Controls.Add(_webBrowser);
 
             _context = new vdrControlCenterContext();
-            Stations stations = await _context.Stations.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName && e.VdradminPort > 0);
+            Stations stations = await _context.Stations.FirstOrDefaultAsync(e => e.VdradminPort > 0);
             if (stations != null)
             {
                 lblAddressValue.Text = $"http://{stations.HostAddress}:{stations.VdradminPort}";

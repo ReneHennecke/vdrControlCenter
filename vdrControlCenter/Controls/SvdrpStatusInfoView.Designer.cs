@@ -76,11 +76,11 @@
             // lblRequestInfo
             // 
             this.lblRequestInfo.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblRequestInfo.Location = new System.Drawing.Point(4, 94);
+            this.lblRequestInfo.Location = new System.Drawing.Point(4, 82);
             this.lblRequestInfo.Name = "lblRequestInfo";
-            this.lblRequestInfo.Size = new System.Drawing.Size(78, 16);
+            this.lblRequestInfo.Size = new System.Drawing.Size(78, 30);
             this.lblRequestInfo.TabIndex = 1;
-            this.lblRequestInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblRequestInfo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblGreen
             // 
@@ -151,12 +151,12 @@
             this.lblTotal.Text = "Gesamt:";
             this.lblTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // StatusInfoView
+            // SvdrpStatusInfoView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panBox);
-            this.Name = "StatusInfoView";
+            this.Name = "SvdrpStatusInfoView";
             this.Size = new System.Drawing.Size(175, 123);
             this.panBox.ResumeLayout(false);
             this.ResumeLayout(false);

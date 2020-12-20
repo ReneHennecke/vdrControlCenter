@@ -22,7 +22,6 @@
         public virtual DbSet<Channels> Channels { get; set; }
         public virtual DbSet<Epg> Epg { get; set; }
         public virtual DbSet<Recordings> Recordings { get; set; }
-        public virtual DbSet<StationTypes> StationTypes { get; set; }
         public virtual DbSet<Stations> Stations { get; set; }
         public virtual DbSet<StatusInfo> StatusInfo { get; set; }
         public virtual DbSet<SystemSettings> SystemSettings { get; set; }
@@ -176,13 +175,6 @@
                 entity.Property(e => e.Title).HasMaxLength(100);
             });
 
-            modelBuilder.Entity<StationTypes>(entity =>
-            {
-                entity.HasKey(e => e.RecId);
-
-                entity.Property(e => e.StationType).HasMaxLength(20);
-            });
-
             modelBuilder.Entity<Stations>(entity =>
             {
                 entity.HasKey(e => e.RecId);
@@ -233,13 +225,6 @@
                 entity.Property(e => e.VdradminUserName)
                     .HasColumnName("VDRAdminUserName")
                     .HasMaxLength(30);
-
-                entity.Property(e => e.PathToChannelLogos).HasMaxLength(255);
-
-                entity.HasOne(d => d.StationTypeNavigation)
-                    .WithMany(p => p.Stations)
-                    .HasForeignKey(d => d.StationType)
-                    .HasConstraintName("FK_Stations_StationTypes");
             });
 
             modelBuilder.Entity<StatusInfo>(entity =>

@@ -47,6 +47,12 @@
         public delegate void OnReceiveCallback(string data);
         public delegate void OnErrorCallback(SocketError error);
 
+        private frmMain frmMain;
+        public frmMain MainForm
+        {
+            set { frmMain = value; }
+        }
+
         public SvdrpController()
         {
             InitializeComponent();
@@ -135,7 +141,7 @@
             }
             else
             {
-                AddBuffer($"Verbunden : {id}{Environment.NewLine}");
+                AddBuffer($"Verbunden » {id}{Environment.NewLine}");
 
                 _svdrpConnectionInfo = new SvdrpConnectionInfo(id);
             }
@@ -150,7 +156,7 @@
             }
             else
             {
-                AddBuffer($"Getrennt : {id}{Environment.NewLine}");
+                AddBuffer($"Getrennt » {id}{Environment.NewLine}");
 
                 _svdrpConnectionInfo = new SvdrpConnectionInfo();
                 svdrpConnector.ShowConnection(_svdrpConnectionInfo);
@@ -258,16 +264,17 @@
                 Invoke(cb, new object[] { error });
             }
             else
-                AddBuffer($"Fehler : {error.ToString()}{Environment.NewLine}");
+                AddBuffer($"Fehler » {error.ToString()}{Environment.NewLine}");
         }
         #endregion 
 
         #region Connection
-        public void SendConnectRequest() //string hostAddress, int port)
+        public void SendConnectRequest()
         {
             if (_client.IsConnected)
                 return;
-            //MainForm.AddMessage($"CONNECT SVDRP.");
+
+           frmMain.AddMessage("CONNECT SVDRP");
 
             _svdrpRequest = SvdrpRequest.Connect;
             _svdrpBuffer.Clear();
@@ -279,7 +286,7 @@
             if (!_client.IsConnected)
                 return;
 
-            //MainForm.AddMessage($"DISCONNECT SVDRP.");
+           frmMain.AddMessage("DISCONNECT SVDRP");
 
             _svdrpRequest = SvdrpRequest.Disconnect;
             _svdrpBuffer.Clear();
@@ -295,7 +302,9 @@
                 return;
 
             RefreshRequestControls(false);
-            //MainForm.AddMessage($"GET StatusInfo.");
+
+            frmMain.AddMessage($"GET STATUSINFO");
+            
             _svdrpRequest = SvdrpRequest.GetStatusInfo;
             _svdrpBuffer.Clear();
             _client.SendAsync($"STAT disk{EOL}");
@@ -309,7 +318,8 @@
                 return;
 
             RefreshRequestControls(false);
-            //MainForm.AddMessage($"EPG Request.");
+
+            frmMain.AddMessage("GET CHANNELLIST");
 
             _svdrpRequest = SvdrpRequest.GetChannelList;
             _svdrpBuffer.Clear();
@@ -324,7 +334,8 @@
                 return;
 
             RefreshRequestControls(false);
-            //MainForm.AddMessage($"EPG Request.");
+
+            frmMain.AddMessage($"GET TIMERLIST");
 
             _svdrpRequest = SvdrpRequest.GetTimerList;
             _svdrpBuffer.Clear();
@@ -336,32 +347,31 @@
             if (!_client.IsConnected)
                 return;
 
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            foreach (long item in selectedItems)
             {
-                foreach (long item in selectedItems)
+                frmMain.AddMessage($"ADD TIMER » {item}");
+
+                Epg epg = await _context.Epg.FirstOrDefaultAsync(e => e.RecId == item);
+                if (epg != null)
                 {
-                    Epg epg = await context.Epg.FirstOrDefaultAsync(e => e.RecId == item);
-                    if (epg != null)
-                    {
-                        Channels channel = await context.Channels.FirstOrDefaultAsync(e => e.RecId == epg.ChannelRecId);
-                        if (channel == null || channel.Number == 0)
-                            continue;
+                    Channels channel = await _context.Channels.FirstOrDefaultAsync(e => e.RecId == epg.ChannelRecId);
+                    if (channel == null || channel.Number == 0)
+                        continue;
 
-                        DateTime dayOfMonth = epg.StartTime.Value;
+                    DateTime dayOfMonth = epg.StartTime.Value;
 
-                        string timer = "1:" +   // Aktiv
-                                       $"{channel.Number}:{dayOfMonth:yyyy-MM-dd}:" +
-                                       $"{epg.StartTime:HHmm}:" +
-                                       $"{epg.StartTime.Value.AddSeconds((double)epg.Duration):HHmm}:" +
-                                       "51:" +
-                                       "50:" +
-                                       $"{epg.Title}:";
+                    string timer = "1:" +   // Aktiv
+                                    $"{channel.Number}:{dayOfMonth:yyyy-MM-dd}:" +
+                                    $"{epg.StartTime:HHmm}:" +
+                                    $"{epg.StartTime.Value.AddSeconds((double)epg.Duration):HHmm}:" +
+                                    "51:" +
+                                    "50:" +
+                                    $"{epg.Title}:";
 
-                        _svdrpRequest = SvdrpRequest.AddTimer;
-                        _svdrpBuffer.Clear();
+                    _svdrpRequest = SvdrpRequest.AddTimer;
+                    _svdrpBuffer.Clear();
 
-                        _client.SendAsync($"NEWT {timer}{EOL}");
-                    }
+                    _client.SendAsync($"NEWT {timer}{EOL}");
                 }
             }
         }
@@ -374,8 +384,9 @@
                 return;
 
             RefreshRequestControls(false);
-            //MainForm.AddMessage($"EPG Request.");
 
+            frmMain.AddMessage($"GET RECORDINGS");
+            
             _svdrpRequest = SvdrpRequest.GetRecordings;
             _svdrpBuffer.Clear();
             _client.SendAsync($"LSTR{EOL}");
@@ -389,8 +400,9 @@
                 return;
 
             RefreshRequestControls(false);
-            //MainForm.AddMessage($"EPG Request.");
 
+            frmMain.AddMessage($"GET EPG");
+            
             _svdrpRequest = SvdrpRequest.GetEPGList;
             _svdrpBuffer.Clear();
             _client.SendAsync($"LSTE{EOL}");
