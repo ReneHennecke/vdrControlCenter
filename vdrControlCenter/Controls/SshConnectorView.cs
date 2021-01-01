@@ -4,7 +4,9 @@
     using Microsoft.EntityFrameworkCore;
     using Renci.SshNet;
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
@@ -47,9 +49,13 @@
             if (_context == null)
                 _context = new vdrControlCenterContext();
 
-            Stations station = await _context.Stations.FirstOrDefaultAsync(station => station.Sshport > 0);
-            if (station != null)
-                lblSshAddressValue.Text = $"ssh://{station.HostAddress}:{station.Sshport}";
+            List<Stations> stations = await _context.Stations
+                                                        .Where(station => station.Sshport > 0 && !string.IsNullOrWhiteSpace(station.SshuserName))
+                                                        .OrderBy(stations => stations.HostAddress)
+                                                        .ToListAsync();
+            cmbSshAddressValue.DataSource = stations;
+            cmbSshAddressValue.DisplayMember = 
+            cmbSshAddressValue.ValueMember = "RecId";
         }
 
         public void ShowConnection(SshClient sshClient)
@@ -66,6 +72,18 @@
                 btnConnect_Disconnect.Text = _connect;
                 btnConnect_Disconnect.Image = _disconnectPng;
             }
+        }
+
+        private void cmbSshAddressValue_Format(object sender, ListControlConvertEventArgs e)
+        {
+            Stations stations = (Stations)e.ListItem;
+            e.Value = $"ssh://{stations.HostAddress}:{stations.Sshport}";
+        }
+
+        public Stations GetSshValue()
+        {
+            Stations stations = (Stations)cmbSshAddressValue.SelectedItem;
+            return stations;
         }
     }
 }

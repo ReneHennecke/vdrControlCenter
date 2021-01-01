@@ -142,8 +142,8 @@
 
             try
             {
-
-                Stations stations = await _context.Stations.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName && x.StationType == 2 && x.Sshport > 0);
+                await Task.Delay(150);
+                Stations stations = sshConnector.GetSshValue();
                 if (stations != null)
                 {
                     ConnectionInfo connectionInfo = new ConnectionInfo(stations.HostAddress,

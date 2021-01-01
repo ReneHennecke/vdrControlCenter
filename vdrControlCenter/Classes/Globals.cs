@@ -79,11 +79,15 @@ namespace vdrControlCenterUI.Classes
         // SvdrpStatusInfoView
         public const string SsivRequestPng = "get-list-icon16x16.png";
 
-        // dlgFindEPG
+        // dlgFindEpg
         public const string Find_FindPng = "zoom-icon16x16.png";
         public const string Find_OkPng = "actions-mail-mark-task-icon16x16.png";
         public const string Find_TimerPng = "clock-icon16x16.png";
         public const string Find_CancelPng = "cancel-icon16x16.png";
+
+        // dlgEpg
+        public const string Epg_TimerPng = "clock-icon16x16.png";
+        public const string Epg_CancelPng = "cancel-icon16x16.png";
 
         // Allgemein
         public const string EmptyPng = "empty16x16.png";
