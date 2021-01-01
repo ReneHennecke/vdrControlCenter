@@ -220,6 +220,7 @@
         private void btnFind_Click(object sender, EventArgs e)
         {
             dlgFindEPG dlg = new dlgFindEPG();
+            dlg.FoundList = _foundList;
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 _foundList = dlg.FoundList;

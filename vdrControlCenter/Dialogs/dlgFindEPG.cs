@@ -15,6 +15,7 @@ namespace vdrControlCenterUI.Dialogs
         
         private ImageList _imageList;
         private List<long> _selectedItems;
+        private List<Epg> _foundList;
 
         public List<long> SelectedItems
         {
@@ -29,19 +30,27 @@ namespace vdrControlCenterUI.Dialogs
 
                 foreach (DataGridViewRow row in dgvFind.Rows)
                 {
-                    long recId = (long)row.Cells["RecId"].Value;
-                    string channelName = (string)row.Cells["ChannelName"].Value;
-                    if (!string.IsNullOrWhiteSpace(channelName))
+                    if ((int)row.Cells["SymbolIndex"].Value == ENTRY_SELECTED)
                     {
-                        Epg epg = new Epg()
-                        { 
-                            RecId = recId
-                        };
-                        epgs.Add(epg);
+                        long recId = (long)row.Cells["RecId"].Value;
+                        string channelName = (string)row.Cells["ChannelName"].Value;
+                        if (!string.IsNullOrWhiteSpace(channelName))
+                        {
+                            Epg epg = new Epg()
+                            {
+                                RecId = recId
+                            };
+                            epgs.Add(epg);
+                        }
                     }
                 }
 
                 return epgs;
+            }
+            set
+            {
+                _foundList = value;
+                PreSelect();
             }
         }
 
@@ -59,7 +68,6 @@ namespace vdrControlCenterUI.Dialogs
             dgvFind.AllowUserToResizeRows = false;
 
             _imageList = Globals.LoadImageList(Enums.ImageListType.SvdrpEpgView);
-
 
             DataGridViewCellStyle headerStyle = new DataGridViewCellStyle()
             {
@@ -152,6 +160,7 @@ namespace vdrControlCenterUI.Dialogs
             dgvFind.Columns.Add(textColumn);
 
             btnFind.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_FindPng}");
+            btnOK.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_OkPng}");
             btnTimer.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_TimerPng}");
             btnCancel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_CancelPng}");
 
@@ -172,6 +181,7 @@ namespace vdrControlCenterUI.Dialogs
                                                          chbTimers.Checked,
                                                          chbRecordings.Checked,
                                                          chbFindInPast.Checked);
+                PreSelect();
             }
         }
 
@@ -262,6 +272,24 @@ namespace vdrControlCenterUI.Dialogs
         private void btnOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+        private void PreSelect()
+        {
+            if (_foundList == null)
+                return;
+
+            foreach (DataGridViewRow row in dgvFind.Rows)
+            {
+                if ((int)row.Cells["SymbolIndex"].Value == ENTRY_UNSELECTED)
+                {
+                    long recId = (long)row.Cells["RecId"].Value;
+                    if (_foundList.Exists(x => x.RecId == recId))
+                    {
+                        row.Cells["SymbolIndex"].Value = ENTRY_SELECTED;
+                    }
+                }
+            }
         }
     }
 }

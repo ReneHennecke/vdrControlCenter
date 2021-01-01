@@ -4,6 +4,7 @@
     using System;
     using System.Drawing;
     using System.Windows.Forms;
+    using vdrControlCenterUI.Dialogs;
 
     public partial class EpgGuideLineEntry : UserControl
     {
@@ -259,12 +260,12 @@
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    //dlgEPG dlg = new dlgEPG();
-                    //dlg.PostInit(_epg);
-                    //if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    //{
+                    dlgEpg dlg = new dlgEpg();
+                    dlg.PostInit(_epg);
+                    if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
 
-                    //}
+                    }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {

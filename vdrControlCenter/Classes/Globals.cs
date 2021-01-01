@@ -81,6 +81,7 @@ namespace vdrControlCenterUI.Classes
 
         // dlgFindEPG
         public const string Find_FindPng = "zoom-icon16x16.png";
+        public const string Find_OkPng = "actions-mail-mark-task-icon16x16.png";
         public const string Find_TimerPng = "clock-icon16x16.png";
         public const string Find_CancelPng = "cancel-icon16x16.png";
 

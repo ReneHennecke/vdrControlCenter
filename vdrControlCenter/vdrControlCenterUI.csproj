@@ -59,6 +59,9 @@
     <None Update="Images\actions-edit-cut-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Images\actions-mail-mark-task-icon16x16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Images\actions-media-record-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

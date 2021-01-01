@@ -99,13 +99,13 @@
             // 
             this.btnFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFind.Enabled = false;
-            this.btnFind.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFind.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnFind.Location = new System.Drawing.Point(783, 28);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(103, 96);
+            this.btnFind.Size = new System.Drawing.Size(103, 50);
             this.btnFind.TabIndex = 10;
-            this.btnFind.Text = "Suchen";
-            this.btnFind.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnFind.Text = "Suche starten";
+            this.btnFind.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
             // 
@@ -244,11 +244,13 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(750, 462);
+            this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnOK.Location = new System.Drawing.Point(852, 456);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(82, 26);
+            this.btnOK.Size = new System.Drawing.Size(94, 23);
             this.btnOK.TabIndex = 3;
             this.btnOK.Text = "Markieren";
+            this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
