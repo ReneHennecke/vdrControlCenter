@@ -181,6 +181,8 @@ namespace vdrControlCenterUI.Dialogs
                                                          chbTimers.Checked,
                                                          chbRecordings.Checked,
                                                          chbFindInPast.Checked);
+
+                lblNotFound.Visible = (dgvFind.Rows.Count == 0);
                 PreSelect();
             }
         }

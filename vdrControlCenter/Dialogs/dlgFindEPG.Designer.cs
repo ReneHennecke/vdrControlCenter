@@ -46,6 +46,7 @@
             this.btnTimer = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.lblNotFound = new System.Windows.Forms.Label();
             this.panEPGFind.SuspendLayout();
             this.grbBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFind)).BeginInit();
@@ -57,6 +58,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panEPGFind.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panEPGFind.Controls.Add(this.lblNotFound);
             this.panEPGFind.Controls.Add(this.grbBox);
             this.panEPGFind.Controls.Add(this.dgvFind);
             this.panEPGFind.Controls.Add(this.tbFind);
@@ -100,7 +102,7 @@
             this.btnFind.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFind.Enabled = false;
             this.btnFind.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnFind.Location = new System.Drawing.Point(783, 28);
+            this.btnFind.Location = new System.Drawing.Point(458, 30);
             this.btnFind.Name = "btnFind";
             this.btnFind.Size = new System.Drawing.Size(103, 50);
             this.btnFind.TabIndex = 10;
@@ -254,6 +256,16 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // lblNotFound
+            // 
+            this.lblNotFound.BackColor = System.Drawing.Color.Transparent;
+            this.lblNotFound.Location = new System.Drawing.Point(400, 294);
+            this.lblNotFound.Name = "lblNotFound";
+            this.lblNotFound.Size = new System.Drawing.Size(424, 23);
+            this.lblNotFound.TabIndex = 11;
+            this.lblNotFound.Text = "Es wurden keine Einträge mit den angegebenen Suchkritierien gefunden.";
+            this.lblNotFound.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // dlgFindEPG
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -296,5 +308,6 @@
         private System.Windows.Forms.DateTimePicker dtpStartTime;
         private System.Windows.Forms.Label lblStartTime;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Label lblNotFound;
     }
 }
