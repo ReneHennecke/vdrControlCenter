@@ -69,10 +69,10 @@
             string json = await PostData(action, request);
 
             var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-            if (response != null)
-            {
-                teResponse.Text += response.FileSystemEntry.FullPath + "\r\n";
-            }
+            //if (response != null)
+            //{
+            //    teResponse.Text += response.FileSystemEntry.FullPath + "\r\n";
+            //}
         }
 
         private async Task<string> PostData(string action, object json)
