@@ -2,13 +2,10 @@
 {
     using Newtonsoft.Json;
     using System;
-    using System.IO;
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlService.Models;
-    using vdrControlService.Models.Requests;
-    using vdrControlService.Models.Responses;
 
     public partial class ServiceController : UserControl
     {
@@ -43,8 +40,8 @@
         {
             _httpClient = new HttpClient();
 
-            //serviceConnector.LoadData(this);
-            _url = "https://localhost:5001/api/";
+            serviceConnector.LoadData(this);
+            //_url = "https://localhost:5001/api/";
         }
 
         private async void tmConnector_Tick(object sender, System.EventArgs e)
@@ -71,10 +68,10 @@
             
             string json = await PostData(action, request);
 
-            var response = JsonConvert.DeserializeObject<DirectoryInfo>(json);
+            var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
             if (response != null)
             {
-                //teResponse.Text += response.DirEntryInfoResult.DirEntryInfo.FullName + "\r\n";
+                teResponse.Text += response.FileSystemEntry.FullPath + "\r\n";
             }
         }
 
@@ -109,10 +106,10 @@
 
             string json = await PostData(action, request);
 
-            var response = JsonConvert.DeserializeObject<CurrentDirectoryResponse>(json);
-            if (response != null)
+            //var response = JsonConvert.DeserializeObject<CurrentDirectoryResponse>(json);
+            //if (response != null)
             {
-                teResponse.Text += response.DirEntryInfoResult.DirEntryInfo.FullName + "\r\n";
+              //  teResponse.Text += response.DirEntryInfoResult.DirEntryInfo.FullName + "\r\n";
             }
         }
     }

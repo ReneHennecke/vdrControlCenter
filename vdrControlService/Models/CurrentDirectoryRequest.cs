@@ -1,9 +1,9 @@
-﻿namespace vdrControlService.Models.Requests
+﻿namespace vdrControlService.Models
 {
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class DirEntriesInfoRequest : ApiRequest
+    public class CurrentDirectoryRequest : ApiRequest
     {
         [DataMember]
         public string FullPath { get; set; }

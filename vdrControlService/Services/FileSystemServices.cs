@@ -4,8 +4,7 @@
     using System.IO;
     using vdrControlService.Interface;
     using vdrControlService.Models;
-    using vdrControlService.Models.Responses;
-
+    
     public class FileSystemService : IFileSystemService
     {
         public DirEntryInfoResult GetCurrentDirectory()

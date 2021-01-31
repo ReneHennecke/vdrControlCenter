@@ -1,8 +1,7 @@
-﻿namespace vdrControlService.Models.Responses
+﻿namespace vdrControlService.Models
 {
     using System;
     using System.Runtime.Serialization;
-    using vdrControlService.Model;
 
     [DataContract]
     public class ApiResponse
@@ -31,7 +30,5 @@
             _responseId = Guid.NewGuid();
             _errorResult = ErrorResult.CreateSuccess();
         }
-
-        public string Test { get; set; }
     }
 }

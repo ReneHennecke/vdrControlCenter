@@ -1,4 +1,4 @@
-﻿namespace vdrControlService.Models.Requests
+﻿namespace vdrControlService.Models
 {
     using System;
     using System.Runtime.Serialization;

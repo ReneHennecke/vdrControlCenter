@@ -1,8 +1,7 @@
 ﻿namespace vdrControlService.Models
 {
     using System.Runtime.Serialization;
-    using vdrControlService.Model;
-
+    
     [DataContract]
     public class InfoResult
     {

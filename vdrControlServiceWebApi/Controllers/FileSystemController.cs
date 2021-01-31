@@ -10,11 +10,7 @@ namespace vdrControlServiceWebAPI.Controllers
     using System.IO;
     using System.Reflection;
     using System.Threading.Tasks;
-    using vdrControlService;
-    using vdrControlService.Model;
     using vdrControlService.Models;
-    using vdrControlService.Models.Requests;
-    using vdrControlService.Models.Responses;
     using vdrControlService.Services;
 
     [Route("api/[controller]/[action]")]
@@ -50,9 +46,10 @@ namespace vdrControlServiceWebAPI.Controllers
             _logger.LogInformation("Disposing...");
         }
 
+
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult GetCurrentDirectory(CurrentDirectoryRequest request)
+        public async Task<ActionResult> GetCurrentDirectory(CurrentDirectoryRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Fehlerhafte Parameter.");
@@ -60,110 +57,102 @@ namespace vdrControlServiceWebAPI.Controllers
             MethodBase m = MethodBase.GetCurrentMethod();
             CreateRequestLogInfo(m, request);
 
-            //ApiResponse response = new ApiResponse()
-            //{
-            //    RequestId = request.RequestId
-            //};
-
-            //DirEntryInfoResult result = await Task.Run(() =>
-            //{
-            //    return _service.GetCurrentDirectory();
-            //});
-
-
-            //response.
-            //if (result == null)
-            //    return BadRequest(response);
-
-            //result.DirEntryInfo.FullName = result.DirEntryInfo.FullName.Replace("*", string.Empty);
-            //response.DirEntryInfoResult = result;
-
-
-
-            // CreateResponseLogInfo(m, response);
-
-            Arschloch a = new Arschloch();
-            a.FileSystemInfo = new DirectoryInfo("D:\\temp");
-
-            return Ok(a);
-        }
-
-        [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult SetCurrentDirectory(CurrentDirectoryRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest("Fehlerhafte Parameter.");
-
-            MethodBase m = MethodBase.GetCurrentMethod();
-            CreateRequestLogInfo(m, request);
-
-            CurrentDirectoryResponse response = new CurrentDirectoryResponse()
+            FileSystemResponse response = new FileSystemResponse()
             {
                 RequestId = request.RequestId
             };
 
+            FileSystemEntry result = await Task.Run(() =>
+            {
+                return new FileSystemEntry(Directory.GetCurrentDirectory());
+            });
 
-            //var result = await Task.Run(() =>
-            //{
-            //    return _service.SetCurrentDirectory(request.FullPath);
-            //});
-            //if (result == null)
-              //  return BadRequest(response);
+            if (result == null)
+                return BadRequest(response);
 
-            //result.DirEntryInfo.FullName = result.DirEntryInfo.FullName.Replace("*", string.Empty);
-            //response.DirEntryInfoResult = result;
-
+            response.FileSystemEntry = result;
+          
             CreateResponseLogInfo(m, response);
 
             return Ok(response);
         }
 
-        [HttpPost()]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Produces("application/json")]
-        public async Task<ActionResult> GetDirEntriesInfo(DirEntriesInfoRequest request)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest("Fehlerhafte Parameter.");
+        //[HttpPost()]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public ActionResult SetCurrentDirectory(CurrentDirectoryRequest request)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest("Fehlerhafte Parameter.");
 
-            MethodBase m = MethodBase.GetCurrentMethod();
-            CreateRequestLogInfo(m, request);
+        //    MethodBase m = MethodBase.GetCurrentMethod();
+        //    CreateRequestLogInfo(m, request);
 
-            ApiResponse response = new ApiResponse()
-            {
-                RequestId = request.RequestId
-            };
-
-            if (string.IsNullOrWhiteSpace(request.FullPath))
-                request.FullPath = Directory.GetCurrentDirectory();
+        //    CurrentDirectoryResponse response = new CurrentDirectoryResponse()
+        //    {
+        //        RequestId = request.RequestId
+        //    };
 
 
-            if (string.IsNullOrWhiteSpace(request.FullPath))
-            {
-                response.ErrorResult.ErrorCode = vdrControlService.Enums.ErrorResultCode.CurrentDirectoryError;
-                return BadRequest(response);
-            }
+        //    //var result = await Task.Run(() =>
+        //    //{
+        //    //    return _service.SetCurrentDirectory(request.FullPath);
+        //    //});
+        //    //if (result == null)
+        //      //  return BadRequest(response);
 
-            if (!Directory.Exists(request.FullPath))
-            {
-                response.ErrorResult.ErrorCode = vdrControlService.Enums.ErrorResultCode.CurrentDirectoryError;
-                return BadRequest(response);
-            }
+        //    //result.DirEntryInfo.FullName = result.DirEntryInfo.FullName.Replace("*", string.Empty);
+        //    //response.DirEntryInfoResult = result;
+
+        //    CreateResponseLogInfo(m, response);
+
+        //    return Ok(response);
+        //}
+
+        //[HttpPost()]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[Produces("application/json")]
+        //public async Task<ActionResult> GetDirEntriesInfo(DirEntriesInfoRequest request)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest("Fehlerhafte Parameter.");
+
+        //    MethodBase m = MethodBase.GetCurrentMethod();
+        //    CreateRequestLogInfo(m, request);
+
+        //    ApiResponse response = new ApiResponse()
+        //    {
+        //        RequestId = request.RequestId
+        //    };
+
+        //    if (string.IsNullOrWhiteSpace(request.FullPath))
+        //        request.FullPath = Directory.GetCurrentDirectory();
 
 
-            var result = await Task.Run(() =>
-            {
-                return _service.GetDirEntriesInfo(request.FullPath);
-            });
-            if (result == null)
-                return BadRequest(response);
+        //    if (string.IsNullOrWhiteSpace(request.FullPath))
+        //    {
+        //        response.ErrorResult.ErrorCode = vdrControlService.Enums.ErrorResultCode.CurrentDirectoryError;
+        //        return BadRequest(response);
+        //    }
+
+        //    if (!Directory.Exists(request.FullPath))
+        //    {
+        //        response.ErrorResult.ErrorCode = vdrControlService.Enums.ErrorResultCode.CurrentDirectoryError;
+        //        return BadRequest(response);
+        //    }
 
 
-            ////response.Response = result;
+        //    var result = await Task.Run(() =>
+        //    {
+        //        return _service.GetDirEntriesInfo(request.FullPath);
+        //    });
+        //    if (result == null)
+        //        return BadRequest(response);
 
-            return Ok(response);
-        }
+
+        //    ////response.Response = result;
+
+        //    return Ok(response);
+        //}
 
         private void CreateLogInfo(MethodBase m, string message)
         {
