@@ -31,6 +31,13 @@
 
         public DirEntryInfo(string fullPath)
         {
+            if (OperatingSystem.IsLinux())
+            {
+                fullPath = fullPath.Replace("\\", "/");
+                if (fullPath.Contains(":"))
+                    fullPath = fullPath.Substring(fullPath.IndexOf(":"));
+            }
+
             _fullPath = fullPath;
             _isDirectory = File.GetAttributes(_fullPath).HasFlag(FileAttributes.Directory);
 
@@ -43,6 +50,8 @@
                 _directoryInfo = new DirectoryInfo(_fullPath);
             else
                 _fileInfo = new FileInfo(_fullPath);
+
+           
         }
 
         [DataMember]

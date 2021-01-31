@@ -24,6 +24,7 @@
                     continue;
 
                 string resp = row.Substring(4);
+                resp = resp.Remove(resp.Length - 1);
                 if (resp.Length > 0)
                 {
                     int j;
@@ -56,6 +57,7 @@
                     channel.Rid = prms[12];
                     channel.Params = resp;
                     channel.ChannelId = $"{channel.SignalSource}-{channel.Nid}-{channel.Tid}-{channel.Sid}";
+                    channel.Favourite = false;
                     channel.Modtime = DateTime.Now;
 
                     Channels.Add(channel);

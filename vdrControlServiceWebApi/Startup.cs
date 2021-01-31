@@ -30,28 +30,11 @@ namespace vdrControlServiceWebAPI
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "vdrControlServiceWebAPI", Version = "v1" });
             //});
             //services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
+
+            // Kestrel Konfiguration laden
             services.Configure<KestrelServerOptions>(serverOptions =>
             {
-                serverOptions.Limits.MaxConcurrentConnections = 100;
-                serverOptions.Limits.MaxConcurrentUpgradedConnections = 100;
-                serverOptions.Limits.MaxRequestBodySize = 10 * 1024;
-                serverOptions.Limits.MinRequestBodyDataRate =
-                    new MinDataRate(bytesPerSecond: 100,
-                        gracePeriod: TimeSpan.FromSeconds(10));
-                serverOptions.Limits.MinResponseDataRate =
-                    new MinDataRate(bytesPerSecond: 100,
-                        gracePeriod: TimeSpan.FromSeconds(10));
-                serverOptions.Listen(IPAddress.Loopback, 8002);
-                //serverOptions.Listen(IPAddress.Loopback, 5001,
-                //    listenOptions =>
-                //    {
-                //        listenOptions.UseHttps("testCert.pfx",
-                //            "testPassword");
-                //    });
-                serverOptions.Limits.KeepAliveTimeout =
-                    TimeSpan.FromMinutes(2);
-                serverOptions.Limits.RequestHeadersTimeout =
-                    TimeSpan.FromMinutes(1);
+                services.Configure<KestrelServerOptions>(Configuration.GetSection("Kestrel"));
             });
 
         }
@@ -59,6 +42,14 @@ namespace vdrControlServiceWebAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            //});
+
+            //app.UseAuthentication();
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

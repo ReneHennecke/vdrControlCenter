@@ -221,6 +221,10 @@
                     case Navigation.Service:
                         page.Text = "VDR-Service";
                         page.ImageIndex = (int)Navigation.Service;
+                        ServiceController serviceControllerView = new ServiceController();
+                        serviceControllerView.MainForm = this;
+                        serviceControllerView.Dock = DockStyle.Fill;
+                        page.Controls.Add(serviceControllerView);
                         break;
                     case Navigation.VDRAdmin:
                         page.Text = "VDR-Admin";

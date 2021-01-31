@@ -5,6 +5,8 @@ namespace vdrControlServiceWebAPI
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
     using System;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Server.Kestrel.Core;
 
     public class Program
     {
@@ -34,13 +36,14 @@ namespace vdrControlServiceWebAPI
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             var host = Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+                .ConfigureServices((context, services) =>
                 {
-                    webBuilder.ConfigureKestrel(serverOptions =>
-                    {
-
-                    })
-                    .UseStartup<Startup>();
+                    // Kestrel Konfiguration beim Erstellen des Hosts
+                    services.Configure<KestrelServerOptions>(context.Configuration.GetSection("Kestrel"));
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {     
+                    webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureLogging(logging =>
                 {
@@ -49,7 +52,7 @@ namespace vdrControlServiceWebAPI
                 })
                 .UseNLog();
 
-            //host.UseSystemd();
+            host.UseSystemd();
             //host.UseWindowsService();
 
             return host;

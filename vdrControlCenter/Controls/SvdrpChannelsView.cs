@@ -156,42 +156,53 @@
                 try
                 {
                     List<Channels> existingChannels = await _context.Channels.ToListAsync();
+                    List<Channels> removeChannels = new List<Channels>();
+                    foreach (var c in _context.Channels)
+                    {
+                        if (!channelList.Channels.Exists(x => x.ChannelId == c.ChannelId))
+                            removeChannels.Add(c);
+                    }
+
+                    _context.Channels.RemoveRange(removeChannels);
 
                     foreach (Channels channel in channelList.Channels)
                     {
-                        bool found = false;
-                        Channels entry = existingChannels.Find(delegate(Channels f)
+                        
+                        Channels channelEntry = existingChannels.Find(delegate(Channels f)
                         {
                             return f.ChannelId == channel.ChannelId;
                         });
 
-                        found = (entry != null);
+                        bool found = (channelEntry != null);
                         if (!found)
-                            entry = new Channels();
+                            channelEntry = new Channels();
 
-                        entry.Apid = channel.Apid;
-                        entry.Caid = channel.Caid;
-                        entry.ChannelId = channel.ChannelId;
-                        entry.ChannelName = channel.ChannelName;
-                        entry.Favourite = channel.Favourite;
-                        entry.Frequency = channel.Frequency;
-                        entry.Nid = channel.Nid;
-                        entry.Number = channel.Number;
-                        entry.Parameter = channel.Parameter;
-                        entry.Params = channel.Params;
-                        entry.ProviderName = channel.ProviderName;
-                        entry.Sid = channel.Sid;
-                        entry.SignalSource = channel.SignalSource;
-                        entry.SymbolRate = channel.SymbolRate;
-                        entry.Rid = channel.Rid;
-                        entry.Tid = channel.Tid;
-                        entry.Tpid = channel.Tpid;
-                        entry.Vpid = channel.Vpid;
+                        channelEntry.Apid = channel.Apid;
+                        channelEntry.Caid = channel.Caid;
+                        channelEntry.ChannelId = channel.ChannelId;
+                        channelEntry.ChannelName = channel.ChannelName;
+                        channelEntry.Favourite = found ? channel.Favourite : false;
+                        channelEntry.Frequency = channel.Frequency;
+                        channelEntry.Nid = channel.Nid;
+                        channelEntry.Number = channel.Number;
+                        channelEntry.Parameter = channel.Parameter;
+                        channelEntry.Params = channel.Params;
+                        channelEntry.ProviderName = channel.ProviderName;
+                        channelEntry.Sid = channel.Sid;
+                        channelEntry.SignalSource = channel.SignalSource;
+                        channelEntry.SymbolRate = channel.SymbolRate;
+                        channelEntry.Rid = channel.Rid;
+                        channelEntry.Tid = channel.Tid;
+                        channelEntry.Tpid = channel.Tpid;
+                        channelEntry.Vpid = channel.Vpid;
 
                         if (!found)
-                            _context.Channels.Add(entry);
+                            _context.Channels.Add(channelEntry);
                         else
-                            _context.Entry(existingChannels).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        {
+                            _context.Channels.Attach(channelEntry);
+                            _context.Entry(channelEntry).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                        }
                     }
 
                     SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
@@ -206,7 +217,7 @@
 
                     reload = true;
                 }
-                catch 
+                catch //(Exception ex)
                 {
                     await transaction.RollbackAsync();
                 }
@@ -236,7 +247,7 @@
                 if (systemSettings.ChannelListType == (short)ChannelType.TV)
                     channelList = channelList.Where(x => x.Vpid.Contains("=")).ToList();
                 else if (systemSettings.ChannelListType == (short)ChannelType.Radio)
-                    channelList = channelList.Where(x => x.Vpid.Contains("=")).ToList();
+                    channelList = channelList.Where(x => !x.Vpid.Contains("=")).ToList();
 
                 dgvChannels.DataSource = channelList;
             }
@@ -278,12 +289,19 @@
                         string svg = $"{Globals.LogoFolder}{name}.svg";
                         if (File.Exists(svg))
                         {
-                            SvgDocument svgDocument = SvgDocument.Open(svg);
-                            if (svg != null)
+                            try
                             {
-                                Bitmap img = svgDocument.Draw(20, 15);
-                                if (img != null)
-                                    e.Graphics.DrawImage(img, point);
+                                SvgDocument svgDocument = SvgDocument.Open(svg);
+                                if (svg != null)
+                                {
+                                    Bitmap img = svgDocument.Draw(20, 15);
+                                    if (img != null)
+                                        e.Graphics.DrawImage(img, point);
+                                }
+                            }
+                            catch
+                            {
+
                             }
                         }
                     }
@@ -298,6 +316,40 @@
         {
             if (e.Value == null)
                 return;
+        }
+
+        private async void dgvChannels_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            int i = e.ColumnIndex;
+            int y = dgvChannels.Columns["DisplayFavourite"].Index;
+
+            if (e.RowIndex > -1 && e.ColumnIndex == dgvChannels.Columns["DisplayFavourite"].Index)
+            {
+                long recId = (long)dgvChannels.Rows[e.RowIndex].Cells["RecId"].Value;
+                Channels channels = await _context.Channels.FirstOrDefaultAsync(x => x.RecId == recId);
+                if (channels != null)
+                {
+                    bool b = !(bool)dgvChannels.Rows[e.RowIndex].Cells["Favourite"].Value;
+                    using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            dgvChannels.Rows[e.RowIndex].Cells["Favourite"].Value = b;
+
+                            channels.Favourite = b;
+                            _context.Channels.Attach(channels);
+                            _context.Entry(channels).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        catch //(Exception ex)
+                        {
+                            await transaction.RollbackAsync();
+                        }
+                    }
+                }
+            }
         }
     }
 }

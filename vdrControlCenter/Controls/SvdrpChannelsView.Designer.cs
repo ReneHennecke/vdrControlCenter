@@ -85,6 +85,7 @@
             this.dgvChannels.TabIndex = 0;
             this.dgvChannels.Text = "dataGridView1";
             this.dgvChannels.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvChannels_CellFormatting);
+            this.dgvChannels.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvChannels_CellMouseDoubleClick);
             this.dgvChannels.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvChannels_CellPainting);
             // 
             // btnRequest
@@ -127,12 +128,12 @@
             this.btnNew.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnNew.UseVisualStyleBackColor = true;
             // 
-            // ChannelsView
+            // SvdrpChannelsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panBox);
-            this.Name = "ChannelsView";
+            this.Name = "SvdrpChannelsView";
             this.Size = new System.Drawing.Size(486, 252);
             this.panBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvChannels)).EndInit();
