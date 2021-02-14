@@ -7,69 +7,46 @@
     
     public class FileSystemService : IFileSystemService
     {
-        public DirEntryInfoResult GetCurrentDirectory()
+        public FileSystemEntry GetDirectory(FileSystemEntryRequest request)
         {
-            DirEntryInfoResult result = new DirEntryInfoResult();
+            FileSystemEntry result = new FileSystemEntry();
 
             try
             {
-                result.DirEntryInfo = new DirEntryInfo(Directory.GetCurrentDirectory());
+                string fullPath = request.FullPath;
+                if (string.IsNullOrWhiteSpace(fullPath))
+                    fullPath = Directory.GetCurrentDirectory();
+
+                result.ReInit(fullPath);
             }
             catch (Exception ex)
             {
-                result.ErrorResult.ErrorCode = Enums.ErrorResultCode.CurrentDirectoryError;
-                result.ErrorResult.ErrorException = ex;
+                result.Exception = ex;
             }
 
             return result;
         }
 
-        public DirEntriesInfo GetDirEntriesInfo()
+        public FileSystemEntry SetDirectory(FileSystemEntryRequest request)
         {
-            return GetDirEntriesInfo(Environment.CurrentDirectory);
-        }
+            FileSystemEntry result = new FileSystemEntry();
 
-        public DirEntriesInfo GetDirEntriesInfo(string path)
-        {
-            return GetDirEntriesInfo(path, "*", SearchOption.TopDirectoryOnly);
-        }
-
-        public DirEntriesInfo GetDirEntriesInfo(string path, string searchPattern)
-        {
-            return GetDirEntriesInfo(path, searchPattern, SearchOption.TopDirectoryOnly);
-        }
-
-        public DirEntriesInfo GetDirEntriesInfo(string path, string searchPattern, SearchOption searchOption)
-        {
-            DirEntriesInfo dirEntriesInfo = new DirEntriesInfo();
-            dirEntriesInfo.FullPath = path;
-            dirEntriesInfo.SearchPattern = searchPattern;
-            dirEntriesInfo.SearchOption = searchOption;
-            dirEntriesInfo.FilesOnly = false;
-            dirEntriesInfo.GetEntries();
-            return dirEntriesInfo;
-        }
-
-        public DirEntryInfoResult SetCurrentDirectory(string path)
-        {
-            DirEntryInfoResult result = new DirEntryInfoResult();
-
-            if (Directory.Exists(path))
+            try
             {
-                try
-                {
-                    Directory.SetCurrentDirectory(path);
 
-                    result.DirEntryInfo = new DirEntryInfo(Directory.GetCurrentDirectory());
-                }
-                catch (Exception ex)
-                {
-                    result.ErrorResult.ErrorCode = Enums.ErrorResultCode.CurrentDirectoryError;
-                    result.ErrorResult.ErrorException = ex;
-                }
+                string fullPath = request.FullPath;
+                if (Directory.Exists(fullPath))
+                    Directory.SetCurrentDirectory(fullPath);
+                
+                result.ReInit(fullPath);
+            }
+            catch (Exception ex)
+            {
+                result.Exception = ex;
             }
 
             return result;
         }
+
     }
 }

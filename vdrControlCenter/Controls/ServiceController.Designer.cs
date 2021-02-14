@@ -32,12 +32,15 @@ namespace vdrControlCenterUI.Controls
             this.components = new System.ComponentModel.Container();
             this.serviceConnector = new vdrControlCenterUI.Controls.ServiceConnectorView();
             this.panBox = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.teResponse = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.splFileCommander = new System.Windows.Forms.SplitContainer();
+            this.cvLocal = new vdrControlCenterUI.Controls.CommanderView();
+            this.cvRemote = new vdrControlCenterUI.Controls.CommanderView();
             this.tmConnector = new System.Windows.Forms.Timer(this.components);
-            this.button3 = new System.Windows.Forms.Button();
             this.panBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splFileCommander)).BeginInit();
+            this.splFileCommander.Panel1.SuspendLayout();
+            this.splFileCommander.Panel2.SuspendLayout();
+            this.splFileCommander.SuspendLayout();
             this.SuspendLayout();
             // 
             // serviceConnector
@@ -46,7 +49,7 @@ namespace vdrControlCenterUI.Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.serviceConnector.Location = new System.Drawing.Point(4, 4);
             this.serviceConnector.Name = "serviceConnector";
-            this.serviceConnector.Size = new System.Drawing.Size(1092, 47);
+            this.serviceConnector.Size = new System.Drawing.Size(1182, 47);
             this.serviceConnector.TabIndex = 0;
             // 
             // panBox
@@ -54,58 +57,57 @@ namespace vdrControlCenterUI.Controls
             this.panBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panBox.Controls.Add(this.button3);
-            this.panBox.Controls.Add(this.button2);
-            this.panBox.Controls.Add(this.teResponse);
-            this.panBox.Controls.Add(this.button1);
+            this.panBox.Controls.Add(this.splFileCommander);
             this.panBox.Location = new System.Drawing.Point(4, 54);
             this.panBox.Name = "panBox";
-            this.panBox.Size = new System.Drawing.Size(1092, 404);
+            this.panBox.Size = new System.Drawing.Size(1182, 374);
             this.panBox.TabIndex = 1;
             // 
-            // button2
+            // splFileCommander
             // 
-            this.button2.Location = new System.Drawing.Point(178, 182);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.splFileCommander.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splFileCommander.Location = new System.Drawing.Point(4, 4);
+            this.splFileCommander.Name = "splFileCommander";
             // 
-            // teResponse
+            // splFileCommander.Panel1
             // 
-            this.teResponse.Location = new System.Drawing.Point(404, 172);
-            this.teResponse.Multiline = true;
-            this.teResponse.Name = "teResponse";
-            this.teResponse.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.teResponse.Size = new System.Drawing.Size(478, 168);
-            this.teResponse.TabIndex = 1;
+            this.splFileCommander.Panel1.Controls.Add(this.cvLocal);
             // 
-            // button1
+            // splFileCommander.Panel2
             // 
-            this.button1.Location = new System.Drawing.Point(354, 50);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(150, 62);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.splFileCommander.Panel2.Controls.Add(this.cvRemote);
+            this.splFileCommander.Size = new System.Drawing.Size(1172, 366);
+            this.splFileCommander.SplitterDistance = 550;
+            this.splFileCommander.TabIndex = 4;
+            // 
+            // cvLocal
+            // 
+            this.cvLocal.Controller = null;
+            this.cvLocal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cvLocal.FileSystemEntry = null;
+            this.cvLocal.IsLocal = false;
+            this.cvLocal.Location = new System.Drawing.Point(0, 0);
+            this.cvLocal.Name = "cvLocal";
+            this.cvLocal.Size = new System.Drawing.Size(550, 366);
+            this.cvLocal.TabIndex = 0;
+            // 
+            // cvRemote
+            // 
+            this.cvRemote.Controller = null;
+            this.cvRemote.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cvRemote.FileSystemEntry = null;
+            this.cvRemote.IsLocal = false;
+            this.cvRemote.Location = new System.Drawing.Point(0, 0);
+            this.cvRemote.Name = "cvRemote";
+            this.cvRemote.Size = new System.Drawing.Size(618, 366);
+            this.cvRemote.TabIndex = 0;
             // 
             // tmConnector
             // 
             this.tmConnector.Interval = 10000;
             this.tmConnector.Tick += new System.EventHandler(this.tmConnector_Tick);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(788, 60);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // ServiceController
             // 
@@ -114,9 +116,12 @@ namespace vdrControlCenterUI.Controls
             this.Controls.Add(this.panBox);
             this.Controls.Add(this.serviceConnector);
             this.Name = "ServiceController";
-            this.Size = new System.Drawing.Size(1099, 463);
+            this.Size = new System.Drawing.Size(1189, 471);
             this.panBox.ResumeLayout(false);
-            this.panBox.PerformLayout();
+            this.splFileCommander.Panel1.ResumeLayout(false);
+            this.splFileCommander.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splFileCommander)).EndInit();
+            this.splFileCommander.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -126,9 +131,8 @@ namespace vdrControlCenterUI.Controls
         private ServiceConnectorView serviceConnector;
         private System.Windows.Forms.Panel panBox;
         private System.Windows.Forms.Timer tmConnector;
-        private System.Windows.Forms.TextBox teResponse;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.SplitContainer splFileCommander;
+        private CommanderView cvLocal;
+        private CommanderView cvRemote;
     }
 }

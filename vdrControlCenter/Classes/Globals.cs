@@ -97,6 +97,11 @@ namespace vdrControlCenterUI.Classes
         public const string DlgCancelPng = "cancel-icon16x16.png";
         public const string DlgOkPng = "ok-icon16x16.png";
 
+        //CommandView
+        public const string CvFolderPng = "folder16x16.png";
+        public const string CvFilePng = "file16x16.png";
+
+
         public static ImageList LoadImageList(ImageListType type)
         {
             ImageList imageList = new ImageList();
@@ -106,25 +111,25 @@ namespace vdrControlCenterUI.Classes
             {
                 case ImageListType.MainForm:
                     imageList.ImageSize = new Size(24, 24);
-                    fileName = $"{ImageFolder}/{ NavSetupPng}";
+                    fileName = $"{ImageFolder}/{NavSetupPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{ NavSshPng}";
+                    fileName = $"{ImageFolder}/{NavSshPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{ NavServicePng}";
+                    fileName = $"{ImageFolder}/{NavServicePng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{ NavSvdrpPng}";
+                    fileName = $"{ImageFolder}/{NavSvdrpPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{ NavVdrAdminPng}";
+                    fileName = $"{ImageFolder}/{NavVdrAdminPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{ NavEditPng}";
+                    fileName = $"{ImageFolder}/{NavEditPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
-                    fileName = $"{ImageFolder}/{ NavEpgPng}";
+                    fileName = $"{ImageFolder}/{NavEpgPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;
@@ -188,6 +193,15 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     fileName = $"{ImageFolder}/{SevSelectPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    break;
+                case ImageListType.CommandView:
+                    imageList.ImageSize = new Size(16, 16);
+                    fileName = $"{ImageFolder}/{CvFolderPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{CvFilePng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;

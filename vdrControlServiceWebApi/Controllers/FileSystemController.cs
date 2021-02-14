@@ -49,7 +49,8 @@ namespace vdrControlServiceWebAPI.Controllers
 
         [HttpPost()]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> GetCurrentDirectory(CurrentDirectoryRequest request)
+        [Produces("application/json")]
+        public async Task<ActionResult> GetDirectory(FileSystemEntryRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Fehlerhafte Parameter.");
@@ -64,7 +65,7 @@ namespace vdrControlServiceWebAPI.Controllers
 
             FileSystemEntry result = await Task.Run(() =>
             {
-                return new FileSystemEntry(Directory.GetCurrentDirectory());
+                return _service.GetDirectory(request);
             });
 
             if (result == null)
@@ -77,82 +78,36 @@ namespace vdrControlServiceWebAPI.Controllers
             return Ok(response);
         }
 
-        //[HttpPost()]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public ActionResult SetCurrentDirectory(CurrentDirectoryRequest request)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest("Fehlerhafte Parameter.");
+        [HttpPost()]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult> SetDirectory(FileSystemEntryRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Fehlerhafte Parameter.");
 
-        //    MethodBase m = MethodBase.GetCurrentMethod();
-        //    CreateRequestLogInfo(m, request);
+            MethodBase m = MethodBase.GetCurrentMethod();
+            CreateRequestLogInfo(m, request);
 
-        //    CurrentDirectoryResponse response = new CurrentDirectoryResponse()
-        //    {
-        //        RequestId = request.RequestId
-        //    };
+            FileSystemResponse response = new FileSystemResponse()
+            {
+                RequestId = request.RequestId
+            };
 
+            FileSystemEntry result = await Task.Run(() =>
+            {
+                return _service.SetDirectory(request);
+            });
 
-        //    //var result = await Task.Run(() =>
-        //    //{
-        //    //    return _service.SetCurrentDirectory(request.FullPath);
-        //    //});
-        //    //if (result == null)
-        //      //  return BadRequest(response);
+            if (result == null)
+                return BadRequest(response);
 
-        //    //result.DirEntryInfo.FullName = result.DirEntryInfo.FullName.Replace("*", string.Empty);
-        //    //response.DirEntryInfoResult = result;
+            response.FileSystemEntry = result;
 
-        //    CreateResponseLogInfo(m, response);
+            CreateResponseLogInfo(m, response);
 
-        //    return Ok(response);
-        //}
-
-        //[HttpPost()]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[Produces("application/json")]
-        //public async Task<ActionResult> GetDirEntriesInfo(DirEntriesInfoRequest request)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest("Fehlerhafte Parameter.");
-
-        //    MethodBase m = MethodBase.GetCurrentMethod();
-        //    CreateRequestLogInfo(m, request);
-
-        //    ApiResponse response = new ApiResponse()
-        //    {
-        //        RequestId = request.RequestId
-        //    };
-
-        //    if (string.IsNullOrWhiteSpace(request.FullPath))
-        //        request.FullPath = Directory.GetCurrentDirectory();
-
-
-        //    if (string.IsNullOrWhiteSpace(request.FullPath))
-        //    {
-        //        response.ErrorResult.ErrorCode = vdrControlService.Enums.ErrorResultCode.CurrentDirectoryError;
-        //        return BadRequest(response);
-        //    }
-
-        //    if (!Directory.Exists(request.FullPath))
-        //    {
-        //        response.ErrorResult.ErrorCode = vdrControlService.Enums.ErrorResultCode.CurrentDirectoryError;
-        //        return BadRequest(response);
-        //    }
-
-
-        //    var result = await Task.Run(() =>
-        //    {
-        //        return _service.GetDirEntriesInfo(request.FullPath);
-        //    });
-        //    if (result == null)
-        //        return BadRequest(response);
-
-
-        //    ////response.Response = result;
-
-        //    return Ok(response);
-        //}
+            return Ok(response);
+        }
 
         private void CreateLogInfo(MethodBase m, string message)
         {
@@ -179,54 +134,5 @@ namespace vdrControlServiceWebAPI.Controllers
                 _logger.LogError(msg);
             }
         }
-
-
-
-
-
-
-
-
-
-            //private HttpResponseMessage BuildResponseMessage(ResponseResult responseResult)
-            //{
-            //    string json = JsonConvert.SerializeObject(responseResult);
-            //    HttpResponseMessage httpResponse = Request.CreateResponse(HttpStatusCode.OK);
-            //    httpResponse.Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            //    return httpResponse;
-            //}
-
-            //// GET: api/<FileSystemController>
-            //[HttpGet]
-            //public IEnumerable<string> Get()
-            //{
-            //    return new string[] { "value1", "value2" };
-            //}
-
-            //// GET api/<FileSystemController>/5
-            //[HttpGet("{id}")]
-            //public string Get(int id)
-            //{
-            //    return "value";
-            //}
-
-            //// POST api/<FileSystemController>
-            //[HttpPost]
-            //public void Post([FromBody] string value)
-            //{
-            //}
-
-            //// PUT api/<FileSystemController>/5
-            //[HttpPut("{id}")]
-            //public void Put(int id, [FromBody] string value)
-            //{
-            //}
-
-            //// DELETE api/<FileSystemController>/5
-            //[HttpDelete("{id}")]
-            //public void Delete(int id)
-            //{
-            //}
-        }
     }
+}

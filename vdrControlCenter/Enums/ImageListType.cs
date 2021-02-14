@@ -8,6 +8,7 @@
         SvdrpChannelsViewRight,
         SvdrpTimersView,
         SvdrpRecordingsView,
-        SvdrpEpgView
+        SvdrpEpgView,
+        CommandView
     }
 }

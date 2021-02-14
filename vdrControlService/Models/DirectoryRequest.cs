@@ -3,9 +3,12 @@
     using System.Runtime.Serialization;
 
     [DataContract]
-    public class CurrentDirectoryRequest : ApiRequest
+    public class FileSystemEntryRequest : ApiRequest
     {
         [DataMember]
         public string FullPath { get; set; }
+
+        [DataMember]
+        public string FormerFullPath { get; set; }
     }
 }
