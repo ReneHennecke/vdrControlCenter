@@ -10,5 +10,7 @@
 
         [DataMember]
         public string FormerFullPath { get; set; }
+        [DataMember]
+        public string Content { get; set; }
     }
 }

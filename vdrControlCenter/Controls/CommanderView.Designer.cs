@@ -70,6 +70,7 @@ namespace vdrControlCenterUI.Controls
             this.livFileSystem.TabIndex = 1;
             this.livFileSystem.UseCompatibleStateImageBehavior = false;
             this.livFileSystem.View = System.Windows.Forms.View.Details;
+            this.livFileSystem.KeyDown += new System.Windows.Forms.KeyEventHandler(this.livFileSystem_KeyDown);
             this.livFileSystem.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.livFileSystem_MouseDoubleClick);
             // 
             // colName
@@ -105,6 +106,7 @@ namespace vdrControlCenterUI.Controls
             this.teFullPath.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.teFullPath.Location = new System.Drawing.Point(2, 2);
             this.teFullPath.Name = "teFullPath";
+            this.teFullPath.ReadOnly = true;
             this.teFullPath.Size = new System.Drawing.Size(590, 16);
             this.teFullPath.TabIndex = 0;
             // 

@@ -7,5 +7,8 @@
     {
         [DataMember]
         public FileSystemEntry FileSystemEntry { get; set; }
+
+        [DataMember]
+        public FileContent FileContent { get; set; }
     }
 }

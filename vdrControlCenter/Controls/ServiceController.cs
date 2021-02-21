@@ -6,12 +6,12 @@
     using Microsoft.EntityFrameworkCore.Storage;
     using Newtonsoft.Json;
     using System;
-    using System.Drawing;
     using System.IO;
-    using System.Linq;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Forms;
+    using vdrControlCenterUI.Dialogs;
     using vdrControlService.Models;
 
     public partial class ServiceController : UserControl
@@ -27,9 +27,10 @@
         private vdrControlCenterContext _context;
 
 
-        private FileSystemEntry _fileSystemEntryLocal = null;
-        private FileSystemEntry _fileSystemEntryRemote = null;
-
+        private string _folderLocal;
+        private string _folderRemote;
+        private bool _inRequest;
+        private bool _isAlive;
 
         public string Url
         {
@@ -37,7 +38,9 @@
             set
             {
                 _url = value;
-                //tmConnector.Enabled = (!string.IsNullOrWhiteSpace(_url));
+                tmConnector.Enabled = (!string.IsNullOrWhiteSpace(_url));
+                if (tmConnector.Enabled)
+                    tmConnector_Tick(null, null);
             }
         }
 
@@ -77,13 +80,11 @@
                 if (systemSettings.Configuration != null)
                     configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
 
-                _fileSystemEntryLocal = new FileSystemEntry();
-                _fileSystemEntryLocal.ReInit(configuration.LocalFolder);
-
-                _fileSystemEntryRemote = new FileSystemEntry();
-                _fileSystemEntryRemote.FullPath = configuration.RemoteFolder;
+                _folderLocal = configuration.LocalFolder;
+                _folderRemote = configuration.RemoteFolder;
             }
 
+            
             LoadDirectoryLocal();
             LoadDirectoryRemote();
         }
@@ -119,109 +120,21 @@
 
         private async void tmConnector_Tick(object sender, System.EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(_url))
+            if (string.IsNullOrWhiteSpace(_url) || _inRequest)
+                return;
+
+            tmConnector.Enabled = false;
+            string url = $"{_url}Extensions/IsAlive";
+            _isAlive = false;
+            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
+            using (HttpContent content = response.Content)
             {
-                string url = $"{_url}Extensions/IsAlive";
-                bool isAlive = false;
-                using (HttpResponseMessage response = await _httpClient.GetAsync(url))
-                using (HttpContent content = response.Content)
-                {
-                    string result = await content.ReadAsStringAsync();
-                    if (result != null)
-                        bool.TryParse(result, out isAlive);
-                }
-                serviceConnector.ShowConnection(isAlive);
+                string result = await content.ReadAsStringAsync();
+                if (result != null)
+                    bool.TryParse(result, out _isAlive);
             }
-        }
-
-
-
-        private void LoadDirectoryLocal()
-        {
-            try
-            {
-                if (_fileSystemEntryLocal == null)
-                    _fileSystemEntryLocal = new FileSystemEntry(Directory.GetCurrentDirectory());
-
-                cvLocal.FileSystemEntry = _fileSystemEntryLocal;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message,
-                                    "Filesystem-Fehler",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-            }
-        }
-
-        private async void LoadDirectoryRemote()
-        {
-            try
-            {
-                FileSystemEntryRequest request = new FileSystemEntryRequest();
-                request.FullPath = _fileSystemEntryRemote.FullPath;
-                string action = $"{_url}FileSystem/GetDirectory";
-
-                string json = await PostData(action, request);
-
-                var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-                if (response != null)
-                    cvRemote.FileSystemEntry = response.FileSystemEntry;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message,
-                                "Remote Filesystem-Fehler",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Error);
-
-            }
-        }
-
-        public async void Execute(bool local, FileSystemEntry fileSystemEntry)
-        {
-            if (fileSystemEntry.Attributes.HasFlag(FileAttributes.Directory))
-            {
-                try
-                {
-                    if (local)
-                    {
-
-                        if (Directory.Exists(fileSystemEntry.FullPath))
-                            Directory.SetCurrentDirectory(fileSystemEntry.FullPath);
-
-                        _fileSystemEntryLocal = new FileSystemEntry();
-                        _fileSystemEntryLocal.ReInit(fileSystemEntry.FullPath);
-
-                        cvLocal.FileSystemEntry = _fileSystemEntryLocal;
-                    }
-                    else
-                    {
-                        FileSystemEntryRequest request = new FileSystemEntryRequest();
-                        request.FullPath = fileSystemEntry.FullPath;
-                        string action = $"{_url}FileSystem/SetDirectory";
-
-                        string json = await PostData(action, request);
-
-                        var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-                        if (response != null)
-                            cvRemote.FileSystemEntry = response.FileSystemEntry;
-                    }
-
-                    SaveData();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message,
-                                    "Remote Filesystem-Fehler",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-
-            }
+            serviceConnector.ShowConnection(_isAlive);
+            tmConnector.Enabled = true;
         }
 
         private async Task<string> PostData(string action, object json)
@@ -240,6 +153,187 @@
             }
 
             return retval;
+        }
+
+
+        private void LoadDirectoryLocal()
+        {
+            try
+            {
+                FileSystemEntry fse = new FileSystemEntry(_folderLocal);
+                cvLocal.FileSystemEntry = fse;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                                    "Filesystem-Fehler",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+            }
+        }
+
+        private async void LoadDirectoryRemote()
+        {
+            if (string.IsNullOrWhiteSpace(_url) || _inRequest)
+                return;
+
+            _inRequest = true;
+
+            try
+            {
+                FileSystemEntryRequest request = new FileSystemEntryRequest();
+                request.FullPath = _folderRemote;
+                string action = $"{_url}FileSystem/GetDirectory";
+
+                string json = await PostData(action, request);
+
+                var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                if (response != null)
+                    cvRemote.FileSystemEntry = response.FileSystemEntry;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                                "Remote Filesystem-Fehler",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+
+            }
+
+            _inRequest = false;
+        }
+
+        public async void Execute(KeyEventArgs ea, bool  local, FileSystemEntry fse)
+        {
+            switch (ea.KeyCode)
+            {
+                case Keys.Enter:
+                    if (fse.Attributes.HasFlag(FileAttributes.Directory))
+                    {
+                        try
+                        {
+                            if (local)
+                            {
+                                if (Directory.Exists(fse.FullPath))
+                                    Directory.SetCurrentDirectory(fse.FullPath);
+
+                                cvLocal.FileSystemEntry = fse;
+                            }
+                            else
+                            {
+                                FileSystemEntryRequest request = new FileSystemEntryRequest();
+                                request.FullPath = fse.FullPath;
+                                string action = $"{_url}FileSystem/SetDirectory";
+
+                                string json = await PostData(action, request);
+
+                                var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                                if (response != null)
+                                    cvRemote.FileSystemEntry = response.FileSystemEntry;
+                            }
+
+                            SaveData();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message,
+                                            "Remote Filesystem-Fehler",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Error);
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            if (local)
+                            {
+                                switch (fse.Extension.ToLower())
+                                {
+                                    case "txt":
+                                    case "conf":
+
+                                    default:
+
+                                        break;
+                                }
+                                
+                            }
+                            else
+                            {
+
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+
+                    break;
+                case Keys.F3:
+                    try
+                    {
+                        if (local)
+                        {
+                            switch (fse.Extension.ToLower())
+                            {
+                                case ".txt":
+                                case ".conf":
+                                case ".config":
+
+
+
+                                    string content = await File.ReadAllTextAsync(fse.FullPath);
+                                    dlgEditor dlg = new dlgEditor();
+                                    dlg.PostInit(this, local, fse, content, true);
+                                    dlg.Show();
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (fse.Extension.ToLower())
+                            {
+                                case ".txt":
+                                case ".conf":
+                                case ".config":
+                                    FileSystemEntryRequest request = new FileSystemEntryRequest();
+                                    request.FullPath = fse.FullPath;
+                                    string action = $"{_url}FileSystem/ReadFileContent";
+
+                                    string json = await PostData(action, request);
+
+                                    var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                                    if (response != null)
+                                    {
+                                        byte[] bytes = Convert.FromBase64String(response.FileContent.Content);
+                                        string content = Encoding.UTF8.GetString(bytes);
+
+                                        dlgEditor dlg = new dlgEditor();
+                                        dlg.PostInit(this, local, fse, content, true);
+                                        dlg.Show();
+                                    }
+                                    break;
+                                default:
+
+                                    break;
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

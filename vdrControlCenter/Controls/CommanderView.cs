@@ -117,8 +117,24 @@
             ListViewHitTestInfo info = livFileSystem.HitTest(e.X, e.Y);
             ListViewItem item = info.Item;
 
+            if (item != null && item.Tag != null && item.Tag is FileSystemEntry)
+            { 
+                KeyEventArgs kea = new KeyEventArgs(Keys.Enter);
+                _controller.Execute(kea, _isLocal, (FileSystemEntry)item.Tag);
+            }
+        }
+
+        private void livFileSystem_KeyDown(object sender, KeyEventArgs e)
+        {
+            ListViewItem item = livFileSystem.FocusedItem;
             if (item != null)
-                _controller.Execute(_isLocal, (FileSystemEntry)item.Tag);
+            {
+                if (item.Tag != null && item.Tag is FileSystemEntry)
+                {
+                    FileSystemEntry fse = (FileSystemEntry)item.Tag;
+                    _controller.Execute(e, _isLocal, fse);
+                }
+            }
         }
     }
 }

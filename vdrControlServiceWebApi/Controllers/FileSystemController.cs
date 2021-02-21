@@ -109,6 +109,37 @@ namespace vdrControlServiceWebAPI.Controllers
             return Ok(response);
         }
 
+        [HttpPost()]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult> ReadFileContent(FileSystemEntryRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Fehlerhafte Parameter.");
+
+            MethodBase m = MethodBase.GetCurrentMethod();
+            CreateRequestLogInfo(m, request);
+
+            FileSystemResponse response = new FileSystemResponse()
+            {
+                RequestId = request.RequestId
+            };
+
+            FileContent result = await Task.Run(() =>
+            {
+                return _service.ReadFileContent(request);
+            });
+
+            if (result == null)
+                return BadRequest(response);
+
+            response.FileContent = result;
+
+            CreateResponseLogInfo(m, response);
+
+            return Ok(response);
+        }
+
         private void CreateLogInfo(MethodBase m, string message)
         {
             _logger.LogInformation($"{m.Name}|{message}");

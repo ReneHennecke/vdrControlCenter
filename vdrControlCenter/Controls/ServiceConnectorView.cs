@@ -2,7 +2,6 @@
 {
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
-    using System;
     using System.Windows.Forms;
 
     public partial class ServiceConnectorView : UserControl
