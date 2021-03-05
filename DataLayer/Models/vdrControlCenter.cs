@@ -123,7 +123,7 @@
 
                 entity.Property(e => e.Duration).HasColumnName("Duration");
 
-                entity.Property(e => e.Stream).HasMaxLength(255);
+                entity.Property(e => e.Stream).HasMaxLength(1024);
 
                 entity.Property(e => e.TableId)
                     .HasColumnName("TableID")

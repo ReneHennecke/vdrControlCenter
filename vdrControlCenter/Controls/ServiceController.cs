@@ -126,12 +126,19 @@
             tmConnector.Enabled = false;
             string url = $"{_url}Extensions/IsAlive";
             _isAlive = false;
-            using (HttpResponseMessage response = await _httpClient.GetAsync(url))
-            using (HttpContent content = response.Content)
+            try
             {
-                string result = await content.ReadAsStringAsync();
-                if (result != null)
-                    bool.TryParse(result, out _isAlive);
+                using (HttpResponseMessage response = await _httpClient.GetAsync(url))
+                using (HttpContent content = response.Content)
+                {
+                    string result = await content.ReadAsStringAsync();
+                    if (result != null)
+                        bool.TryParse(result, out _isAlive);
+                }
+            }
+            catch
+            {
+
             }
             serviceConnector.ShowConnection(_isAlive);
             tmConnector.Enabled = true;
@@ -282,9 +289,7 @@
                                 case ".txt":
                                 case ".conf":
                                 case ".config":
-
-
-
+                                case ".cs":
                                     string content = await File.ReadAllTextAsync(fse.FullPath);
                                     dlgEditor dlg = new dlgEditor();
                                     dlg.PostInit(this, local, fse, content, true);

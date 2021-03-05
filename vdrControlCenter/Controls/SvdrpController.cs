@@ -164,7 +164,7 @@
             }
         }
 
-        public void OnReceive(string data)
+        public async void OnReceive(string data)
         {
             if (InvokeRequired)
             {
@@ -176,7 +176,7 @@
                 AddBuffer($"{data}{Environment.NewLine}");
 
                 _svdrpBuffer.Add(data);
-                _svdrpBuffer.Save2File();
+                _svdrpBuffer.SaveLogFile();
 
                 switch (_svdrpRequest)
                 {
@@ -204,6 +204,7 @@
                         RefreshRequestControls(true);
                         
                         _svdrpRequest = SvdrpRequest.Undefined;
+                        _svdrpBuffer.CloseLogFile();
                         break;
                     case SvdrpRequest.GetChannelList:
                         if (_svdrpBuffer.Content.StartsWith(REQ_250))
@@ -238,10 +239,12 @@
                         {
                             SvdrpEPGList svdrpEPGList = new SvdrpEPGList();
                             svdrpEPGList.ParseMessage(_svdrpBuffer.Splitter);
-                            
+
                             svdrpEpgListView.RefreshData(svdrpEPGList);
                             RefreshRequestControls(true);
+
                             _svdrpRequest = SvdrpRequest.Undefined;
+                            _svdrpBuffer.CloseLogFile();
                         }
                         break;
                     case SvdrpRequest.AddTimer:
@@ -428,7 +431,9 @@
 
                     if (svdrpChannelList != null)
                         svdrpChannelsView.RefreshData(svdrpChannelList);
-        
+
+                    _svdrpRequest = SvdrpRequest.Undefined;
+                    _svdrpBuffer.CloseLogFile();
                     break;
                 case SvdrpRequest.GetTimerList:
                     SvdrpTimerList svdrpTimerList = new SvdrpTimerList();
@@ -437,6 +442,8 @@
                     if (svdrpTimerList != null)
                         svdrpTimersView.RefreshData(svdrpTimerList);
 
+                    _svdrpRequest = SvdrpRequest.Undefined;
+                    _svdrpBuffer.CloseLogFile();
                     break;
                 case SvdrpRequest.GetRecordings:
                     SvdrpRecordingList svdrpRecordingList = new SvdrpRecordingList();
@@ -445,6 +452,8 @@
                     if (svdrpRecordingList != null)
                         svdrpRecordingsView.RefreshData(svdrpRecordingList);
 
+                    _svdrpRequest = SvdrpRequest.Undefined;
+                    _svdrpBuffer.CloseLogFile();
                     break;
             }
 

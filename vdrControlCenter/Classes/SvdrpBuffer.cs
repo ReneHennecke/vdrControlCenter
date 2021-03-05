@@ -30,6 +30,7 @@
         private System.Text.Encoding _utf8EncoderNoBOM = new System.Text.UTF8Encoding(false);
         private const char EOL = '\n';
         private bool _enableDebug = false;
+        private StreamWriter _sw;
 
         public bool EnableDebug
         {
@@ -48,6 +49,13 @@
         public void Clear()
         {
             _buffer.Clear();
+            if (_enableDebug)
+            {
+                if (_sw != null)
+                    CloseLogFile();
+
+                CreateLogFile();
+            }
         }
 
         public void Add(string s)
@@ -80,34 +88,44 @@
             get { return Content.Split(EOL); }
         }
 
-        public string Save2File()
+        public async void SaveLogFile()
         {
-            string fileName = string.Empty;
-            if (_enableDebug && _buffer.Length > 0)
+            if (_enableDebug && _buffer.Length > 0 && _sw != null)
             {
                 try
                 {
-                    string path = $"{AppDomain.CurrentDomain.BaseDirectory}temp";
-
-                    if (!Directory.Exists(path))
-                        Directory.CreateDirectory(path);
-
-                    fileName = $"{path}\\{Guid.NewGuid()}";
-                    using (StreamWriter sw = new StreamWriter(fileName, false, _utf8EncoderNoBOM))
-                    {
-                        sw.Write(_buffer);
-                        sw.Flush();
-                        sw.Close();
-                    }
+                    await _sw.WriteAsync(_buffer);
                 }
                 catch (IOException)
                 {
-                    fileName = string.Empty;
+
                 }
             }
+        }
 
-            return fileName;
+        private void CreateLogFile()
+        {
+            string fileName = string.Empty;
+            try
+            {
+                string path = $"{AppDomain.CurrentDomain.BaseDirectory}temp";
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                fileName = $"{path}\\{Guid.NewGuid()}";
+                _sw = new StreamWriter(fileName, false, _utf8EncoderNoBOM);
+            }
+            catch (IOException)
+            {
+                fileName = string.Empty;
+            }
+        }
+
+        public async void CloseLogFile()
+        {
+            if (_sw != null)
+                await _sw.DisposeAsync();
         }
     }
-
 }

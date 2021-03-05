@@ -188,7 +188,7 @@
 
                     reload = true;
                 }
-                catch 
+                catch //(DbUpdateException ex)
                 {
                     await transaction.RollbackAsync();
                 }
