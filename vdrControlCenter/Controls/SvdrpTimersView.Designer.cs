@@ -85,7 +85,7 @@
             this.dgvTimers.TabIndex = 0;
             this.dgvTimers.Text = "dataGridView1";
             this.dgvTimers.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvTimers_CellFormatting);
-            this.dgvTimers.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvChannels_CellPainting);
+            this.dgvTimers.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvTimers_CellPainting);
             // 
             // btnRequest
             // 
@@ -127,12 +127,12 @@
             this.btnNew.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnNew.UseVisualStyleBackColor = true;
             // 
-            // TimersView
+            // SvdrpTimersView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panBox);
-            this.Name = "TimersView";
+            this.Name = "SvdrpTimersView";
             this.Size = new System.Drawing.Size(480, 254);
             this.panBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTimers)).EndInit();

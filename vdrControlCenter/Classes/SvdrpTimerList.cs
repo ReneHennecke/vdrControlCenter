@@ -61,7 +61,7 @@
                                 timer.Priority = j;
                                 int.TryParse(prm[6], out j);
                                 timer.Duration = (int)duration.TotalMinutes;
-                                timer.Title = prm[7];
+                                timer.Title = prm[7].Replace("\r", string.Empty);
                                 for (int i = 2; i < prms.Length; i++)
                                 {
                                     string s = prms[i];

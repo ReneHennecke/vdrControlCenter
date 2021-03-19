@@ -81,14 +81,12 @@
             grbBuffer.MouseClick += grbBuffer_MouseClick;
             _bufferControlSize = grbBuffer.Size;
 
-#if DEBUG
-            _svdrpBuffer.EnableDebug = true;
-            grbBuffer.Visible = true;
-#else
-            grbBuffer.Visible = false;
-#endif
+            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync();
+            _svdrpBuffer.EnableDebug = systemSettings.EnableLogging.GetValueOrDefault();
+          //  grbBuffer.Visible = systemSettings.SaveBufferToFile.GetValueOrDefault();
 
             Stations station = await _context.Stations.FirstOrDefaultAsync(s => s.Svdrpport > 0);
+            
             _client = new SvdrpClient(this, station.HostAddress, station.Svdrpport.GetValueOrDefault());
         }
 
@@ -164,7 +162,7 @@
             }
         }
 
-        public async void OnReceive(string data)
+        public void OnReceive(string data)
         {
             if (InvokeRequired)
             {

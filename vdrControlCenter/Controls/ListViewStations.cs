@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
+    using System.Linq;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Dialogs;
@@ -127,6 +128,8 @@
                         macAddress = macAddress.Replace("-", string.Empty).Replace(":", string.Empty);
                         byte[] b = StringRaX.HexStringToByteArray(macAddress);
                         NetworkRaX.WakeOnLan(b);
+
+                        macAddress = string.Join(":", Enumerable.Range(0, 6).Select(i => macAddress.Substring(i * 2, 2)));
 
                         dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("WakeOnLAN", $"Das Magic-Paket wurde an {macAddress} gesendet.", 3);
                         dlg.ShowDialog();

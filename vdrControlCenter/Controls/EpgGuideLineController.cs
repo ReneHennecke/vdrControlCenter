@@ -21,6 +21,7 @@
 
         private int _countTimeLines;
         private bool _init;
+        private bool _readEPG;
 
         private const int EPG_GUIDE_LINE_HEIGHT = 30;
 
@@ -207,7 +208,7 @@
             foreach (EpgGuideLine timeLine in panTimeLineControls.Controls)
             {
                 frmMain.AddMessage($"EPG-Daten » {timeLine.ChannelName}");
-                await Task.Run(() => timeLine.DrawTimeLineEntries());
+                var t = await Task.Run(() => timeLine.DrawTimeLineEntries());
             }
         }
 

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataLayer.Models
+﻿namespace DataLayer.Models
 {
+    using System;
+
     public partial class FakeEpg
     {
         public long RecId { get; set; }
