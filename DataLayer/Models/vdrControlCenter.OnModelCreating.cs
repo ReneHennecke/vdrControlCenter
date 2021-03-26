@@ -52,23 +52,6 @@
                 entity.Property(e => e.GenreCodes);
                 entity.Property(e => e.ParentalRating);
             });
-
-            modelBuilder.Entity<FakeTimer>(entity =>
-            {
-                entity.HasNoKey();
-                entity.Property(e => e.RecId);
-                entity.Property(e => e.Modtime);
-                entity.Property(e => e.Number);
-                entity.Property(e => e.Active);
-                entity.Property(e => e.ChannelRecId);
-                entity.Property(e => e.StartTime);
-                entity.Property(e => e.EndTime);
-                entity.Property(e => e.Priority);
-                entity.Property(e => e.Duration);
-                entity.Property(e => e.Title);
-                entity.Property(e => e.ChannelId);
-                entity.Property(e => e.ChannelName);
-            });
         }
     }
 }

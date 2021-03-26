@@ -5,7 +5,6 @@
     using Microsoft.EntityFrameworkCore.Storage;
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
@@ -17,8 +16,6 @@
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
         private ImageList _imageList;
-        private List<FakeEpg> _unfilteredList;
-        private List<FakeEpg> _filteredList;
 
         public bool RequestEnable
         {
@@ -254,8 +251,7 @@
                 if (dtpDate.Value.Date.CompareTo(date.Date) != 0)
                     date = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-                _unfilteredList = _context.GetFakeEpgs(date, 0, false);
-                dgvEPG.DataSource = _unfilteredList; 
+                dgvEPG.DataSource = _context.GetFakeEpgs(date, 0, false);
             }
         }
 
@@ -297,75 +293,5 @@
         {
             ReLoad();
         }
-
-        private void dgvEPG_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
-                return;
-
-            int colIndex = e.ColumnIndex;
-            if (_filteredList == null)
-            {
-                int rowIndex = e.RowIndex;
-
-                if (colIndex == dgvEPG.Columns["ChannelName"].Index)
-                {
-                    string channelName = (string)dgvEPG.Rows[rowIndex].Cells["ChannelName"].Value;
-                    _filteredList = _unfilteredList.Where(x => x.ChannelName == channelName).ToList();
-                
-                }
-                else if (colIndex == dgvEPG.Columns["StartTime"].Index)
-                {
-                    DateTime startTime = (DateTime)dgvEPG.Rows[rowIndex].Cells["StartTime"].Value;
-                    _filteredList = _unfilteredList.Where(x => x.StartTime == startTime).ToList();
-                }
-                else if (colIndex == dgvEPG.Columns["EndTime"].Index)
-                {
-                    DateTime endTime = (DateTime)dgvEPG.Rows[rowIndex].Cells["EndTime"].Value;
-                    _filteredList = _unfilteredList.Where(x => x.EndTime == endTime).ToList();
-                }
-                else if (colIndex == dgvEPG.Columns["DurationMinutes"].Index)
-                {
-                    int durationMinutes = (int)dgvEPG.Rows[rowIndex].Cells["DurationMinutes"].Value;
-                    _filteredList = _unfilteredList.Where(x => x.DurationMinutes == durationMinutes).ToList();
-                }
-                else if (colIndex == dgvEPG.Columns["Title"].Index)
-                {
-                    string title = (string)dgvEPG.Rows[rowIndex].Cells["Title"].Value;
-                    _filteredList = _unfilteredList.Where(x => x.Title == title).ToList();
-                }
-                else if (colIndex == dgvEPG.Columns["ShortDescription"].Index)
-                {
-                    string shortDescription = (string)dgvEPG.Rows[rowIndex].Cells["ShortDescription"].Value;
-                    _filteredList = _unfilteredList.Where(x => x.ShortDescription == shortDescription).ToList();
-                }
-
-                dgvEPG.DataSource = _filteredList;
-            }
-            else
-            {
-                _filteredList = null;
-                dgvEPG.DataSource = _unfilteredList;
-            }
-
-            DataGridViewCellStyle style = dgvEPG.Columns[colIndex].HeaderCell.Style;
-            if (_filteredList == null)
-            {
-                style.BackColor = Color.SteelBlue;
-                style.ForeColor = Color.WhiteSmoke;
-                style.SelectionBackColor = Color.LightSteelBlue;
-                style.SelectionForeColor = Color.WhiteSmoke;
-            }
-            else 
-            {
-                style.BackColor = Color.Khaki;
-                style.ForeColor = Color.Black;
-                style.SelectionBackColor = Color.PapayaWhip;
-                style.SelectionForeColor = Color.Black;
-            }
-            dgvEPG.Columns[colIndex].HeaderCell.Style = style;
-
-        }
-
     }
 }

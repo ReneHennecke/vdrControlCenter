@@ -7,18 +7,13 @@
     using vdrControlCenterUI.Enums;
     using vdrControlCenterUI.Dialogs;
     using vdrControlCenterUI.Controls;
-    using DataLayer.Models;
-    using Microsoft.EntityFrameworkCore;
-    using DataLayer.Classes;
-    using Newtonsoft.Json;
-    using Microsoft.EntityFrameworkCore.Storage;
 
     public partial class frmMain : Form
     {
         private Point _imageLocation = new Point(20, 4);
         private Point _imgHitArea = new Point(20, 4);
         private Image _closeImage;
-        private const int FORM_MAXIMIZED = -9999;
+
 
         private delegate void AddMessageCallback(string msg);
 
@@ -109,8 +104,6 @@
             trvNavigation.Nodes.Add(node);
 
             trvNavigation.SelectedNode = null;
-
-            LoadConfiguration();
             
             viewStations.PopulateData();
 
@@ -277,100 +270,6 @@
             {
                 e.Cancel = true;
             }
-        }
-
-        private async void LoadConfiguration()
-        {
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            {
-                SystemSettings systemSettings = await context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-                if (systemSettings != null)
-                {
-                    if (systemSettings.Configuration != null)
-                    {
-                        Configuration configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-
-                        if (!configuration.X.HasValue && !configuration.Y.HasValue && !configuration.Width.HasValue && !configuration.Height.HasValue)
-                            WindowState = FormWindowState.Normal;
-                        else
-                        {
-                            if (configuration.X == FORM_MAXIMIZED && configuration.Y == FORM_MAXIMIZED && configuration.Width == FORM_MAXIMIZED && configuration.Height == FORM_MAXIMIZED)
-                                WindowState = FormWindowState.Maximized;
-                            else
-                            {
-                                Location = new Point(configuration.X.Value, configuration.Y.Value);
-                                Size = new Size(configuration.Width.Value, configuration.Height.Value);
-                            }
-                        }
-                    }
-                    else
-                        WindowState = FormWindowState.Normal;
-                }
-            }
-        }
-
-        private async void SaveConfiguration()
-        {
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            using (IDbContextTransaction transaction = context.Database.BeginTransaction())
-            {
-                try
-                { 
-                    bool exists = true;
-                    SystemSettings systemSettings = await context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-                    if (systemSettings == null)
-                    {
-                        systemSettings = new SystemSettings()
-                        {
-                            MachineName = Environment.MachineName
-                        };
-                        exists = false;
-                    }
-
-                    Configuration configuration;
-                    if (systemSettings.Configuration == null)
-                        configuration = new Configuration();
-                    else
-                        configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-
-                    
-                    if (configuration == null)
-                        configuration = new Configuration();
-
-                    if (WindowState == FormWindowState.Maximized)
-                    {
-                        configuration.X = FORM_MAXIMIZED;
-                        configuration.Y = FORM_MAXIMIZED;
-                        configuration.Width = FORM_MAXIMIZED;
-                        configuration.Height = FORM_MAXIMIZED;
-                    }
-                    else
-                    {
-                        configuration.X = Location.X;
-                        configuration.Y = Location.Y;
-                        configuration.Width = Size.Width;
-                        configuration.Height = Size.Height;
-                    }
-
-                    systemSettings.Configuration = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-                    if (exists)
-                        context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    else
-                        context.SystemSettings.Add(systemSettings);
-
-                    await context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch //(Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                }
-            }
-        }
-
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SaveConfiguration();
         }
     }
 }

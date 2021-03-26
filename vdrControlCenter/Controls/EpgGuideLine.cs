@@ -21,7 +21,7 @@
         private bool _enableRequest = false;
         private long _channelRecId;
 
-        private delegate bool DrawTimeLineEntriesDelegate();
+        private delegate void DrawTimeLineEntriesDelegate();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool EnableRequest
@@ -129,9 +129,8 @@
             set { _foundList = value; }
         }
 
-        public bool DrawTimeLineEntries()
+        public void DrawTimeLineEntries()
         {
-            bool running = true;
             if (lblTimeLineTable.InvokeRequired)
             {
                 var d = new DrawTimeLineEntriesDelegate(DrawTimeLineEntries);
@@ -167,11 +166,7 @@
                 }
 
                 lblTimeLineTable.ResumeLayout();
-
-                running = false;
             }
-
-            return running;
         }
 
         public void ClearEpgEntries()

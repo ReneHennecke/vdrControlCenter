@@ -1,7 +1,9 @@
-﻿namespace DataLayer.Models
-{
-    using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace DataLayer.Models
+{
     public partial class FakeEpg
     {
         public long RecId { get; set; }

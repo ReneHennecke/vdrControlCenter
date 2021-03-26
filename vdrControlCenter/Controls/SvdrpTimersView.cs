@@ -193,20 +193,17 @@
             {
                 lblRequestInfo.Text = $"{systemSettings.LastUpdateTimers:dd.MM.yyyy HH:mm:ss}";
 
-                dgvTimers.DataSource = _context.GetFakeTimers().ToList();
+                dgvTimers.DataSource = await _context.Timers.OrderBy(e => e.StartTime).ToListAsync();
             }
         }
 
-        private void dgvTimers_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        private void dgvChannels_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.RowIndex > -1 && e.ColumnIndex == dgvTimers.Columns["DisplayActive"].Index)
-            {
-
-                bool b = (bool)dgvTimers.Rows[e.RowIndex].Cells["Active"].Value;
-
-                Image cellImage = b ? _imageList.Images[1] : _imageList.Images[0];
-                if (cellImage != null)
+            if (e.RowIndex > -1)
+            { 
+                if (e.ColumnIndex == dgvTimers.Columns["DisplayActive"].Index)
                 {
+                    bool active = (bool)dgvTimers.Rows[e.RowIndex].Cells["Active"].Value;
                     SolidBrush gridBrush = new SolidBrush(dgvTimers.GridColor);
                     Pen gridLinePen = new Pen(gridBrush);
                     SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
@@ -216,8 +213,8 @@
                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
                     // Draw the image over cell at specific location.  
                     Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(cellImage, point);
-                    dgvTimers.Rows[e.RowIndex].Cells["DisplayActive"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
+                    e.Graphics.DrawImage(active ? _imageList.Images[1] : _imageList.Images[0], point);
+                    dgvTimers.Rows[e.RowIndex].Cells["DisplaySymbol"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
                 }
 
                 e.Handled = true;

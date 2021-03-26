@@ -70,7 +70,6 @@
             this.mleMessage.ReadOnly = true;
             this.mleMessage.Size = new System.Drawing.Size(298, 94);
             this.mleMessage.TabIndex = 2;
-            this.mleMessage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnOKOnly
             // 
