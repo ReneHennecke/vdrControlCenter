@@ -5,19 +5,22 @@
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Enums;
-    using vdrControlCenterUI.Dialogs;
     using vdrControlCenterUI.Controls;
+    using Microsoft.EntityFrameworkCore.Storage;
+    using DataLayer.Models;
+    using Newtonsoft.Json;
+    using Microsoft.EntityFrameworkCore;
+    using DataLayer.Classes;
 
     public partial class frmMain : Form
     {
         private Point _imageLocation = new Point(20, 4);
         private Point _imgHitArea = new Point(20, 4);
         private Image _closeImage;
-
-
+        private const int FRAME_MAXIMIZED = -1;
+        
         private delegate void AddMessageCallback(string msg);
-
-
+        
         public frmMain()
         {
             InitializeComponent();
@@ -103,11 +106,18 @@
             };
             trvNavigation.Nodes.Add(node);
 
-            trvNavigation.SelectedNode = null;
-            
-            viewStations.PopulateData();
+            node = new TreeNode()
+            {
+                Text = "Video",
+                ImageIndex = (int)Navigation.Video,
+                SelectedImageIndex = (int)Navigation.Video,
+                Tag = Navigation.Video
+            };
+            trvNavigation.Nodes.Add(node);
 
-            LoadData();
+            trvNavigation.SelectedNode = null;
+
+            viewStations.PopulateData();
         }
 
         private TabPage FindTabPage(Navigation navigation)
@@ -140,8 +150,19 @@
             {
                 if (r.Contains(p))
                 {
-                    TabPage tabPage = (TabPage)tabControl.TabPages[tabControl.SelectedIndex];
-                    tabControl.TabPages.Remove(tabPage);
+                    TabPage page = (TabPage)tabControl.TabPages[tabControl.SelectedIndex];
+                    Navigation navigation = (Navigation)page.Tag;
+                    switch (navigation)
+                    {
+                        case Navigation.Setup:
+                            SystemSettingsView systemSettingsView = (SystemSettingsView)page.Controls[0];
+                            systemSettingsView.SaveData();
+                            break;
+                        default:
+                            break;
+                    }
+
+                    tabControl.TabPages.Remove(page);
                 }
             }
         }
@@ -166,11 +187,6 @@
                 img = tabWorkspace.ImageList.Images[page.ImageIndex];
                 e.Graphics.DrawImage(img, new Point(r.X, _imageLocation.Y));
             }
-        }
-
-        private void LoadData()
-        {
-            
         }
 
         public void AddMessage(string msg)
@@ -253,6 +269,14 @@
                         epgGuideLineController.Dock = DockStyle.Fill;
                         page.Controls.Add(epgGuideLineController);
                         break;
+                    case Navigation.Video:
+                        page.Text = "Video";
+                        page.ImageIndex = (int)Navigation.Video;
+                        VideoView videoView = new VideoView();
+                        videoView.MainForm = this;
+                        videoView.Dock = DockStyle.Fill;
+                        page.Controls.Add(videoView);
+                        break;
                     default:
                         break;
                 }
@@ -270,6 +294,105 @@
             {
                 e.Cancel = true;
             }
+        }
+                
+        private async void LoadSettings()
+        {
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            {
+                try
+                {
+                    Configuration configuration = null;
+                    SystemSettings systemSettings = await context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
+                    if (systemSettings != null)
+                    {
+                        if (systemSettings.Configuration != null)
+                            configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
+                    }
+                       
+                    if (configuration == null)
+                    {
+                        WindowState = FormWindowState.Normal;
+                        StartPosition = FormStartPosition.CenterScreen;
+                    }
+                    else 
+                    { 
+                        if (configuration.X == FRAME_MAXIMIZED && configuration.Y == FRAME_MAXIMIZED && configuration.Width == FRAME_MAXIMIZED && configuration.Height == FRAME_MAXIMIZED)
+                            WindowState = FormWindowState.Maximized;
+                        else 
+                        {
+                            Location = new Point(configuration.X, configuration.Y);
+                            Size = new Size(configuration.Width, configuration.Height);
+                        }
+                    }
+                }
+                catch //(Exception ex)
+                {
+
+                }
+            }
+        }
+
+        private async void SaveSettings()
+        {
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            using (IDbContextTransaction transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    bool exists = true;
+                    Configuration configuration = null;
+                    SystemSettings systemSettings = await context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
+                    if (systemSettings != null)
+                        configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
+                    else
+                    {
+                        systemSettings = new SystemSettings();
+                        exists = false;
+                    }
+
+                    if (configuration == null)
+                        configuration = new Configuration();
+
+                    if (WindowState == FormWindowState.Maximized)
+                    {
+                        configuration.X = FRAME_MAXIMIZED;
+                        configuration.Y = FRAME_MAXIMIZED;
+                        configuration.Width = FRAME_MAXIMIZED;
+                        configuration.Height = FRAME_MAXIMIZED;
+                    }
+                    else
+                    {
+                        configuration.X = Location.X;
+                        configuration.Y = Location.Y;
+                        configuration.Width = Size.Width;
+                        configuration.Height = Size.Height;
+                    }
+
+                    systemSettings.Configuration = JsonConvert.SerializeObject(configuration, Formatting.Indented);
+                    if (exists)
+                        context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    else
+                        context.SystemSettings.Add(systemSettings);
+
+                    await context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch //(Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                }
+            }
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            LoadSettings();
         }
     }
 }

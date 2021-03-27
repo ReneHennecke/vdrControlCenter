@@ -16,6 +16,8 @@
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
         private ImageList _imageList;
+        private List<FakeEpg> _unfiltered;
+        private List<FakeEpg> _filtered;
 
         public bool RequestEnable
         {
@@ -251,36 +253,40 @@
                 if (dtpDate.Value.Date.CompareTo(date.Date) != 0)
                     date = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-                dgvEPG.DataSource = _context.GetFakeEpgs(date, 0, false);
+                _unfiltered = _context.GetFakeEpgs(date, 0, false);
+                dgvEPG.DataSource = _unfiltered;
             }
         }
 
         private void dgvEPG_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (e.RowIndex > -1 && e.ColumnIndex == dgvEPG.Columns["DisplaySymbol"].Index)
+            if (e.RowIndex > -1)
             {
-
-                int i = (int)dgvEPG.Rows[e.RowIndex].Cells["SymbolIndex"].Value;
-                if (i < 0 || i >= _imageList.Images.Count)
-                    i = 0;
-
-                Image cellImage = _imageList.Images[i];
-                if (cellImage != null)
+                if (e.ColumnIndex == dgvEPG.Columns["DisplaySymbol"].Index)
                 {
-                    SolidBrush gridBrush = new SolidBrush(dgvEPG.GridColor);
-                    Pen gridLinePen = new Pen(gridBrush);
-                    SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
-                    e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
-                    // Draw lines over cell  
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
-                    e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
-                    // Draw the image over cell at specific location.  
-                    Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(cellImage, point);
-                    dgvEPG.Rows[e.RowIndex].Cells["DisplaySymbol"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
-                }
 
-                e.Handled = true;
+                    int i = (int)dgvEPG.Rows[e.RowIndex].Cells["SymbolIndex"].Value;
+                    if (i < 0 || i >= _imageList.Images.Count)
+                        i = 0;
+
+                    Image cellImage = _imageList.Images[i];
+                    if (cellImage != null)
+                    {
+                        SolidBrush gridBrush = new SolidBrush(dgvEPG.GridColor);
+                        Pen gridLinePen = new Pen(gridBrush);
+                        SolidBrush backColorBrush = new SolidBrush(e.CellStyle.BackColor);
+                        e.Graphics.FillRectangle(backColorBrush, e.CellBounds);
+                        // Draw lines over cell  
+                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Left, e.CellBounds.Bottom - 1, e.CellBounds.Right - 1, e.CellBounds.Bottom - 1);
+                        e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
+                        // Draw the image over cell at specific location.  
+                        Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
+                        e.Graphics.DrawImage(cellImage, point);
+                        dgvEPG.Rows[e.RowIndex].Cells["DisplaySymbol"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
+                    }
+
+                    e.Handled = true;
+                }
             }
         }
 
@@ -292,6 +298,44 @@
         private void dtpDate_ValueChanged(object sender, EventArgs e)
         {
             ReLoad();
+        }
+
+        private void dgvEPG_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex > -1)
+            {
+                if (_filtered != null)
+                {
+                    dgvEPG.DataSource = _unfiltered;
+                    _filtered = null;
+                    return;
+                }
+
+
+                int columnIndex = e.ColumnIndex;
+                if (columnIndex == dgvEPG.Columns["ChannelName"].Index)
+                {
+                    string channelName = (string)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                    _filtered = _unfiltered.Where(x => x.ChannelName == channelName).ToList();                }
+                else if (columnIndex == dgvEPG.Columns["StartTime"].Index)
+                {
+                }
+                else if (columnIndex == dgvEPG.Columns["EndTime"].Index)
+                {
+                }
+                else if (columnIndex == dgvEPG.Columns["DurationMinutes"].Index)
+                {
+                }
+                else if (columnIndex == dgvEPG.Columns["Title"].Index)
+                {
+                }
+                else if (columnIndex == dgvEPG.Columns["ShortDescription"].Index)
+                {
+                }
+
+                if (_filtered != null)
+                    dgvEPG.DataSource = _filtered;
+            }
         }
     }
 }

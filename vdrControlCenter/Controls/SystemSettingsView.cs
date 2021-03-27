@@ -113,7 +113,7 @@
 
         }
 
-        private void SaveData()
+        public void SaveData()
         {
             if (_inTransaction)
                 return;

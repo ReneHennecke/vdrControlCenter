@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.panBox = new System.Windows.Forms.Panel();
+            this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.lblRequestInfo = new System.Windows.Forms.Label();
             this.dgvEPG = new System.Windows.Forms.DataGridView();
             this.btnRequest = new System.Windows.Forms.Button();
             this.btnTimer = new System.Windows.Forms.Button();
             this.btnFind = new System.Windows.Forms.Button();
-            this.dtpDate = new System.Windows.Forms.DateTimePicker();
             this.panBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEPG)).BeginInit();
             this.SuspendLayout();
@@ -55,6 +55,15 @@
             this.panBox.Name = "panBox";
             this.panBox.Size = new System.Drawing.Size(678, 336);
             this.panBox.TabIndex = 1;
+            // 
+            // dtpDate
+            // 
+            this.dtpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dtpDate.Location = new System.Drawing.Point(200, 306);
+            this.dtpDate.Name = "dtpDate";
+            this.dtpDate.Size = new System.Drawing.Size(196, 23);
+            this.dtpDate.TabIndex = 4;
+            this.dtpDate.ValueChanged += new System.EventHandler(this.dtpDate_ValueChanged);
             // 
             // lblRequestInfo
             // 
@@ -86,6 +95,7 @@
             this.dgvEPG.Size = new System.Drawing.Size(670, 300);
             this.dgvEPG.TabIndex = 0;
             this.dgvEPG.Text = "dataGridView1";
+            this.dgvEPG.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEPG_CellClick);
             this.dgvEPG.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEPG_CellFormatting);
             this.dgvEPG.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvEPG_CellPainting);
             // 
@@ -128,15 +138,6 @@
             this.btnFind.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.btnFind_Click);
-            // 
-            // dtpDate
-            // 
-            this.dtpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dtpDate.Location = new System.Drawing.Point(200, 306);
-            this.dtpDate.Name = "dtpDate";
-            this.dtpDate.Size = new System.Drawing.Size(196, 23);
-            this.dtpDate.TabIndex = 4;
-            this.dtpDate.ValueChanged += new System.EventHandler(this.dtpDate_ValueChanged);
             // 
             // SvdrpEpgView
             // 

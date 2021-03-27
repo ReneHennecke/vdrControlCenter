@@ -31,11 +31,9 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder
-                //    .UseLazyLoadingProxies()
-                //    .UseSqlServer(ConfigurationManager.ConnectionStrings["vdrControlCenterDatabase"].ConnectionString);
                 optionsBuilder
-                    .UseSqlServer("Server=RH0;DataBase=vdrControlCenter_Test;Trusted_Connection=true;MultipleActiveResultSets=True;");
+                    .UseLazyLoadingProxies()
+                    .UseSqlServer(ConfigurationManager.ConnectionStrings["vdrControlCenterDatabase"].ConnectionString);
             }
         }
 

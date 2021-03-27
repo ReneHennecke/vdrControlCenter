@@ -8,11 +8,12 @@
     {
         private int _countDown;
 
-        public dlgMessageBoxExtended(string title, string message, int countDown)
+        public dlgMessageBoxExtended(string title, string message, int countDown, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
         {
             InitializeComponent();
 
             Text = title;
+            mleMessage.TextAlign = horizontalAlignment;
             mleMessage.Text = message;
             if (countDown > 0)
             {

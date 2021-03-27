@@ -30,12 +30,19 @@
         private System.Text.Encoding _utf8EncoderNoBOM = new System.Text.UTF8Encoding(false);
         private const char EOL = '\n';
         private bool _enableDebug = false;
+        private bool _saveBuffer2File = false;
         private StreamWriter _sw;
 
         public bool EnableDebug
         {
-            get { return _enableDebug; }
-            set { _enableDebug = value; }
+            get => _enableDebug; 
+            set => _enableDebug = value;
+        }
+
+        public bool SaveBuffer2File
+        {
+            get =>  _saveBuffer2File;
+            set => _saveBuffer2File = value;
         }
 
         public SvdrpBuffer()
@@ -49,7 +56,7 @@
         public void Clear()
         {
             _buffer.Clear();
-            if (_enableDebug)
+            if (_saveBuffer2File)
             {
                 if (_sw != null)
                     CloseLogFile();
@@ -90,7 +97,7 @@
 
         public async void SaveLogFile()
         {
-            if (_enableDebug && _buffer.Length > 0 && _sw != null)
+            if (_saveBuffer2File && _buffer.Length > 0 && _sw != null)
             {
                 try
                 {

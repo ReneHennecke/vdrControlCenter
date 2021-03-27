@@ -12,7 +12,7 @@
         private Regex _splitter = new Regex("\\n");
         
 
-        private string[] _keywords;
+        private string[] _keywords = { "public", "void", "using", "static", "class", "True" };
 
         public dlgEditor()
         {
@@ -153,10 +153,10 @@
                 rtbEditor.SelectionColor = Color.Black;
                 rtbEditor.SelectionFont = new Font("Courier New", 10, FontStyle.Regular);
                 // Check whether the token is a keyword.   
-                string[] keywords = { "public", "void", "using", "static", "class", "True" };
-                for (int i = 0; i < keywords.Length; i++)
+                
+                for (int i = 0; i < _keywords.Length; i++)
                 {
-                    if (keywords[i] == token)
+                    if (_keywords[i] == token)
                     {
                         // Apply alternative color and font to highlight keyword.  
                         rtbEditor.SelectionColor = Color.Blue;

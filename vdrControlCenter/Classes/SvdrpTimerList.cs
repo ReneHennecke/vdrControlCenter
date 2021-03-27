@@ -61,14 +61,15 @@
                                 timer.Priority = j;
                                 int.TryParse(prm[6], out j);
                                 timer.Duration = (int)duration.TotalMinutes;
-                                timer.Title = prm[7];
+                                string title = prm[7];
                                 for (int i = 2; i < prms.Length; i++)
                                 {
                                     string s = prms[i];
                                     if (s.Contains(":"))
                                         s = s.Substring(0, s.IndexOf(':'));
-                                    timer.Title += $" {s}";
+                                   title += $" {s}";
                                 }
+                                timer.Title = title.Replace("\r", string.Empty);
                                 timer.Modtime = DateTime.Now;
 
                                 Timers.Add(timer);

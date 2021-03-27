@@ -8,6 +8,7 @@
         VDRAdmin,
         SVDRP,
         Editor,
-        EPGGuide
+        EPGGuide,
+        Video
     }
 }

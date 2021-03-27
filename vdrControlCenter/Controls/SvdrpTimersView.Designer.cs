@@ -85,7 +85,7 @@
             this.dgvTimers.TabIndex = 0;
             this.dgvTimers.Text = "dataGridView1";
             this.dgvTimers.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvTimers_CellFormatting);
-            this.dgvTimers.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvChannels_CellPainting);
+            this.dgvTimers.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvTimers_CellPainting);
             // 
             // btnRequest
             // 

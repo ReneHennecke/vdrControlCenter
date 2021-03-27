@@ -193,14 +193,14 @@
             {
                 lblRequestInfo.Text = $"{systemSettings.LastUpdateTimers:dd.MM.yyyy HH:mm:ss}";
 
-                dgvTimers.DataSource = await _context.Timers.OrderBy(e => e.StartTime).ToListAsync();
+                dgvTimers.DataSource = _context.GetFakeTimers().ToList();
             }
         }
 
-        private void dgvChannels_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        private void dgvTimers_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex > -1)
-            { 
+            {
                 if (e.ColumnIndex == dgvTimers.Columns["DisplayActive"].Index)
                 {
                     bool active = (bool)dgvTimers.Rows[e.RowIndex].Cells["Active"].Value;
@@ -214,10 +214,11 @@
                     // Draw the image over cell at specific location.  
                     Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
                     e.Graphics.DrawImage(active ? _imageList.Images[1] : _imageList.Images[0], point);
-                    dgvTimers.Rows[e.RowIndex].Cells["DisplaySymbol"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
-                }
+                    dgvTimers.Rows[e.RowIndex].Cells["DisplayActive"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
+                
 
-                e.Handled = true;
+                    e.Handled = true;
+                }
             }
         }
 
