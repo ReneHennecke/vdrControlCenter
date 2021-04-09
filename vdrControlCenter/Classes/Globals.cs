@@ -20,6 +20,7 @@ namespace vdrControlCenterUI.Classes
         public const string NavEditPng = "document-edit-icon24x24.png";
         public const string NavEpgPng = "tv-guide-icon24x24.png";
         public const string VideoPng = "file-movies-icon24x24.png";
+        public const string CommanderPng = "total-commander-icon24x24.png";
 
         // TabPages in Workspace
         public const string ClosePng = "cancel-icon16x16.png";
@@ -134,6 +135,9 @@ namespace vdrControlCenterUI.Classes
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     fileName = $"{ImageFolder}/{VideoPng}";
+                    if (File.Exists(fileName))
+                        imageList.Images.Add(Image.FromFile(fileName));
+                    fileName = $"{ImageFolder}/{CommanderPng}";
                     if (File.Exists(fileName))
                         imageList.Images.Add(Image.FromFile(fileName));
                     break;

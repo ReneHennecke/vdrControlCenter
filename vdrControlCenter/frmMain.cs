@@ -115,6 +115,15 @@
             };
             trvNavigation.Nodes.Add(node);
 
+            node = new TreeNode()
+            {
+                Text = "Datei Manager",
+                ImageIndex = (int)Navigation.Commander,
+                SelectedImageIndex = (int)Navigation.Commander,
+                Tag = Navigation.Commander
+            };
+            trvNavigation.Nodes.Add(node);
+
             trvNavigation.SelectedNode = null;
 
             viewStations.PopulateData();
@@ -272,10 +281,18 @@
                     case Navigation.Video:
                         page.Text = "Video";
                         page.ImageIndex = (int)Navigation.Video;
-                        VideoView videoView = new VideoView();
+                        MediaView videoView = new MediaView();
                         videoView.MainForm = this;
                         videoView.Dock = DockStyle.Fill;
                         page.Controls.Add(videoView);
+                        break;
+                    case Navigation.Commander:
+                        page.Text = "Datei Manager";
+                        page.ImageIndex = (int)Navigation.Commander;
+                        CommanderController commanderController = new CommanderController();
+                        commanderController.MainForm = this;
+                        commanderController.Dock = DockStyle.Fill;
+                        page.Controls.Add(commanderController);
                         break;
                     default:
                         break;

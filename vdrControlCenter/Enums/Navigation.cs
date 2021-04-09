@@ -9,6 +9,7 @@
         SVDRP,
         Editor,
         EPGGuide,
-        Video
+        Video,
+        Commander
     }
 }

@@ -154,7 +154,8 @@
                 {
                     await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Timers];");
 
-                    await _context.Timers.AddRangeAsync(timerList.Timers);
+                    if (timerList != null)
+                        await _context.Timers.AddRangeAsync(timerList.Timers);
 
                     SystemSettings settings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
                     if (settings != null)

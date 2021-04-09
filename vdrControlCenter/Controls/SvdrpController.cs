@@ -180,6 +180,10 @@
                 switch (_svdrpRequest)
                 {
                     case SvdrpRequest.Connect:
+                        if (_svdrpConnectionInfo == null)
+                            return;
+
+
                         if (_svdrpBuffer.Content.StartsWith(REQ_220))
                         {
                             _svdrpConnectionInfo.ParseMessage(_svdrpBuffer.Splitter);
@@ -218,6 +222,7 @@
                             dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("Timer", "Es sind keine Timer definiert.", 3);
                             dlg.ShowDialog();
 
+                            svdrpTimersView.RefreshData(null);
                             RefreshRequestControls(true);
                         }
                         else if (_svdrpBuffer.Content.StartsWith(REQ_250))

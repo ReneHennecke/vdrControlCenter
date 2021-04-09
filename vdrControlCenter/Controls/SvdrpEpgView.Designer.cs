@@ -95,8 +95,8 @@
             this.dgvEPG.Size = new System.Drawing.Size(670, 300);
             this.dgvEPG.TabIndex = 0;
             this.dgvEPG.Text = "dataGridView1";
-            this.dgvEPG.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEPG_CellClick);
             this.dgvEPG.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEPG_CellFormatting);
+            this.dgvEPG.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvEPG_CellMouseClick);
             this.dgvEPG.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvEPG_CellPainting);
             // 
             // btnRequest

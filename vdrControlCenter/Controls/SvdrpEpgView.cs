@@ -18,7 +18,7 @@
         private ImageList _imageList;
         private List<FakeEpg> _unfiltered;
         private List<FakeEpg> _filtered;
-
+        
         public bool RequestEnable
         {
             get { return btnRequest.Enabled; }
@@ -300,12 +300,18 @@
             ReLoad();
         }
 
-        private void dgvEPG_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void dgvEPG_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+
             if (e.RowIndex > -1)
             {
                 if (_filtered != null)
                 {
+                    foreach (DataGridViewColumn column in dgvEPG.Columns)
+                    {
+                        column.HeaderCell.Style.BackColor = Color.SteelBlue;
+                        column.HeaderCell.Style.ForeColor = Color.WhiteSmoke;
+                    }
                     dgvEPG.DataSource = _unfiltered;
                     _filtered = null;
                     return;
@@ -313,28 +319,46 @@
 
 
                 int columnIndex = e.ColumnIndex;
-                if (columnIndex == dgvEPG.Columns["ChannelName"].Index)
+                if (columnIndex > 0)
                 {
-                    string channelName = (string)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
-                    _filtered = _unfiltered.Where(x => x.ChannelName == channelName).ToList();                }
-                else if (columnIndex == dgvEPG.Columns["StartTime"].Index)
-                {
-                }
-                else if (columnIndex == dgvEPG.Columns["EndTime"].Index)
-                {
-                }
-                else if (columnIndex == dgvEPG.Columns["DurationMinutes"].Index)
-                {
-                }
-                else if (columnIndex == dgvEPG.Columns["Title"].Index)
-                {
-                }
-                else if (columnIndex == dgvEPG.Columns["ShortDescription"].Index)
-                {
-                }
+                    dgvEPG.Columns[columnIndex].HeaderCell.Style.BackColor = Color.Bisque;
+                    dgvEPG.Columns[columnIndex].HeaderCell.Style.ForeColor = Color.Black;
 
-                if (_filtered != null)
-                    dgvEPG.DataSource = _filtered;
+                    if (columnIndex == dgvEPG.Columns["ChannelName"].Index)
+                    {
+
+                        string search = (string)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.ChannelName == search).ToList();
+                    }
+                    else if (columnIndex == dgvEPG.Columns["StartTime"].Index)
+                    {
+                        DateTime search = (DateTime)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.StartTime.GetValueOrDefault().CompareTo(search) == 0).ToList();
+                    }
+                    else if (columnIndex == dgvEPG.Columns["EndTime"].Index)
+                    {
+                        DateTime search = (DateTime)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.EndTime.GetValueOrDefault().CompareTo(search) == 0).ToList();
+                    }
+                    else if (columnIndex == dgvEPG.Columns["DurationMinutes"].Index)
+                    {
+                        int search = (int)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.DurationMinutes.GetValueOrDefault().CompareTo(search) == 0).ToList();
+                    }
+                    else if (columnIndex == dgvEPG.Columns["Title"].Index)
+                    {
+                        string search = (string)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.Title == search).ToList();
+                    }
+                    else if (columnIndex == dgvEPG.Columns["ShortDescription"].Index)
+                    {
+                        string search = (string)dgvEPG.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.ShortDescription == search).ToList();
+                    }
+
+                    if (_filtered != null)
+                        dgvEPG.DataSource = _filtered;
+                }
             }
         }
     }
