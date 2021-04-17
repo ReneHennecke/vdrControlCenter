@@ -30,24 +30,36 @@ namespace vdrControlCenterUI.Controls
         private void InitializeComponent()
         {
             this.panBox = new System.Windows.Forms.Panel();
+            this.cmbFullPath = new System.Windows.Forms.ComboBox();
             this.livFileSystem = new System.Windows.Forms.ListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
             this.colExtension = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
             this.colAttributes = new System.Windows.Forms.ColumnHeader();
-            this.teFullPath = new System.Windows.Forms.TextBox();
             this.panBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // panBox
             // 
+            this.panBox.Controls.Add(this.cmbFullPath);
             this.panBox.Controls.Add(this.livFileSystem);
-            this.panBox.Controls.Add(this.teFullPath);
             this.panBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panBox.Location = new System.Drawing.Point(0, 0);
             this.panBox.Name = "panBox";
             this.panBox.Size = new System.Drawing.Size(594, 472);
             this.panBox.TabIndex = 0;
+            // 
+            // cmbFullPath
+            // 
+            this.cmbFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFullPath.BackColor = System.Drawing.SystemColors.Control;
+            this.cmbFullPath.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFullPath.FormattingEnabled = true;
+            this.cmbFullPath.Location = new System.Drawing.Point(2, 0);
+            this.cmbFullPath.Name = "cmbFullPath";
+            this.cmbFullPath.Size = new System.Drawing.Size(590, 23);
+            this.cmbFullPath.TabIndex = 2;
             // 
             // livFileSystem
             // 
@@ -64,9 +76,9 @@ namespace vdrControlCenterUI.Controls
             this.livFileSystem.ForeColor = System.Drawing.SystemColors.WindowText;
             this.livFileSystem.FullRowSelect = true;
             this.livFileSystem.HideSelection = false;
-            this.livFileSystem.Location = new System.Drawing.Point(2, 20);
+            this.livFileSystem.Location = new System.Drawing.Point(2, 24);
             this.livFileSystem.Name = "livFileSystem";
-            this.livFileSystem.Size = new System.Drawing.Size(590, 450);
+            this.livFileSystem.Size = new System.Drawing.Size(590, 446);
             this.livFileSystem.TabIndex = 1;
             this.livFileSystem.UseCompatibleStateImageBehavior = false;
             this.livFileSystem.View = System.Windows.Forms.View.Details;
@@ -98,18 +110,6 @@ namespace vdrControlCenterUI.Controls
             this.colAttributes.Text = "Attr.";
             this.colAttributes.Width = 70;
             // 
-            // teFullPath
-            // 
-            this.teFullPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.teFullPath.BackColor = System.Drawing.Color.PowderBlue;
-            this.teFullPath.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.teFullPath.Location = new System.Drawing.Point(2, 2);
-            this.teFullPath.Name = "teFullPath";
-            this.teFullPath.ReadOnly = true;
-            this.teFullPath.Size = new System.Drawing.Size(590, 16);
-            this.teFullPath.TabIndex = 0;
-            // 
             // CommanderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -118,7 +118,6 @@ namespace vdrControlCenterUI.Controls
             this.Name = "CommanderView";
             this.Size = new System.Drawing.Size(594, 472);
             this.panBox.ResumeLayout(false);
-            this.panBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -131,6 +130,6 @@ namespace vdrControlCenterUI.Controls
         private System.Windows.Forms.ColumnHeader colExtension;
         private System.Windows.Forms.ColumnHeader colSize;
         private System.Windows.Forms.ColumnHeader colAttributes;
-        private System.Windows.Forms.TextBox teFullPath;
+        private System.Windows.Forms.ComboBox cmbFullPath;
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class SystemSettingsView
+    partial class SystemSettingsController
     {
         /// <summary> 
         /// Erforderliche Designervariable.

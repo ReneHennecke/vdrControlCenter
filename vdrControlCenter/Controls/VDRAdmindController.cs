@@ -6,12 +6,12 @@
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
 
-    public partial class VDRAdmindView : UserControl
+    public partial class VDRAdmindController : UserControl
     {
         WebBrowser _webBrowser;
         vdrControlCenterContext _context;
 
-        public VDRAdmindView()
+        public VDRAdmindController()
         {
             InitializeComponent();
 

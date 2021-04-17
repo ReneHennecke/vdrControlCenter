@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class VDRAdmindView
+    partial class VDRAdmindController
     {
         /// <summary> 
         /// Erforderliche Designervariable.

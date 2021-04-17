@@ -164,7 +164,7 @@
                     switch (navigation)
                     {
                         case Navigation.Setup:
-                            SystemSettingsView systemSettingsView = (SystemSettingsView)page.Controls[0];
+                            SystemSettingsController systemSettingsView = (SystemSettingsController)page.Controls[0];
                             systemSettingsView.SaveData();
                             break;
                         default:
@@ -228,71 +228,87 @@
                 switch (navigation)
                 {
                     case Navigation.Setup:
-                        page.Text = "Setup";
-                        page.ImageIndex = (int)Navigation.Setup;
-                        SystemSettingsView systemSettingsView = new SystemSettingsView();
-                        systemSettingsView.MainForm = this;
-                        systemSettingsView.Dock = DockStyle.Fill;
-                        page.Controls.Add(systemSettingsView);
+                        {
+                            page.Text = "Setup";
+                            page.ImageIndex = (int)Navigation.Setup;
+                            SystemSettingsController controller = new SystemSettingsController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.SSH:
-                        page.Text = "SSH";
-                        page.ImageIndex = (int)Navigation.SSH;
-                        SshController sshController = new SshController();
-                        sshController.MainForm = this;
-                        sshController.Dock = DockStyle.Fill;
-                        page.Controls.Add(sshController);
+                        {
+                            page.Text = "SSH";
+                            page.ImageIndex = (int)Navigation.SSH;
+                            SshController controller = new SshController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.Service:
-                        page.Text = "VDR-Service";
-                        page.ImageIndex = (int)Navigation.Service;
-                        ServiceController serviceControllerView = new ServiceController();
-                        serviceControllerView.MainForm = this;
-                        serviceControllerView.Dock = DockStyle.Fill;
-                        page.Controls.Add(serviceControllerView);
+                        {
+                            page.Text = "VDR-Service";
+                            page.ImageIndex = (int)Navigation.Service;
+                            ServiceController controller = new ServiceController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.VDRAdmin:
-                        page.Text = "VDR-Admin";
-                        page.ImageIndex = (int)Navigation.VDRAdmin;
-                        VDRAdmindView admindView = new VDRAdmindView();
-                        admindView.Dock = DockStyle.Fill;
-                        page.Controls.Add(admindView);
+                        {
+                            page.Text = "VDR-Admin";
+                            page.ImageIndex = (int)Navigation.VDRAdmin;
+                            VDRAdmindController controller = new VDRAdmindController();
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.SVDRP:
-                        page.Text = "SVDRP";
-                        page.ImageIndex = (int)Navigation.SVDRP;
-                        SvdrpController svdrpController = new SvdrpController();
-                        svdrpController.MainForm = this;
-                        svdrpController.Dock = DockStyle.Fill;
-                        page.Controls.Add(svdrpController);
+                        {
+                            page.Text = "SVDRP";
+                            page.ImageIndex = (int)Navigation.SVDRP;
+                            SvdrpController controller = new SvdrpController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.Editor:
                         page.Text = "Editoren";
                         page.ImageIndex = (int)Navigation.Editor;
                         break;
                     case Navigation.EPGGuide:
-                        page.Text = "EPG-Guide";
-                        page.ImageIndex = (int)Navigation.EPGGuide;
-                        EpgGuideLineController epgGuideLineController = new EpgGuideLineController();
-                        epgGuideLineController.MainForm = this;
-                        epgGuideLineController.Dock = DockStyle.Fill;
-                        page.Controls.Add(epgGuideLineController);
+                        {
+                            page.Text = "EPG-Guide";
+                            page.ImageIndex = (int)Navigation.EPGGuide;
+                            EpgGuideLineController controller = new EpgGuideLineController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.Video:
-                        page.Text = "Video";
-                        page.ImageIndex = (int)Navigation.Video;
-                        MediaView videoView = new MediaView();
-                        videoView.MainForm = this;
-                        videoView.Dock = DockStyle.Fill;
-                        page.Controls.Add(videoView);
+                        {
+                            page.Text = "Video";
+                            page.ImageIndex = (int)Navigation.Video;
+                            MediaController controller = new MediaController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     case Navigation.Commander:
-                        page.Text = "Datei Manager";
-                        page.ImageIndex = (int)Navigation.Commander;
-                        CommanderController commanderController = new CommanderController();
-                        commanderController.MainForm = this;
-                        commanderController.Dock = DockStyle.Fill;
-                        page.Controls.Add(commanderController);
+                        {
+                            page.Text = "Datei Manager";
+                            page.ImageIndex = (int)Navigation.Commander;
+                            CommanderController controller = new CommanderController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
                         break;
                     default:
                         break;

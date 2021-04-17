@@ -127,9 +127,6 @@
     <None Update="Images\green-icon16x16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Images\Info.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Images\network-service-icon24x24.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -11,7 +11,7 @@
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Dialogs;
 
-    public partial class SystemSettingsView : UserControl
+    public partial class SystemSettingsController : UserControl
     {
         private vdrControlCenterContext _context;
         private bool _inTransaction;
@@ -21,7 +21,7 @@
             set { frmMain = value; }
         }
 
-        public SystemSettingsView()
+        public SystemSettingsController()
         {
             InitializeComponent();
 

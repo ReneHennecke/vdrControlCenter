@@ -1,5 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
+    using System;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Globalization;
@@ -48,6 +49,9 @@
         private void PostInit()
         {
             livFileSystem.SmallImageList = Globals.LoadImageList(Enums.ImageListType.CommandView);
+
+            cmbFullPath.Items.Add(Environment.MachineName);
+
         }
 
         private void LoadFileSystemEntries()
@@ -55,7 +59,6 @@
             if (_fileSystemEntry == null)
                 return;
 
-            teFullPath.Text = _fileSystemEntry.FullPath;
             livFileSystem.SuspendLayout();
             livFileSystem.Items.Clear();
 
