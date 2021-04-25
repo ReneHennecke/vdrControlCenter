@@ -4,12 +4,11 @@
     {
         Setup,
         SSH,
-        Service,
+        Commander,
         VDRAdmin,
         SVDRP,
         Editor,
         EPGGuide,
-        Video,
-        Commander
+        Video
     }
 }

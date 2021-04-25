@@ -62,10 +62,10 @@
 
             node = new TreeNode()
             {
-                Text = "Service",
-                ImageIndex = (int)Navigation.Service,
-                SelectedImageIndex = (int)Navigation.Service,
-                Tag = Navigation.Service
+                Text = "Datei Manager",
+                ImageIndex = (int)Navigation.Commander,
+                SelectedImageIndex = (int)Navigation.Commander,
+                Tag = Navigation.Commander
             };
             trvNavigation.Nodes.Add(node);
 
@@ -115,15 +115,6 @@
             };
             trvNavigation.Nodes.Add(node);
 
-            node = new TreeNode()
-            {
-                Text = "Datei Manager",
-                ImageIndex = (int)Navigation.Commander,
-                SelectedImageIndex = (int)Navigation.Commander,
-                Tag = Navigation.Commander
-            };
-            trvNavigation.Nodes.Add(node);
-
             trvNavigation.SelectedNode = null;
 
             viewStations.PopulateData();
@@ -166,6 +157,10 @@
                         case Navigation.Setup:
                             SystemSettingsController systemSettingsView = (SystemSettingsController)page.Controls[0];
                             systemSettingsView.SaveData();
+                            break;
+                        case Navigation.Commander:
+                            CommanderController commanderController = (CommanderController)page.Controls[0];
+                            commanderController.SaveConfig();
                             break;
                         default:
                             break;
@@ -242,16 +237,6 @@
                             page.Text = "SSH";
                             page.ImageIndex = (int)Navigation.SSH;
                             SshController controller = new SshController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
-                            page.Controls.Add(controller);
-                        }
-                        break;
-                    case Navigation.Service:
-                        {
-                            page.Text = "VDR-Service";
-                            page.ImageIndex = (int)Navigation.Service;
-                            ServiceController controller = new ServiceController();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);

@@ -1,14 +1,19 @@
 ﻿namespace DataLayer.Classes
 {
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     [DataContract]
     public class Configuration
     {
         [DataMember]
-        public string LocalFolder { get; set; }
+        public CommanderPanelView LastCommanderPanelViewLeft { get; set; }
         [DataMember]
-        public string RemoteFolder { get; set; }
+        public CommanderPanelView LastCommanderPanelViewRight { get; set; }
+        [DataMember]
+        public List<CommanderPanelView> CommanderViewListLeft { get; set; }
+        [DataMember]
+        public List<CommanderPanelView> CommanderViewListRight { get; set; }
         [DataMember]
         public int X { get; set; }
         [DataMember]
@@ -17,6 +22,5 @@
         public int Width { get; set; }
         [DataMember]
         public int Height { get; set; }
-
     }
 }

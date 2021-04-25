@@ -61,9 +61,7 @@
             //_url = "https://localhost:5001/api/";
 
             cvLocal.Controller = this;
-            cvLocal.IsLocal = true;
             cvRemote.Controller = this;
-            cvRemote.IsLocal = false;
 
             if (_context == null)
                 _context = new vdrControlCenterContext();
@@ -80,8 +78,8 @@
                 if (systemSettings.Configuration != null)
                     configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
 
-                _folderLocal = configuration.LocalFolder;
-                _folderRemote = configuration.RemoteFolder;
+                //_folderLocal = configuration.LocalFolder;
+                //_folderRemote = configuration.RemoteFolder;
             }
 
             
@@ -100,8 +98,8 @@
                     {
                         Configuration configuration = new Configuration()
                         {
-                            LocalFolder = cvLocal.FileSystemEntry.FullPath,
-                            RemoteFolder = cvRemote.FileSystemEntry.FullPath
+                            //LocalFolder = cvLocal.FileSystemEntry.FullPath,
+                            //RemoteFolder = cvRemote.FileSystemEntry.FullPath
                         };
 
                         systemSettings.Configuration = JsonConvert.SerializeObject(configuration, Formatting.Indented);
@@ -168,7 +166,7 @@
             try
             {
                 FileSystemEntry fse = new FileSystemEntry(_folderLocal);
-                cvLocal.FileSystemEntry = fse;
+                //cvLocal.FileSystemEntry = fse;
             }
             catch (Exception ex)
             {
@@ -195,8 +193,8 @@
                 string json = await PostData(action, request);
 
                 var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-                if (response != null)
-                    cvRemote.FileSystemEntry = response.FileSystemEntry;
+                //if (response != null)
+                //    cvRemote.FileSystemEntry = response.FileSystemEntry;
             }
             catch (Exception ex)
             {
@@ -224,7 +222,7 @@
                                 if (Directory.Exists(fse.FullPath))
                                     Directory.SetCurrentDirectory(fse.FullPath);
 
-                                cvLocal.FileSystemEntry = fse;
+                                //cvLocal.FileSystemEntry = fse;
                             }
                             else
                             {
@@ -235,8 +233,8 @@
                                 string json = await PostData(action, request);
 
                                 var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-                                if (response != null)
-                                    cvRemote.FileSystemEntry = response.FileSystemEntry;
+                                //if (response != null)
+                                //    cvRemote.FileSystemEntry = response.FileSystemEntry;
                             }
 
                             SaveData();

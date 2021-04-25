@@ -86,8 +86,6 @@ namespace vdrControlCenterUI.Controls
             // 
             this.cvLocal.Controller = null;
             this.cvLocal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cvLocal.FileSystemEntry = null;
-            this.cvLocal.IsLocal = false;
             this.cvLocal.Location = new System.Drawing.Point(0, 0);
             this.cvLocal.Name = "cvLocal";
             this.cvLocal.Size = new System.Drawing.Size(550, 366);
@@ -97,8 +95,6 @@ namespace vdrControlCenterUI.Controls
             // 
             this.cvRemote.Controller = null;
             this.cvRemote.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cvRemote.FileSystemEntry = null;
-            this.cvRemote.IsLocal = false;
             this.cvRemote.Location = new System.Drawing.Point(0, 0);
             this.cvRemote.Name = "cvRemote";
             this.cvRemote.Size = new System.Drawing.Size(618, 366);

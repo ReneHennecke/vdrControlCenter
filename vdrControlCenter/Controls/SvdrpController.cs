@@ -243,6 +243,8 @@
                         {
                             SvdrpEPGList svdrpEPGList = new SvdrpEPGList();
                             svdrpEPGList.ParseMessage(_svdrpBuffer.Splitter);
+                            
+                            frmMain.AddMessage($"SAVE EPG-DATA");
 
                             svdrpEpgListView.RefreshData(svdrpEPGList);
                             RefreshRequestControls(true);
@@ -434,7 +436,10 @@
                     svdrpChannelList.ParseMessage(_svdrpBuffer.Splitter);
 
                     if (svdrpChannelList != null)
+                    {
+                        frmMain.AddMessage($"SAVE CHANNEL");
                         svdrpChannelsView.RefreshData(svdrpChannelList);
+                    }
 
                     _svdrpRequest = SvdrpRequest.Undefined;
                     _svdrpBuffer.CloseLogFile();
@@ -444,7 +449,10 @@
                     svdrpTimerList.ParseMessage(_svdrpBuffer.Splitter);
 
                     if (svdrpTimerList != null)
+                    {
+                        frmMain.AddMessage($"SAVE TIMER");
                         svdrpTimersView.RefreshData(svdrpTimerList);
+                    }
 
                     _svdrpRequest = SvdrpRequest.Undefined;
                     _svdrpBuffer.CloseLogFile();
@@ -454,7 +462,10 @@
                     svdrpRecordingList.ParseMessage(_svdrpBuffer.Splitter);
 
                     if (svdrpRecordingList != null)
+                    {
+                        frmMain.AddMessage($"SAVE RECORDINGS");
                         svdrpRecordingsView.RefreshData(svdrpRecordingList);
+                    }
 
                     _svdrpRequest = SvdrpRequest.Undefined;
                     _svdrpBuffer.CloseLogFile();

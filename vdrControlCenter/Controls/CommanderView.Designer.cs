@@ -29,6 +29,7 @@ namespace vdrControlCenterUI.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panBox = new System.Windows.Forms.Panel();
             this.cmbFullPath = new System.Windows.Forms.ComboBox();
             this.livFileSystem = new System.Windows.Forms.ListView();
@@ -36,6 +37,7 @@ namespace vdrControlCenterUI.Controls
             this.colExtension = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
             this.colAttributes = new System.Windows.Forms.ColumnHeader();
+            this.tmCheckConnect = new System.Windows.Forms.Timer(this.components);
             this.panBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,6 +62,7 @@ namespace vdrControlCenterUI.Controls
             this.cmbFullPath.Name = "cmbFullPath";
             this.cmbFullPath.Size = new System.Drawing.Size(590, 23);
             this.cmbFullPath.TabIndex = 2;
+            this.cmbFullPath.SelectedIndexChanged += new System.EventHandler(this.cmbFullPath_SelectedIndexChanged);
             // 
             // livFileSystem
             // 
@@ -110,6 +113,11 @@ namespace vdrControlCenterUI.Controls
             this.colAttributes.Text = "Attr.";
             this.colAttributes.Width = 70;
             // 
+            // tmCheckConnect
+            // 
+            this.tmCheckConnect.Interval = 1000;
+            this.tmCheckConnect.Tick += new System.EventHandler(this.tmCheckConnect_Tick);
+            // 
             // CommanderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -131,5 +139,6 @@ namespace vdrControlCenterUI.Controls
         private System.Windows.Forms.ColumnHeader colSize;
         private System.Windows.Forms.ColumnHeader colAttributes;
         private System.Windows.Forms.ComboBox cmbFullPath;
+        private System.Windows.Forms.Timer tmCheckConnect;
     }
 }
