@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Controls\ServiceConnectorView.cs" />
     <Compile Update="Controls\CommanderController.cs">
       <SubType>UserControl</SubType>
     </Compile>

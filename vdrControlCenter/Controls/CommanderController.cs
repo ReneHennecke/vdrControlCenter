@@ -58,6 +58,7 @@
             List<CommanderPanelView> commanderViewList = configuration.CommanderViewListLeft;
             cmvLeft.LoadData(commanderPanelView, commanderViewList);
 
+            cmvRight.Switch = true;
             commanderPanelView = configuration.LastCommanderPanelViewRight;
             commanderViewList = configuration.CommanderViewListRight;
             cmvRight.LoadData(commanderPanelView, commanderViewList);

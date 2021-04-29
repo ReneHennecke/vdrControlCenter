@@ -10,18 +10,22 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
     using vdrControlService.Models;
 
     public partial class CommanderView : UserControl
     {
-        private ServiceController _controller;
+        private CommanderController _controller;
         private vdrControlCenterContext _context;
         private int _prevIndex = -1;
+        List<ShareConnect> _shareConnects;
         private FileSystemEntry _fileSystemEntry;
         private CommanderPanelView _commanderPanelView;
         private List<CommanderPanelView> _commanderList;
+        private HttpClient _httpClient;
 
         public CommanderPanelView CommanderPanelView
         {
@@ -49,8 +53,12 @@
             //}
         }
 
+        public bool Switch { get; set; }
+
+
+
         // Wieder entfernen
-        public ServiceController Controller
+        public CommanderController Controller
         {
             get => _controller;
             set => _controller = value;
@@ -69,6 +77,9 @@
             livFileSystem.SmallImageList = Globals.LoadImageList(Enums.ImageListType.CommandView);
 
             _commanderList = new List<CommanderPanelView>();
+
+            _httpClient = new HttpClient();
+            _httpClient.Timeout = TimeSpan.FromSeconds(2);
         }
 
         public async void LoadData(CommanderPanelView view, List<CommanderPanelView> list)
@@ -76,7 +87,7 @@
             if (_context == null)
                 _context = new vdrControlCenterContext();
 
-            List<ShareConnect> shareConnects = new List<ShareConnect>();
+            _shareConnects = new List<ShareConnect>();
             ShareConnect shareConnect = null;
 
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -91,7 +102,7 @@
                         ShareTyp = Enums.ShareTyp.Local,
                         FullPath = $"{di.Name.Substring(0, 1)}:/"
                     };
-                    shareConnects.Add(shareConnect);
+                    _shareConnects.Add(shareConnect);
                 }
             }
 
@@ -107,7 +118,7 @@
                     ShareTyp = Enums.ShareTyp.SMB,
                     NetworkCredential = new NetworkCredential(station.SambaUserName, station.SambaPassword)
                 };
-                shareConnects.Add(shareConnect);
+                _shareConnects.Add(shareConnect);
             }
 
             stations = await _context.Stations.Where(x => x.MachineName != Environment.MachineName && x.VdrControlServicePort > 0).ToListAsync(); 
@@ -121,14 +132,14 @@
                     Port = station.VdrControlServicePort.Value,
                     ShareTyp = Enums.ShareTyp.vdrControlService
                 };
-                shareConnects.Add(shareConnect);
+                _shareConnects.Add(shareConnect);
             }
 
 
             ComboBoxItem item = null;
             int index = 0;
             int selected = -1;
-            foreach (ShareConnect sc in shareConnects)
+            foreach (ShareConnect sc in _shareConnects)
             {
                 item = new ComboBoxItem();
                 item.Text = sc.DisplayName;
@@ -140,11 +151,15 @@
             }
 
             cmbFullPath.SelectedIndex = selected == -1 ? 0 : selected;
+            cmbFullPath_SelectionChangeCommitted(null, null);
+
+            tmCheckConnect.Enabled = true;
+            tmCheckConnect_Tick(null, null);
         }
 
         private void LoadFileSystemEntries()
         {
-            if (_fileSystemEntry == null || !Directory.Exists(_fileSystemEntry.FullPath))
+            if (_fileSystemEntry == null)
                 return;
 
             livFileSystem.SuspendLayout();
@@ -240,12 +255,13 @@
             }
         }
 
-        private void tmCheckConnect_Tick(object sender, EventArgs e)
+        private async void tmCheckConnect_Tick(object sender, EventArgs e)
         {
             tmCheckConnect.Enabled = false;
-            foreach (ComboBoxItem item in cmbFullPath.Items)
+
+            int index = 0;
+            foreach (ShareConnect shareConnect in _shareConnects)
             {
-                ShareConnect shareConnect = (ShareConnect)item.Value;
                 switch (shareConnect.ShareTyp)
                 {
                     case Enums.ShareTyp.Local:
@@ -253,43 +269,142 @@
                     case Enums.ShareTyp.SMB:
                         break;
                     case Enums.ShareTyp.vdrControlService:
+                        {
+                            string url = shareConnect.Url;
+                            if (string.IsNullOrWhiteSpace(url) || shareConnect.State == Enums.ShareConnectState.Idle || shareConnect.State == Enums.ShareConnectState.InRequest)
+                                return;
+
+                            shareConnect.State = Enums.ShareConnectState.IsAlive;
+
+                            ComboBoxItem item = (ComboBoxItem)cmbFullPath.Items[index];
+
+                            item.Text = shareConnect.DisplayName;
+                            item.Value = shareConnect;
+                            cmbFullPath.Items[index] = item;
+
+                            url += $"Extensions/IsAlive";
+                            bool isAlive = false;
+
+                            try
+                            {
+                                using (HttpResponseMessage response = await _httpClient.GetAsync(url))
+                                using (HttpContent content = response.Content)
+                                {
+                                    string result = await content.ReadAsStringAsync();
+                                    if (result != null)
+                                        bool.TryParse(result, out isAlive);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+
+                            shareConnect.State = Enums.ShareConnectState.Idle;
+
+                            item.Text = shareConnect.DisplayName;
+                            item.Value = shareConnect;
+                            cmbFullPath.Items[index] = item;
+                        }
                         break;
                     default:
                         break;
 
                 }
+
+                index++;
             }
+            
             tmCheckConnect.Enabled = true;
         }
 
-        private void cmbFullPath_SelectedIndexChanged(object sender, EventArgs e)
+        private async Task<string> PostData(string action, object json)
         {
-            if (_prevIndex != cmbFullPath.SelectedIndex)
+            string retval = string.Empty;
+            using (var content = new StringContent(JsonConvert.SerializeObject(json, Formatting.Indented), System.Text.Encoding.UTF8, "application/json"))
             {
-                ComboBoxItem item = (ComboBoxItem)cmbFullPath.SelectedItem;
-                ShareConnect shareConnect = (ShareConnect)item.Value;
-                //if (shareConnect.ShareTyp != Enums.ShareTyp.Local && shareConnect.Connected)
-                //{
-
-                //}
-
-                if (Directory.Exists(shareConnect.FullPath))
+                HttpResponseMessage result = await _httpClient.PostAsync(action, content);
+                if (!result.IsSuccessStatusCode)
                 {
-                    _prevIndex = cmbFullPath.SelectedIndex;
-                    _fileSystemEntry = new FileSystemEntry(shareConnect.FullPath);
-                    LoadFileSystemEntries();
+                    // Fehlermeldung
+                    return retval;
                 }
-                else
+
+                retval = result.Content.ReadAsStringAsync().Result;
+            }
+
+            return retval;
+        }
+
+        private async void cmbFullPath_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            if (cmbFullPath.SelectedIndex == _prevIndex)
+                return;
+
+            bool resetSelection = false;
+
+            ComboBoxItem item = (ComboBoxItem)cmbFullPath.SelectedItem;
+            ShareConnect shareConnect = (ShareConnect)item.Value;
+            string path = shareConnect.FullPath;
+            if (shareConnect.ShareTyp == Enums.ShareTyp.vdrControlService)
+            {
+                string url = shareConnect.Url;
+                if (string.IsNullOrWhiteSpace(url) || shareConnect.State != Enums.ShareConnectState.Idle)
+                    return;
+
+                shareConnect.State = Enums.ShareConnectState.InRequest;
+                item.Text = shareConnect.DisplayName;
+                item.Value = shareConnect;
+                cmbFullPath.Items[cmbFullPath.SelectedIndex] = item;
+
+                try
                 {
-                    if (_prevIndex > -1)
-                        cmbFullPath.SelectedIndex = _prevIndex;
+                    FileSystemEntryRequest request = new FileSystemEntryRequest();
+                    request.FullPath = string.IsNullOrWhiteSpace(path) ? "/" : path; // Kein Pfad vorhanden, dann root-Verzeichnis
+                    string action = $"{url}FileSystem/GetDirectory";
+
+                    string json = await PostData(action, request);
+
+                    var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                    if (response != null)
+                    {
+                        _fileSystemEntry = response.FileSystemEntry;
+                        LoadFileSystemEntries();
+                    }
+                    else
+                        resetSelection = true;
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message,
+                                    "Remote Filesystem-Fehler",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+
+                }
+
+                shareConnect.State = Enums.ShareConnectState.Idle;
+                item.Text = shareConnect.DisplayName;
+                item.Value = shareConnect;
+                cmbFullPath.Items[cmbFullPath.SelectedIndex] = item;
             }
             else
             {
-                if (_prevIndex > -1)
-                    cmbFullPath.SelectedIndex = _prevIndex;
+                // Lokale oder SMB-Verzeichnisse
+                if (Directory.Exists(shareConnect.FullPath))
+                {
+                    _prevIndex = cmbFullPath.SelectedIndex;
+                    _fileSystemEntry = new FileSystemEntry(path);
+                    LoadFileSystemEntries();
+                }
+                else
+                    resetSelection = true;
             }
+
+            if (resetSelection)
+                cmbFullPath.SelectedIndex = _prevIndex;
+            else
+                _prevIndex = cmbFullPath.SelectedIndex;
         }
     }
 }

@@ -66,7 +66,7 @@
             }
         }
 
-        public void PostInit(ServiceController controller, bool local, FileSystemEntry fse, string content, bool readOnly = true)
+        public void PostInit(CommanderController controller, bool local, FileSystemEntry fse, string content, bool readOnly = true)
         {
             string text = readOnly ? "View" : "Edit";
             Text = $"{readOnly} ¤ [{fse.FullPath}]";

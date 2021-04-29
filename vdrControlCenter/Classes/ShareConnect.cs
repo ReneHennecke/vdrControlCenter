@@ -9,14 +9,43 @@
         public int Port { get; set; }
         public ShareTyp ShareTyp { get; set; }
         public NetworkCredential NetworkCredential { get; set; }
-        public bool Connected { get; set; }
+        public ShareConnectState State { get; set; }
         public string DisplayName
         {
             get
             {
                 string retval = $"{MachineName} · {HostAddress}:{Port}";
-                if (ShareTyp != ShareTyp.Local)
-                    retval += " · " + (Connected ? "Verbunden" : "Getrennt") + " · ";
+                switch (ShareTyp)
+                {
+                    case ShareTyp.SMB:
+                        retval += " · " + (State == ShareConnectState.DisConnected ? "Getrennt" : "Verbunden") + " · ";
+                        break;
+                    case ShareTyp.vdrControlService:
+                        retval += " · ";
+                        switch (State)
+                        {
+                            case ShareConnectState.DisConnected:
+                                retval += "Getrennt";
+                                break;
+                            case ShareConnectState.Connected:
+                                retval += "Verbunden";
+                                break;
+                            case ShareConnectState.Idle:
+                                retval += "Im Leerlauf";
+                                break;
+                            case ShareConnectState.InRequest:
+                                retval += "Abfrage läuft";
+                                break;
+                            case ShareConnectState.IsAlive:
+                                retval += "Verfügbar";
+                                break;
+                            default: break;
+                        }
+                        retval += " · ";
+                        break;
+                    default:
+                        break;
+                }
 
                 retval += "»" + FullPath;
 
@@ -28,6 +57,11 @@
         public string Entry
         {
             get => $"{MachineName}{HostAddress}:{Port}»{FullPath}";
+        }
+
+        public string Url
+        {
+            get => $"http://{HostAddress}:{Port}/api/";
         }
     }
 }

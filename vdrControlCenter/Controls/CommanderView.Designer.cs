@@ -62,7 +62,7 @@ namespace vdrControlCenterUI.Controls
             this.cmbFullPath.Name = "cmbFullPath";
             this.cmbFullPath.Size = new System.Drawing.Size(590, 23);
             this.cmbFullPath.TabIndex = 2;
-            this.cmbFullPath.SelectedIndexChanged += new System.EventHandler(this.cmbFullPath_SelectedIndexChanged);
+            this.cmbFullPath.SelectionChangeCommitted += new System.EventHandler(this.cmbFullPath_SelectionChangeCommitted);
             // 
             // livFileSystem
             // 
@@ -115,7 +115,7 @@ namespace vdrControlCenterUI.Controls
             // 
             // tmCheckConnect
             // 
-            this.tmCheckConnect.Interval = 1000;
+            this.tmCheckConnect.Interval = 10000;
             this.tmCheckConnect.Tick += new System.EventHandler(this.tmCheckConnect_Tick);
             // 
             // CommanderView
