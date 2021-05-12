@@ -38,6 +38,7 @@ namespace vdrControlCenterUI.Controls
             this.btnDown = new System.Windows.Forms.Button();
             this.panTimeLineControls = new vdrControlCenterUI.Controls.EpgGuideLinePanel();
             this.chbIgnorePast = new System.Windows.Forms.CheckBox();
+            this.btnPrint = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblCurrentDate
@@ -127,10 +128,21 @@ namespace vdrControlCenterUI.Controls
             this.chbIgnorePast.UseVisualStyleBackColor = true;
             this.chbIgnorePast.CheckedChanged += new System.EventHandler(this.chbIgnorePast_CheckedChanged);
             // 
+            // btnPrint
+            // 
+            this.btnPrint.Location = new System.Drawing.Point(836, 4);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(121, 27);
+            this.btnPrint.TabIndex = 9;
+            this.btnPrint.Text = "Drucken";
+            this.btnPrint.UseVisualStyleBackColor = true;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
+            // 
             // EpgGuideLineController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.chbIgnorePast);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.panTimeLineControls);
@@ -156,5 +168,6 @@ namespace vdrControlCenterUI.Controls
         private Controls.EpgGuideLinePanel panTimeLineControls;
         private Button btnFind;
         private CheckBox chbIgnorePast;
+        private Button btnPrint;
     }
 }

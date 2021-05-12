@@ -29,6 +29,7 @@ namespace vdrControlService.Models
         private string _rootPath;
         private string _parentPath;
         private long _size;
+        private bool _replaceDosPathSeparator = true;
 
         private Exception _exception;
 
@@ -59,14 +60,18 @@ namespace vdrControlService.Models
 
         private void PrepareFullPathForOS(string fullPath)        
         {
-            const string DOS_DRIVE_SEPARATOR = ":";
 
-            if (OperatingSystem.IsLinux())
-            {
+            //const string DOS_DRIVE_SEPARATOR = ":";
+
+            //if (OperatingSystem.IsLinux())
+            //{
+            //   // fullPath = fullPath.Replace("\\", "/");
+            //    //if (fullPath.Contains(DOS_DRIVE_SEPARATOR))
+            //    //    fullPath = fullPath.Substring(fullPath.IndexOf(DOS_DRIVE_SEPARATOR)) + "ää";
+            //}
+
+            if (_replaceDosPathSeparator)
                 fullPath = fullPath.Replace("\\", "/");
-                if (fullPath.Contains(DOS_DRIVE_SEPARATOR))
-                    fullPath = fullPath.Substring(fullPath.IndexOf(DOS_DRIVE_SEPARATOR)) + "ää";
-            }
 
             _fullPath = fullPath;
         }
@@ -333,6 +338,12 @@ namespace vdrControlService.Models
         {
             PrepareFullPathForOS(fullPath);
             LoadAttributes();
+        }
+
+        public bool ReplaceDosPathSeparator
+        {
+            get => _replaceDosPathSeparator;
+            set => _replaceDosPathSeparator = value;
         }
     }
 }

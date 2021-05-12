@@ -22,6 +22,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NetCoreServer" Version="3.0.22" />
+    <PackageReference Include="ReportViewerCore.WinForms" Version="15.1.13" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
     <PackageReference Include="Svg" Version="3.2.3" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.12" />
@@ -37,10 +38,20 @@
     <Compile Update="Controls\CommanderController.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Reports\EPGGuideDS.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EPGGuideDS.xsd</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="vdrControlCenterDataSet.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>vdrControlCenterDataSet.xsd</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -62,6 +73,10 @@
     <None Update="app.Release.config">
       <IsTransformFile>true</IsTransformFile>
       <DependentUpon>app.config</DependentUpon>
+    </None>
+    <None Update="Reports\EPGGuideDS.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>EPGGuideDS.Designer.cs</LastGenOutput>
     </None>
     <None Update="Images\actions-edit-cut-icon16x16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -182,6 +197,13 @@
     </None>
     <None Update="libvlc\win-x86\libvlccore.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\EpgGuide.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="vdrControlCenterDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>vdrControlCenterDataSet.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

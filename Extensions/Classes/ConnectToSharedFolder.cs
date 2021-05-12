@@ -28,15 +28,9 @@
                 RemoteName = _networkName
             };
 
-            var userName = string.IsNullOrEmpty(credential.Domain)
-            ? credential.UserName
-            : string.Format(@"{0}\{1}", credential.Domain, credential.UserName);
+            var userName = string.IsNullOrEmpty(credential.Domain) ? credential.UserName : string.Format(@"{0}\{1}", credential.Domain, credential.UserName);
 
-            var result = WNetAddConnection2(
-           netResource,
-           credential.Password,
-           userName,
-           0);
+            var result = WNetAddConnection2(netResource, credential.Password, userName, 0);
 
             if (result != 0)
                 throw new IOException("Error connecting to remote share", result);

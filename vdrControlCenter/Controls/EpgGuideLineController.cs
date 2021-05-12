@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Printing;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows.Forms;
@@ -260,6 +261,26 @@
         private void chbIgnorePast_CheckedChanged(object sender, EventArgs e)
         {
             panTimeLineControls_SizeChanged(null, null);
+        }
+
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            dlgReports reports = new dlgReports();
+            reports.PostInit(Enums.ReportType.EpgGuide, _context);
+            if (reports.ShowDialog() == DialogResult.OK && reports.ReportParameters != null && reports.ReportDataSource != null)
+            {
+                const int margin = 15;
+
+                dlgReport dlg = new dlgReport();
+                dlg.Title = "EPG-Guide";
+                dlg.PageSettings = new System.Drawing.Printing.PageSettings()
+                {
+                    Landscape = true,
+                    Margins = new Margins(margin, margin, margin, margin)
+                };
+                dlg.PostInit(Enums.ReportType.EpgGuide, reports.ReportParameters, reports.ReportDataSource);
+                dlg.Show();
+            }
         }
     }
 }

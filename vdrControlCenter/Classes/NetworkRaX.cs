@@ -133,5 +133,27 @@
             }
             return 0;
         }
+
+        /// <summary>
+        /// Get local Iip address
+        /// </summary>
+        public static IPAddress LocalAddress
+        {
+            get
+            {
+                IPAddress retval = null;
+                var localHost = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in localHost.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        retval = ip;
+                        break;
+                    }
+                }
+
+                return retval;
+            }
+        }
     }
 }

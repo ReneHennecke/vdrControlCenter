@@ -66,13 +66,13 @@
             }
         }
 
-        public void PostInit(CommanderController controller, bool local, FileSystemEntry fse, string content, bool readOnly = true)
+        public void PostInit(CommanderView view, FileSystemEntry fse, string content, bool readOnly = true)
         {
             string text = readOnly ? "View" : "Edit";
             Text = $"{readOnly} ¤ [{fse.FullPath}]";
             rtbEditor.Text = content;
             rtbEditor.Select(0, 0);
-            //rtbEditor.ReadOnly = readOnly;
+            rtbEditor.ReadOnly = readOnly;
 
             Parser();
         }

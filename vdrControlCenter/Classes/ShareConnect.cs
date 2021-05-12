@@ -10,6 +10,7 @@
         public ShareTyp ShareTyp { get; set; }
         public NetworkCredential NetworkCredential { get; set; }
         public ShareConnectState State { get; set; }
+        public object Tag { get; set; }
         public string DisplayName
         {
             get
@@ -61,7 +62,7 @@
 
         public string Url
         {
-            get => $"http://{HostAddress}:{Port}/api/";
+            get => ShareTyp ==  ShareTyp.vdrControlService ? $"http://{HostAddress}:{Port}/api/" : string.Empty;
         }
     }
 }

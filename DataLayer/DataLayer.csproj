@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Models\vdrControlCenter.FindEntry.cs" />
+    <None Include="Models\vdrControlCenterContext.FindEntry.cs" />
   </ItemGroup>
 
 </Project>

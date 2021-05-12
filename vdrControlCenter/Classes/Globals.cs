@@ -1,7 +1,9 @@
 ﻿using DataLayer.Classes;
 using DataLayer.Models;
+using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using vdrControlCenterUI.Enums;
 
@@ -229,6 +231,20 @@ namespace vdrControlCenterUI.Classes
         public static string LogoFolder
         {
             get { return ModelHelper.PathToChannelLogos; }
+        }
+
+        public static string ChannelLogoPath(vdrControlCenterContext context)
+        {
+            string channelLogoPath = string.Empty;
+            SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
+            if (systemSettings != null)
+            {
+                channelLogoPath = systemSettings.PathToChannelLogos;
+                if (!string.IsNullOrWhiteSpace(channelLogoPath) && !channelLogoPath.EndsWith("/"))
+                    channelLogoPath += "/";
+            }
+
+            return channelLogoPath;
         }
     }
 }

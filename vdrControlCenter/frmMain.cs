@@ -11,6 +11,7 @@
     using Newtonsoft.Json;
     using Microsoft.EntityFrameworkCore;
     using DataLayer.Classes;
+    using Microsoft.Reporting.WinForms;
 
     public partial class frmMain : Form
     {
@@ -18,9 +19,12 @@
         private Point _imgHitArea = new Point(20, 4);
         private Image _closeImage;
         private const int FRAME_MAXIMIZED = -1;
-        
+
         private delegate void AddMessageCallback(string msg);
-        
+
+        private ReportViewer _reportViewer;
+
+      
         public frmMain()
         {
             InitializeComponent();
@@ -411,6 +415,22 @@
         private void frmMain_Load(object sender, EventArgs e)
         {
             LoadSettings();
+        }
+
+        public void RptEpg(vdrControlCenterContext context)
+        {
+            if (_reportViewer == null)
+                _reportViewer = new ReportViewer();
+
+            _reportViewer.LocalReport.DataSources.Clear();
+
+            var data = context.Stations.ToListAsync();
+            var reportDataSource = new Microsoft.Reporting.WinForms.ReportDataSource();
+            reportDataSource.Name = "DataSet1";
+            reportDataSource.Value = data;
+            _reportViewer.LocalReport.DataSources.Add(reportDataSource);
+            _reportViewer.LocalReport.ReportEmbeddedResource = "..\\Reports\\EPG.rdlc";
+            _reportViewer.RefreshReport();
         }
     }
 }
