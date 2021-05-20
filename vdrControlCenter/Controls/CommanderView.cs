@@ -7,11 +7,13 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.NetworkInformation;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
@@ -29,6 +31,7 @@
         private List<CommanderPanelView> _commanderList;
         private HttpClient _httpClient;
         private Ping _ping;
+        private string _name;
 
         public CommanderPanelView CommanderPanelView
         {
@@ -39,28 +42,13 @@
         public List<CommanderPanelView> CommanderList
         {
             get => _commanderList;
-            //{
-            //    List<CommanderPanelView> retval = new List<CommanderPanelView>();
-            //    foreach (ComboBoxItem item in cmbFullPath.Items)
-            //    {
-            //        ShareConnect shareConnect = (ShareConnect)item.Value;
-            //        CommanderPanelView view = new CommanderPanelView()
-            //        {
-            //            View = shareConnect.Entry,
-            //            FullPath = shareConnect.FullPath
-            //        };
-            //        retval.Add(view);
-            //    }
-
-            //    return retval;
-            //}
         }
 
-        public bool Switch { get; set; }
+        public FileSystemEntry CurrentFileSystemEntry
+        {
+            get => _fileSystemEntry;
+        }
 
-
-
-        // Wieder entfernen
         public CommanderController Controller
         {
             get => _controller;
@@ -87,8 +75,9 @@
             _ping = new Ping();
         }
 
-        public async void LoadData(CommanderPanelView view, List<CommanderPanelView> list)
+        public async void LoadData(CommanderPanelView view, List<CommanderPanelView> list, string name)
         {
+            _name = name;
             if (_context == null)
                 _context = new vdrControlCenterContext();
 
@@ -410,6 +399,11 @@
 
                             }
                         }
+                        else
+                        {
+                            ea = new KeyEventArgs(Keys.F3);
+                            Execute(ea, lvitem); // Wenn Datei, versuchen die Datei im Anzeigemodus zu öffnen
+                        }
                     }
                     break;
 
@@ -427,6 +421,41 @@
 
                     OpenFile(shareConnect, fse, true);
 
+                    break;
+
+                case Keys.F5:
+                    DoCopyOrMove(shareConnect, fse, false, false);
+                    break;
+
+                case Keys.F6:
+                    DoCopyOrMove(shareConnect, fse, true, false);
+                    break;
+
+                case Keys.F8:
+                case Keys.Delete:
+                    string title = "%1 löschen";
+                    string text = $"Möchten Sie %1 <{fse.FullPath}> wirklich löschen ?";
+                    if (fse.Attributes.HasFlag(FileAttributes.Directory))
+                    {
+                        title = title.Replace("%1", "Verzeichnis");
+                        text = text.Replace("%1", "das Verzeichnis");
+                    }
+                    else
+                    {
+                        title = title.Replace("%1", "Datei");
+                        text = text.Replace("%1", "die Datei");
+                    }
+                    if (MessageBox.Show(text, 
+                                        title,
+                                        MessageBoxButtons.YesNoCancel,
+                                        MessageBoxIcon.Question) != DialogResult.Yes)
+                        return;
+
+                    DoDelete(shareConnect, fse);
+
+                    break;
+                case Keys.F10:
+                    RefreshView();
                     break;
             }
         }
@@ -498,56 +527,141 @@
 
         private async void OpenFile(ShareConnect shareConnect, FileSystemEntry fse, bool toWrite = false)
         {
+            switch (fse.Extension.ToLower())
+            {
+                case ".txt":
+                case ".conf":
+                case ".config":
+                case ".cs":
+                    string url = shareConnect.Url;
+                    FileSystemEntryRequest request = null;
+                    if (shareConnect.ShareTyp == Enums.ShareTyp.vdrControlService)
+                    {
+                        request = new FileSystemEntryRequest();
+                        request.FullPath = fse.FullPath;
+
+                        if (string.IsNullOrWhiteSpace(url) || shareConnect.State != Enums.ShareConnectState.Idle)
+                            return;
+                    }
+
+                    string content = string.Empty;
+                    if (shareConnect.ShareTyp != Enums.ShareTyp.vdrControlService)
+                        content = await File.ReadAllTextAsync(fse.FullPath);
+                    else if (request != null)
+                    {
+                        string action = $"{url}FileSystem/ReadFileContent";
+                        string json = await PostData(action, request);
+
+                        var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                        if (response != null)
+                        {
+                            byte[] bytes = Convert.FromBase64String(response.FileContent.Content);
+                            content = Encoding.UTF8.GetString(bytes);
+                        }
+                    }
+                    dlgEditor dlg = new dlgEditor();
+                    dlg.PostInit(this, fse, content, toWrite);
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        if (shareConnect.ShareTyp != Enums.ShareTyp.vdrControlService)
+                            await File.WriteAllTextAsync(fse.FullPath, dlg.Content);
+                        else if (request != null)
+                        {
+                            byte[] bytes = Encoding.UTF8.GetBytes(dlg.Content);
+                            request.Content = Convert.ToBase64String(bytes);
+                            string action = $"{url}FileSystem/WriteFileContent";
+                            string json = await PostData(action, request);
+
+                            var response = JsonConvert.DeserializeObject<ApiResponse>(json);
+                            if (response != null)
+                            {
+
+                            }
+                        }
+                    }
+                    break;
+                case ".pdf":
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                case ".tif":
+                case ".mp3":
+                case ".mp4":
+                    // if (shareConnect.ShareTyp == Enums.ShareTyp.vdrControlService)
+                    string fullPath = fse.FullPath;
+                    if (string.IsNullOrWhiteSpace(fullPath))
+                        return;
+
+                    ProcessStartInfo info = new ProcessStartInfo(fullPath)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(info);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void DoCopyOrMove(ShareConnect shareConnect, FileSystemEntry fse, bool move, bool overwrite)
+        {
+            FileSystemEntry target = _controller.GetTargetFileSystemEntry(_name);
+            if (_fileSystemEntry.FullPath == target.FullPath)
+                return;
+
             if (shareConnect.ShareTyp != Enums.ShareTyp.vdrControlService)
             {
-                switch (fse.Extension.ToLower())
-                {
-                    case ".txt":
-                    case ".conf":
-                    case ".config":
-                    case ".cs":
-                        string content = await File.ReadAllTextAsync(fse.FullPath);
-                        dlgEditor dlg = new dlgEditor();
-                        dlg.PostInit(this, fse, content, toWrite);
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                        { 
-                            //await File.WriteAllTextAsync(dlg.cont fse.FullPath);
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                if (!move)
+                    File.Copy(_fileSystemEntry.FullPath, target.FullPath, overwrite);
+                else
+                    File.Move(_fileSystemEntry.FullPath, target.FullPath, overwrite);
             }
             else
             {
-                //                switch (fse.Extension.ToLower())
-                //                {
-                //                    case ".txt":
-                //                    case ".conf":
-                //                    case ".config":
-                //                        FileSystemEntryRequest request = new FileSystemEntryRequest();
-                //                        request.FullPath = fse.FullPath;
-                //                        string action = $"{_url}FileSystem/ReadFileContent";
 
-                //                        string json = await PostData(action, request);
-
-                //                        var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-                //                        if (response != null)
-                //                        {
-                //                            byte[] bytes = Convert.FromBase64String(response.FileContent.Content);
-                //                            string content = Encoding.UTF8.GetString(bytes);
-
-                //                            dlgEditor dlg = new dlgEditor();
-                //                            dlg.PostInit(this, local, fse, content, true);
-                //                            dlg.Show();
-                //                        }
-                //                        break;
-                //                    default:
-
-                //                        break;
-                //                }
             }
 
+            _controller.RefreshTarget(_name);
+        }
+
+        private void DoDelete(ShareConnect shareConnect, FileSystemEntry fse)
+        {
+            if (shareConnect.ShareTyp != Enums.ShareTyp.vdrControlService)
+                File.Delete(fse.FullPath);
+
+            RefreshView();
+        }
+
+
+        public void RefreshView()
+        {
+            FileSystemEntry fse = _fileSystemEntry;
+            if (!fse.Attributes.HasFlag(FileAttributes.Directory))
+            {
+                string separator = fse.ReplaceDosPathSeparator ? "/" : "\\";
+                fse = new FileSystemEntry(fse.FullPath.Substring(0, fse.FullPath.LastIndexOf(separator)));
+            }
+
+            _fileSystemEntry = new FileSystemEntry(fse.FullPath);
+            LoadFileSystemEntries();
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            KeyEventArgs ea = new KeyEventArgs(Keys.F5);
+            livFileSystem_KeyDown(null, ea);
+        }
+
+        private void btnMove_Click(object sender, EventArgs e)
+        {
+            KeyEventArgs ea = new KeyEventArgs(Keys.F6);
+            livFileSystem_KeyDown(null, ea);
+        }
+
+        private void btnDel_Click(object sender, EventArgs e)
+        {
+            KeyEventArgs ea = new KeyEventArgs(Keys.F8);
+            livFileSystem_KeyDown(null, ea);
         }
     }
 }

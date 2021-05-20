@@ -3,10 +3,8 @@
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage;
-    using Microsoft.Extensions.Configuration;
     using System;
     using System.Drawing;
-    using System.Linq;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
@@ -14,7 +12,6 @@
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
-        private int _width;
 
         public bool RequestEnable
         {
@@ -83,22 +80,12 @@
 
         private void PostInit()
         {
-            _width = lblRed.Width;
-            Reset();
             btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SsivRequestPng}");
         }
 
         private void btnRequest_Click(object sender, System.EventArgs e)
         {
             _controller.SendStatusInfoRequest();
-        }
-
-        private void Reset()
-        {
-            lblGreen.Visible = false;
-            lblGreen.Width = _width;
-            lblRed.Visible = false;
-            lblRed.Width = _width;
         }
 
         private async void ReLoad()
@@ -112,19 +99,19 @@
                     statusInfo.FreeDiskSpace.HasValue &&
                     statusInfo.UsedPercent.HasValue)
                 {
-                    lblGreen.Visible = true;
-                    lblRed.Visible = true;
+                    lblGreen.Visible = (lblGreen.Width > 0);
+                    lblRed.Visible = (lblRed.Width > 0);
 
                     lblTotalValue.Text = $"{statusInfo.TotalDiskSpace / 1024:0,0} GB";
                     lblFreeValue.Text = $"{statusInfo.FreeDiskSpace / 1024:0,0} GB";
                     lblPercentValue.Text = $"{statusInfo.UsedPercent:0.0} %";
                     
-                    int maxLength = lblPercentValue.Size.Width;
+                    int maxLength = lblPercentValue.Size.Width; // Das Label hat dieselbe Breite wie die Balken-Label
                     int height = lblRed.Size.Height;
                     int calcRed = (int)(maxLength * statusInfo.UsedPercent / 100);
 
-                    lblRed.Size = new Size(calcRed - 1, height);
-                    lblGreen.Location = new Point(lblGreen.Location.X + calcRed + 1, lblGreen.Location.Y);
+                    lblRed.Size = new Size(calcRed - 1, height); // Etwas kleiner darstellen, um einen Zwischenraum anzuzeigen
+                    lblGreen.Location = new Point(lblRed.Location.X + calcRed + 1, lblGreen.Location.Y); // Etwas größer...
                     lblGreen.Size = new Size(maxLength - calcRed - 2, height);
                 }
 

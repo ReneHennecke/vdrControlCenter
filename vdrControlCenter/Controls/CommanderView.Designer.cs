@@ -31,6 +31,9 @@ namespace vdrControlCenterUI.Controls
         {
             this.components = new System.ComponentModel.Container();
             this.panBox = new System.Windows.Forms.Panel();
+            this.btnDel = new System.Windows.Forms.Button();
+            this.btnMove = new System.Windows.Forms.Button();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.cmbFullPath = new System.Windows.Forms.ComboBox();
             this.livFileSystem = new System.Windows.Forms.ListView();
             this.colName = new System.Windows.Forms.ColumnHeader();
@@ -43,6 +46,9 @@ namespace vdrControlCenterUI.Controls
             // 
             // panBox
             // 
+            this.panBox.Controls.Add(this.btnDel);
+            this.panBox.Controls.Add(this.btnMove);
+            this.panBox.Controls.Add(this.btnCopy);
             this.panBox.Controls.Add(this.cmbFullPath);
             this.panBox.Controls.Add(this.livFileSystem);
             this.panBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -50,6 +56,42 @@ namespace vdrControlCenterUI.Controls
             this.panBox.Name = "panBox";
             this.panBox.Size = new System.Drawing.Size(594, 472);
             this.panBox.TabIndex = 0;
+            // 
+            // btnDel
+            // 
+            this.btnDel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnDel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnDel.Location = new System.Drawing.Point(286, 446);
+            this.btnDel.Name = "btnDel";
+            this.btnDel.Size = new System.Drawing.Size(140, 22);
+            this.btnDel.TabIndex = 5;
+            this.btnDel.Text = "<F8, Entf>=Löschen";
+            this.btnDel.UseVisualStyleBackColor = true;
+            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
+            // 
+            // btnMove
+            // 
+            this.btnMove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnMove.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnMove.Location = new System.Drawing.Point(144, 446);
+            this.btnMove.Name = "btnMove";
+            this.btnMove.Size = new System.Drawing.Size(140, 22);
+            this.btnMove.TabIndex = 4;
+            this.btnMove.Text = "<F6>=Verschieben";
+            this.btnMove.UseVisualStyleBackColor = true;
+            this.btnMove.Click += new System.EventHandler(this.btnMove_Click);
+            // 
+            // btnCopy
+            // 
+            this.btnCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCopy.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnCopy.Location = new System.Drawing.Point(2, 446);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(140, 22);
+            this.btnCopy.TabIndex = 3;
+            this.btnCopy.Text = "<F5>=Kopieren";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
             // cmbFullPath
             // 
@@ -81,7 +123,7 @@ namespace vdrControlCenterUI.Controls
             this.livFileSystem.HideSelection = false;
             this.livFileSystem.Location = new System.Drawing.Point(2, 24);
             this.livFileSystem.Name = "livFileSystem";
-            this.livFileSystem.Size = new System.Drawing.Size(590, 446);
+            this.livFileSystem.Size = new System.Drawing.Size(590, 420);
             this.livFileSystem.TabIndex = 1;
             this.livFileSystem.UseCompatibleStateImageBehavior = false;
             this.livFileSystem.View = System.Windows.Forms.View.Details;
@@ -140,5 +182,8 @@ namespace vdrControlCenterUI.Controls
         private System.Windows.Forms.ColumnHeader colAttributes;
         private System.Windows.Forms.ComboBox cmbFullPath;
         private System.Windows.Forms.Timer tmCheckConnect;
+        private System.Windows.Forms.Button btnDel;
+        private System.Windows.Forms.Button btnMove;
+        private System.Windows.Forms.Button btnCopy;
     }
 }

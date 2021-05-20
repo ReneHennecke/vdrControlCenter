@@ -6,7 +6,7 @@ namespace vdrControlService.Models
     {
         private string _fullPath;
         private string _content;
-        private Exception _exception;
+        private ErrorResult _errorResult;
 
         public string FullPath 
         { 
@@ -20,10 +20,15 @@ namespace vdrControlService.Models
             set => _content = value; 
         }
 
-        public Exception Exception
+        public ErrorResult ErrorResult
         {
-            get => _exception;
-            set => _exception = value;
+            get => _errorResult;
+            set => _errorResult = value;
+        }
+
+        public FileContent()
+        {
+            _errorResult = new ErrorResult();
         }
     }
 }

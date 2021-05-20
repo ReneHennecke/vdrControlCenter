@@ -38,7 +38,6 @@ namespace vdrControlService.Models
 
         private string _searchPattern = "*";
 
-
         // Settings über public Methoden sonst Problem mit Deserializer
 
         public FileSystemEntry()

@@ -7,8 +7,6 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlService.Models;
 
@@ -56,12 +54,13 @@
 
             CommanderPanelView commanderPanelView = configuration.LastCommanderPanelViewLeft;
             List<CommanderPanelView> commanderViewList = configuration.CommanderViewListLeft;
-            cmvLeft.LoadData(commanderPanelView, commanderViewList);
+            cmvLeft.Controller = this;
+            cmvLeft.LoadData(commanderPanelView, commanderViewList, "cmvLeft");
 
-            cmvRight.Switch = true;
             commanderPanelView = configuration.LastCommanderPanelViewRight;
             commanderViewList = configuration.CommanderViewListRight;
-            cmvRight.LoadData(commanderPanelView, commanderViewList);
+            cmvRight.Controller = this;
+            cmvRight.LoadData(commanderPanelView, commanderViewList, "cmvRight");
         }
 
         public async void SaveConfig()
@@ -96,6 +95,23 @@
                     await transaction.RollbackAsync();
                 }
             }
+        }
+
+        private CommanderView GetTargetView(string name)
+        {
+            return name == "cmvLeft" ? cmvRight : cmvLeft;
+        }
+
+        public FileSystemEntry GetTargetFileSystemEntry(string name)
+        {
+            CommanderView target = GetTargetView(name);
+            return target.CurrentFileSystemEntry;
+        }
+
+        public void RefreshTarget(string name)
+        {
+            CommanderView target = GetTargetView(name);
+            target.RefreshView();
         }
     }
 }

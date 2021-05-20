@@ -1,9 +1,6 @@
 ﻿namespace DataLayer.Models
 {
-    using System;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata;
-    using Microsoft.IdentityModel.Protocols;
     using System.Configuration;
 
     public partial class vdrControlCenterContext : DbContext

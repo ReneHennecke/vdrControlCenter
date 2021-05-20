@@ -1,6 +1,5 @@
 ﻿namespace vdrControlService.Interface
 {
-    using System.IO;
     using System.Threading.Tasks;
     using vdrControlService.Models;
 
@@ -10,6 +9,6 @@
         FileSystemEntry SetDirectory(FileSystemEntryRequest request);
 
         Task<FileContent> ReadFileContent(FileSystemEntryRequest request);
-        Task<bool> WriteFileContent(FileSystemEntryRequest request);
+        Task<ApiResponse> WriteFileContent(FileSystemEntryRequest request);
     }
 }

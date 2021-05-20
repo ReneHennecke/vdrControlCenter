@@ -63,28 +63,29 @@
             }
             catch (Exception ex)
             {
-                result.Exception = ex;
+                result.ErrorResult.ErrorCode = Enums.ErrorResultCode.ReadFileContent;
+                result.ErrorResult.ErrorException = ex;
             }
 
             return result;
         }
 
-        public async Task<bool> WriteFileContent(FileSystemEntryRequest request)
+        public async Task<ApiResponse> WriteFileContent(FileSystemEntryRequest request)
         {
-            bool result = false;
+            ApiResponse response = new ApiResponse();
 
             try
             {
                 byte[] bytes = Convert.FromBase64String(request.Content);
                 await File.WriteAllBytesAsync(request.FullPath, bytes);
-                result = true;
             }
-            catch //(Exception ex)
+            catch (Exception ex)
             {
-
+                response.ErrorResult.ErrorCode = Enums.ErrorResultCode.WriteFileContent;
+                response.ErrorResult.ErrorException = ex;
             }
 
-            return result;
+            return response;
         }
     }
 }

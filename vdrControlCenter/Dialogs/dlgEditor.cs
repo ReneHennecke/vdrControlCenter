@@ -14,6 +14,12 @@
 
         private string[] _keywords = { "public", "void", "using", "static", "class", "True" };
 
+        public string Content
+        {
+            get { return rtbEditor.Text; }
+            set { rtbEditor.Text = value; }
+        }
+
         public dlgEditor()
         {
             InitializeComponent();

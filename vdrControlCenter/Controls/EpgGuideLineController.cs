@@ -266,7 +266,7 @@
         private void btnPrint_Click(object sender, EventArgs e)
         {
             dlgReports reports = new dlgReports();
-            reports.PostInit(Enums.ReportType.EpgGuide, _context);
+            reports.PostInit(Enums.ReportType.EpgGuide);
             if (reports.ShowDialog() == DialogResult.OK && reports.ReportParameters != null && reports.ReportDataSource != null)
             {
                 const int margin = 15;

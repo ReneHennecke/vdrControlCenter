@@ -1,6 +1,7 @@
 ﻿namespace vdrControlCenterUI.Reports.Dialogs
 {
     using DataLayer.Models;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Reporting.WinForms;
     using System;
     using System.Linq;
@@ -89,6 +90,11 @@
             }
 
             return reportDataSource;
+        }
+
+        public int Days
+        {
+            get => (dtpEnde.Value - dtpStart.Value).Days + 1;
         }
 
         private void dtpStart_ValueChanged(object sender, System.EventArgs e)
