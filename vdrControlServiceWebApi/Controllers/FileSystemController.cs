@@ -58,22 +58,15 @@ namespace vdrControlServiceWebAPI.Controllers
             MethodBase m = MethodBase.GetCurrentMethod();
             CreateRequestLogInfo(m, request);
 
-            FileSystemResponse response = new FileSystemResponse()
-            {
-                RequestId = request.RequestId
-            };
-
-            FileSystemEntry result = await Task.Run(() =>
+            FileSystemResponse response = await Task.Run(() =>
             {
                 return _service.GetDirectory(request);
             });
 
-            if (result == null)
-                return BadRequest(response);
-
-            response.FileSystemEntry = result;
-          
             CreateResponseLogInfo(m, response);
+
+            if (!response.ErrorResult.Success)
+                return BadRequest(response);
 
             return Ok(response);
         }
@@ -89,20 +82,15 @@ namespace vdrControlServiceWebAPI.Controllers
             MethodBase m = MethodBase.GetCurrentMethod();
             CreateRequestLogInfo(m, request);
 
-            FileSystemResponse response = new FileSystemResponse()
-            {
-                RequestId = request.RequestId
-            };
-
-            FileSystemEntry result = await Task.Run(() =>
+            FileSystemResponse response = await Task.Run(() =>
             {
                 return _service.SetDirectory(request);
             });
 
-            if (result == null)
+            if (!response.ErrorResult.Success)
+            {
                 return BadRequest(response);
-
-            response.FileSystemEntry = result;
+            }
 
             CreateResponseLogInfo(m, response);
 
@@ -120,26 +108,68 @@ namespace vdrControlServiceWebAPI.Controllers
             MethodBase m = MethodBase.GetCurrentMethod();
             CreateRequestLogInfo(m, request);
 
-            FileSystemResponse response = new FileSystemResponse()
-            {
-                RequestId = request.RequestId
-            };
-
-            FileContent result = await Task.Run(() =>
+            FileSystemResponse response = await Task.Run(() =>
             {
                 return _service.ReadFileContent(request);
             });
 
-            if (result == null)
-                return BadRequest(response);
+            CreateResponseLogInfo(m, response);
 
-            response.FileContent = result;
+            if (!response.ErrorResult.Success)
+                return BadRequest(response);
+            
+            return Ok(response);
+        }
+
+        [HttpPost()]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult> WriteFileContent(FileSystemEntryRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Fehlerhafte Parameter.");
+
+            MethodBase m = MethodBase.GetCurrentMethod();
+            CreateRequestLogInfo(m, request);
+
+            FileSystemResponse response = await Task.Run(() =>
+            {
+                return _service.WriteFileContent(request);
+            });
 
             CreateResponseLogInfo(m, response);
+
+            if (!response.ErrorResult.Success)
+                return BadRequest(response);
 
             return Ok(response);
         }
 
+        [HttpPost()]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Produces("application/json")]
+        public async Task<ActionResult> DeleteFileSystemEntry(FileSystemEntryRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Fehlerhafte Parameter.");
+
+            MethodBase m = MethodBase.GetCurrentMethod();
+            CreateRequestLogInfo(m, request);
+
+            FileSystemResponse response = await Task.Run(() =>
+            {
+                return _service.DeleteFileSystemEntry(request);
+            });
+
+            CreateResponseLogInfo(m, response);
+
+            if (!response.ErrorResult.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        #region Private Methods
         private void CreateLogInfo(MethodBase m, string message)
         {
             _logger.LogInformation($"{m.Name}|{message}");
@@ -165,5 +195,6 @@ namespace vdrControlServiceWebAPI.Controllers
                 _logger.LogError(msg);
             }
         }
+        #endregion
     }
 }

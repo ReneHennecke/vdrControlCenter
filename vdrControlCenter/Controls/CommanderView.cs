@@ -434,7 +434,7 @@
                 case Keys.F8:
                 case Keys.Delete:
                     string title = "%1 löschen";
-                    string text = $"Möchten Sie %1 <{fse.FullPath}> wirklich löschen ?";
+                    string text = $"Möchten Sie %1 «{fse.FullPath}» wirklich löschen ?";
                     if (fse.Attributes.HasFlag(FileAttributes.Directory))
                     {
                         title = title.Replace("%1", "Verzeichnis");
@@ -454,6 +454,7 @@
                     DoDelete(shareConnect, fse);
 
                     break;
+
                 case Keys.F10:
                     RefreshView();
                     break;
@@ -499,7 +500,7 @@
                 try
                 {
                     FileSystemEntryRequest request = new FileSystemEntryRequest();
-                    request.FullPath = string.IsNullOrWhiteSpace(path) ? "/" : path; // Kein Pfad vorhanden, dann root-Verzeichnis
+                    request.Source.FullPath = string.IsNullOrWhiteSpace(path) ? "/" : path; // Kein Pfad vorhanden, dann root-Verzeichnis
                     string action = $"{url}FileSystem/GetDirectory";
 
                     string json = await PostData(action, request);
@@ -507,7 +508,7 @@
                     var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
                     if (response != null)
                     {
-                        _fileSystemEntry = response.FileSystemEntry;
+                        _fileSystemEntry = response.Source;
                         LoadFileSystemEntries();
                     }
                     else
@@ -538,7 +539,7 @@
                     if (shareConnect.ShareTyp == Enums.ShareTyp.vdrControlService)
                     {
                         request = new FileSystemEntryRequest();
-                        request.FullPath = fse.FullPath;
+                        request.Source.FullPath = fse.FullPath;
 
                         if (string.IsNullOrWhiteSpace(url) || shareConnect.State != Enums.ShareConnectState.Idle)
                             return;
@@ -553,9 +554,13 @@
                         string json = await PostData(action, request);
 
                         var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
-                        if (response != null)
+                        if (response == null)
+                            ShowApiError();
+                        else if (!response.ErrorResult.Success)
+                            ShowApiError(response.ErrorResult);
+                        else
                         {
-                            byte[] bytes = Convert.FromBase64String(response.FileContent.Content);
+                            byte[] bytes = Convert.FromBase64String(response.Content);
                             content = Encoding.UTF8.GetString(bytes);
                         }
                     }
@@ -572,14 +577,15 @@
                             string action = $"{url}FileSystem/WriteFileContent";
                             string json = await PostData(action, request);
 
-                            var response = JsonConvert.DeserializeObject<ApiResponse>(json);
-                            if (response != null)
-                            {
-
-                            }
+                            var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                            if (response == null)
+                                ShowApiError();
+                            else if (!response.ErrorResult.Success)
+                                ShowApiError(response.ErrorResult);
                         }
                     }
                     break;
+
                 case ".pdf":
                 case ".jpg":
                 case ".jpeg":
@@ -587,7 +593,9 @@
                 case ".tif":
                 case ".mp3":
                 case ".mp4":
-                    // if (shareConnect.ShareTyp == Enums.ShareTyp.vdrControlService)
+                    if (shareConnect.ShareTyp == Enums.ShareTyp.vdrControlService)
+                        return;
+
                     string fullPath = fse.FullPath;
                     if (string.IsNullOrWhiteSpace(fullPath))
                         return;
@@ -598,6 +606,7 @@
                     };
                     Process.Start(info);
                     break;
+
                 default:
                     break;
             }
@@ -624,10 +633,31 @@
             _controller.RefreshTarget(_name);
         }
 
-        private void DoDelete(ShareConnect shareConnect, FileSystemEntry fse)
+        private async void DoDelete(ShareConnect shareConnect, FileSystemEntry fse)
         {
             if (shareConnect.ShareTyp != Enums.ShareTyp.vdrControlService)
                 File.Delete(fse.FullPath);
+            else
+            {
+                string url = shareConnect.Url;
+                if (string.IsNullOrWhiteSpace(url) || shareConnect.State != Enums.ShareConnectState.Idle)
+                    return;
+
+                FileSystemEntryRequest request = new FileSystemEntryRequest()
+                {
+                    Source = new FileSystemEntry(fse.FullPath)
+                };
+
+                string action = $"{url}FileSystem/DeleteFileSystemEntry";
+                string json = await PostData(action, request);
+
+                var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                if (response == null)
+                    ShowApiError();
+                else if (!response.ErrorResult.Success)
+                    ShowApiError(response.ErrorResult);
+
+            }
 
             RefreshView();
         }
@@ -662,6 +692,18 @@
         {
             KeyEventArgs ea = new KeyEventArgs(Keys.F8);
             livFileSystem_KeyDown(null, ea);
+        }
+
+        private void ShowApiError(ErrorResult result = null)
+        {
+            string title = "API-Fehler" + result == null ? string.Empty : $" «{result.ErrorCode}»";
+            string text = result == null ? "Die Abfrage konnte nicht erfolgreich ausgeführt werden." : 
+                                          $"Bei der Abfrage trat der Fehler «{result.ErrorMessage}»{Environment.NewLine}{result.ErrorException.Message}";
+            MessageBox.Show(text,
+                            title,
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+
         }
     }
 }

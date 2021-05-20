@@ -5,10 +5,11 @@
 
     public interface IFileSystemService
     {
-        FileSystemEntry GetDirectory(FileSystemEntryRequest request);
-        FileSystemEntry SetDirectory(FileSystemEntryRequest request);
+        FileSystemResponse GetDirectory(FileSystemEntryRequest request);
+        FileSystemResponse SetDirectory(FileSystemEntryRequest request);
 
-        Task<FileContent> ReadFileContent(FileSystemEntryRequest request);
-        Task<ApiResponse> WriteFileContent(FileSystemEntryRequest request);
+        Task<FileSystemResponse> ReadFileContent(FileSystemEntryRequest request);
+        Task<FileSystemResponse> WriteFileContent(FileSystemEntryRequest request);
+        Task<FileSystemResponse> DeleteFileSystemEntry(FileSystemEntryRequest request);
     }
 }

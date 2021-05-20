@@ -3,7 +3,8 @@
     public enum ErrorResultCode
     {
         Success,
-        CurrentDirectoryError = 1001,
+        GetDirectory = 1001,
+        SetDirectory,
         ReadFileContent,
         WriteFileContent
     }

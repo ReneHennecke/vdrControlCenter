@@ -6,9 +6,10 @@
     public class FileSystemResponse : ApiResponse
     {
         [DataMember]
-        public FileSystemEntry FileSystemEntry { get; set; }
-
+        public FileSystemEntry Source { get; set; }
         [DataMember]
-        public FileContent FileContent { get; set; }
+        public string Content { get; set; }
+        [DataMember]
+        public FileSystemEntry Target { get; set; }
     }
 }

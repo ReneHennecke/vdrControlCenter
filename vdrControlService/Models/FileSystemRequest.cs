@@ -6,10 +6,10 @@
     public class FileSystemEntryRequest : ApiRequest
     {
         [DataMember]
-        public string FullPath { get; set; }
-
+        public FileSystemEntry Source { get; set; }
         [DataMember]
-        public string FormerFullPath { get; set; }
+        public FileSystemEntry Target { get; set; }
+
         [DataMember]
         public string Content { get; set; }
     }
