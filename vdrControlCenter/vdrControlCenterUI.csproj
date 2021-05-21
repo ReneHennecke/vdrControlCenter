@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="LibVLCSharp" Version="3.5.0" />
     <PackageReference Include="LibVLCSharp.WinForms" Version="3.5.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -21,11 +21,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NetCoreServer" Version="3.0.22" />
+    <PackageReference Include="NetCoreServer" Version="5.0.15" />
     <PackageReference Include="ReportViewerCore.WinForms" Version="15.1.13" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
     <PackageReference Include="Svg" Version="3.2.3" />
-    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.12" />
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.14" />
   </ItemGroup>
 
   <ItemGroup>

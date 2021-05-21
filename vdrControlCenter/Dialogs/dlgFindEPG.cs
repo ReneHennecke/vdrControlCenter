@@ -1,11 +1,12 @@
-﻿using System;
-namespace vdrControlCenterUI.Dialogs
+﻿namespace vdrControlCenterUI.Dialogs
 {
+    using System;
     using DataLayer.Models;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
+    using System.Linq;
 
     public partial class dlgFindEPG : Form
     {
@@ -16,6 +17,9 @@ namespace vdrControlCenterUI.Dialogs
         private ImageList _imageList;
         private List<long> _selectedItems;
         private List<Epg> _foundList;
+
+        private List<FindEntry> _unfiltered;
+        private List<FindEntry> _filtered;
 
         public List<long> SelectedItems
         {
@@ -169,11 +173,12 @@ namespace vdrControlCenterUI.Dialogs
 
         private void btnFind_Click(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             dgvFind.DataSource = null;
 
             using (vdrControlCenterContext context = new vdrControlCenterContext())
             {
-                dgvFind.DataSource = context.FindEntries(tbFind.Text,
+                _unfiltered = context.FindEntries(tbFind.Text,
                                                          dtpStartTime.Value,
                                                          chbTitle.Checked,
                                                          chbSortDescription.Checked,
@@ -182,9 +187,12 @@ namespace vdrControlCenterUI.Dialogs
                                                          chbRecordings.Checked,
                                                          chbFindInPast.Checked);
 
+                dgvFind.DataSource = _unfiltered;
+
                 lblNotFound.Visible = (dgvFind.Rows.Count == 0);
                 PreSelect();
             }
+            Cursor = Cursors.Default;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -261,12 +269,17 @@ namespace vdrControlCenterUI.Dialogs
         {
             if (e.RowIndex > -1)
             {
-                int i = (int)dgvFind.Rows[e.RowIndex].Cells["SymbolIndex"].Value;
+                int rowIndex = e.RowIndex;
+                DateTime start = (DateTime)dgvFind.Rows[rowIndex].Cells["StartTime"].Value;
+                if (start.CompareTo(DateTime.Now) < 0)
+                    return;
+
+                int i = (int)dgvFind.Rows[rowIndex].Cells["SymbolIndex"].Value;
                 if (i == ENTRY_SELECTED || i == ENTRY_UNSELECTED)
                 {
-                    dgvFind.Rows[e.RowIndex].Cells["SymbolIndex"].Value = (i == ENTRY_UNSELECTED ? ENTRY_SELECTED : ENTRY_UNSELECTED);
+                    dgvFind.Rows[rowIndex].Cells["SymbolIndex"].Value = (i == ENTRY_UNSELECTED ? ENTRY_SELECTED : ENTRY_UNSELECTED);
 
-                    dgvFind.InvalidateCell(dgvFind.Rows[e.RowIndex].Cells["DisplaySymbol"]);
+                    dgvFind.InvalidateCell(dgvFind.Rows[rowIndex].Cells["DisplaySymbol"]);
                 }
             }
         }
@@ -285,6 +298,8 @@ namespace vdrControlCenterUI.Dialogs
             {
                 if ((int)row.Cells["SymbolIndex"].Value == ENTRY_UNSELECTED)
                 {
+                    
+
                     long recId = (long)row.Cells["RecId"].Value;
                     if (_foundList.Exists(x => x.RecId == recId))
                     {
@@ -293,5 +308,63 @@ namespace vdrControlCenterUI.Dialogs
                 }
             }
         }
+
+        private void dgvFind_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+
+            if (e.RowIndex > -1)
+            {
+                if (_filtered != null)
+                {
+                    foreach (DataGridViewColumn column in dgvFind.Columns)
+                    {
+                        column.HeaderCell.Style.BackColor = Color.SteelBlue;
+                        column.HeaderCell.Style.ForeColor = Color.WhiteSmoke;
+                    }
+                    dgvFind.DataSource = _unfiltered;
+                    _filtered = null;
+                    return;
+                }
+
+
+                int columnIndex = e.ColumnIndex;
+                if (columnIndex > 0)
+                {
+                    dgvFind.Columns[columnIndex].HeaderCell.Style.BackColor = Color.Bisque;
+                    dgvFind.Columns[columnIndex].HeaderCell.Style.ForeColor = Color.Black;
+
+                    if (columnIndex == dgvFind.Columns["ChannelName"].Index)
+                    {
+
+                        string search = (string)dgvFind.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.ChannelName == search).ToList();
+                    }
+                    else if (columnIndex == dgvFind.Columns["StartTime"].Index)
+                    {
+                        DateTime search = (DateTime)dgvFind.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.StartTime.GetValueOrDefault().CompareTo(search) == 0).ToList();
+                    }
+                    else if (columnIndex == dgvFind.Columns["DurationMinutes"].Index)
+                    {
+                        int search = (int)dgvFind.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.DurationMinutes.GetValueOrDefault().CompareTo(search) == 0).ToList();
+                    }
+                    else if (columnIndex == dgvFind.Columns["Title"].Index)
+                    {
+                        string search = (string)dgvFind.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.Title == search).ToList();
+                    }
+                    else if (columnIndex == dgvFind.Columns["ShortDescription"].Index)
+                    {
+                        string search = (string)dgvFind.Rows[e.RowIndex].Cells[columnIndex].Value;
+                        _filtered = _unfiltered.Where(x => x.ShortDescription == search).ToList();
+                    }
+
+                    if (_filtered != null)
+                        dgvFind.DataSource = _filtered;
+                }
+            }
+        }
     }
 }
+

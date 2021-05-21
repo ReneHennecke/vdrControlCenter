@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dlgFindEPG));
             this.panEPGFind = new System.Windows.Forms.Panel();
+            this.lblNotFound = new System.Windows.Forms.Label();
             this.grbBox = new System.Windows.Forms.GroupBox();
             this.chbRecordings = new System.Windows.Forms.CheckBox();
             this.btnFind = new System.Windows.Forms.Button();
@@ -46,7 +47,6 @@
             this.btnTimer = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.lblNotFound = new System.Windows.Forms.Label();
             this.panEPGFind.SuspendLayout();
             this.grbBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFind)).BeginInit();
@@ -67,6 +67,16 @@
             this.panEPGFind.Name = "panEPGFind";
             this.panEPGFind.Size = new System.Drawing.Size(1138, 446);
             this.panEPGFind.TabIndex = 0;
+            // 
+            // lblNotFound
+            // 
+            this.lblNotFound.BackColor = System.Drawing.Color.Transparent;
+            this.lblNotFound.Location = new System.Drawing.Point(400, 294);
+            this.lblNotFound.Name = "lblNotFound";
+            this.lblNotFound.Size = new System.Drawing.Size(424, 23);
+            this.lblNotFound.TabIndex = 11;
+            this.lblNotFound.Text = "Es wurden keine Einträge mit den angegebenen Suchkritierien gefunden.";
+            this.lblNotFound.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // grbBox
             // 
@@ -196,6 +206,7 @@
             this.dgvFind.TabIndex = 7;
             this.dgvFind.Text = "dataGridView1";
             this.dgvFind.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvFind_CellFormatting);
+            this.dgvFind.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvFind_CellMouseClick);
             this.dgvFind.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvFind_CellMouseDoubleClick);
             this.dgvFind.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvFind_CellPainting);
             // 
@@ -246,6 +257,7 @@
             // 
             // btnOK
             // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnOK.Location = new System.Drawing.Point(852, 456);
             this.btnOK.Name = "btnOK";
@@ -255,16 +267,6 @@
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // lblNotFound
-            // 
-            this.lblNotFound.BackColor = System.Drawing.Color.Transparent;
-            this.lblNotFound.Location = new System.Drawing.Point(400, 294);
-            this.lblNotFound.Name = "lblNotFound";
-            this.lblNotFound.Size = new System.Drawing.Size(424, 23);
-            this.lblNotFound.TabIndex = 11;
-            this.lblNotFound.Text = "Es wurden keine Einträge mit den angegebenen Suchkritierien gefunden.";
-            this.lblNotFound.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // dlgFindEPG
             // 
