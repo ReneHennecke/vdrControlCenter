@@ -143,6 +143,10 @@
                 AddBuffer($"Verbunden » {id}{Environment.NewLine}");
 
                 _svdrpConnectionInfo = new SvdrpConnectionInfo(id);
+                _svdrpConnectionInfo.ParseMessage(_svdrpBuffer.Splitter);
+                svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                RefreshRequestControls(true);
+                _svdrpRequest = SvdrpRequest.Undefined;
             }
         }
 
@@ -159,6 +163,7 @@
 
                 _svdrpConnectionInfo = new SvdrpConnectionInfo();
                 svdrpConnector.ShowConnection(_svdrpConnectionInfo);
+                RefreshRequestControls(false);
                 _svdrpRequest = SvdrpRequest.Undefined;
             }
         }
@@ -483,6 +488,11 @@
                 grbBuffer.Size = new System.Drawing.Size(150, 15);
             else
                 grbBuffer.Size = _bufferControlSize;
+        }
+
+        private void SvdrpController_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

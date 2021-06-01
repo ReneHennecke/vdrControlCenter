@@ -39,62 +39,28 @@
             base.OnHandleDestroyed(e);
         }
 
-        private async void PostInit()
+        private void PostInit()
         {
             if (_context == null)
                 _context = new vdrControlCenterContext();
 
-            Configuration configuration = null;
-            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-            if (systemSettings != null)
-            {
-                if (systemSettings.Configuration != null)
-                    configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-            }
+            Configuration configuration = ConfigurationHelper.CurrentConfig;
 
             CommanderPanelView commanderPanelView = configuration.LastCommanderPanelViewLeft;
-            List<CommanderPanelView> commanderViewList = configuration.CommanderViewListLeft;
             cmvLeft.Controller = this;
-            cmvLeft.LoadData(commanderPanelView, commanderViewList, "cmvLeft");
+            cmvLeft.LoadData(commanderPanelView, "cmvLeft");
 
             commanderPanelView = configuration.LastCommanderPanelViewRight;
-            commanderViewList = configuration.CommanderViewListRight;
             cmvRight.Controller = this;
-            cmvRight.LoadData(commanderPanelView, commanderViewList, "cmvRight");
+            cmvRight.LoadData(commanderPanelView, "cmvRight");
         }
 
-        public async void SaveConfig()
+        public void SaveConfig()
         {
-            using (IDbContextTransaction transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-                    if (systemSettings != null)
-                    {
-                        Configuration configuration = null;
-                        if (systemSettings.Configuration != null)
-                            configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-                        else
-                            configuration = new Configuration();
-
-                        configuration.LastCommanderPanelViewLeft = cmvLeft.CommanderPanelView;
-                        configuration.CommanderViewListLeft = cmvLeft.CommanderList;
-                        configuration.LastCommanderPanelViewRight = cmvRight.CommanderPanelView;
-                        configuration.CommanderViewListRight = cmvRight.CommanderList;
-
-                        systemSettings.Configuration = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-                        _context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    }
-
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch //(Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                }
-            }
+            Configuration configuration = ConfigurationHelper.CurrentConfig;
+            configuration.LastCommanderPanelViewLeft = cmvLeft.CommanderPanelView;
+            configuration.LastCommanderPanelViewRight = cmvRight.CommanderPanelView;
+            ConfigurationHelper.CurrentConfig = configuration;
         }
 
         private CommanderView GetTargetView(string name)

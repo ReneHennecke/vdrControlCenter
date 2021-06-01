@@ -150,6 +150,7 @@
             this.Controls.Add(this.grbBuffer);
             this.Name = "SvdrpController";
             this.Size = new System.Drawing.Size(1679, 729);
+            this.Load += new System.EventHandler(this.SvdrpController_Load);
             this.grbBuffer.ResumeLayout(false);
             this.grbBuffer.PerformLayout();
             this.ResumeLayout(false);

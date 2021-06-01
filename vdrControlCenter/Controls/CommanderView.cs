@@ -75,7 +75,7 @@
             _ping = new Ping();
         }
 
-        public async void LoadData(CommanderPanelView view, List<CommanderPanelView> list, string name)
+        public async void LoadData(CommanderPanelView view, string name)
         {
             _name = name;
             if (_context == null)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataLayer.Models
 {
@@ -10,6 +12,8 @@ namespace DataLayer.Models
             StatusInfo = new HashSet<StatusInfo>();
         }
 
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public long RecId { get; set; }
         public string MachineName { get; set; }
         public short? ChannelListType { get; set; }

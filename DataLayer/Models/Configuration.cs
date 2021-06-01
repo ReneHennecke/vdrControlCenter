@@ -1,6 +1,5 @@
 ﻿namespace DataLayer.Classes
 {
-    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     [DataContract]
@@ -10,10 +9,6 @@
         public CommanderPanelView LastCommanderPanelViewLeft { get; set; }
         [DataMember]
         public CommanderPanelView LastCommanderPanelViewRight { get; set; }
-        [DataMember]
-        public List<CommanderPanelView> CommanderViewListLeft { get; set; }
-        [DataMember]
-        public List<CommanderPanelView> CommanderViewListRight { get; set; }
         [DataMember]
         public int X { get; set; }
         [DataMember]

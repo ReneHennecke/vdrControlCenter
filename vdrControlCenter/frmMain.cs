@@ -12,6 +12,7 @@
     using Microsoft.EntityFrameworkCore;
     using DataLayer.Classes;
     using Microsoft.Reporting.WinForms;
+    using System.Linq;
 
     public partial class frmMain : Form
     {
@@ -318,98 +319,70 @@
             }
         }
                 
-        private async void LoadSettings()
+        private void LoadSettings()
         {
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            Configuration configuration = ConfigurationHelper.CurrentConfig;
+            if (configuration == null)
             {
-                try
+                WindowState = FormWindowState.Normal;
+                StartPosition = FormStartPosition.CenterScreen;
+            }
+            else
+            {
+                if (configuration.X == FRAME_MAXIMIZED && configuration.Y == FRAME_MAXIMIZED && configuration.Width == FRAME_MAXIMIZED && configuration.Height == FRAME_MAXIMIZED)
+                    WindowState = FormWindowState.Maximized;
+                else
                 {
-                    Configuration configuration = null;
-                    SystemSettings systemSettings = await context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-                    if (systemSettings != null)
-                    {
-                        if (systemSettings.Configuration != null)
-                            configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-                    }
-                       
-                    if (configuration == null)
-                    {
-                        WindowState = FormWindowState.Normal;
-                        StartPosition = FormStartPosition.CenterScreen;
-                    }
-                    else 
-                    { 
-                        if (configuration.X == FRAME_MAXIMIZED && configuration.Y == FRAME_MAXIMIZED && configuration.Width == FRAME_MAXIMIZED && configuration.Height == FRAME_MAXIMIZED)
-                            WindowState = FormWindowState.Maximized;
-                        else 
-                        {
-                            Location = new Point(configuration.X, configuration.Y);
-                            Size = new Size(configuration.Width, configuration.Height);
-                        }
-                    }
-                }
-                catch //(Exception ex)
-                {
-
+                    Location = new Point(configuration.X, configuration.Y);
+                    Size = new Size(configuration.Width, configuration.Height);
                 }
             }
         }
 
-        private async void SaveSettings()
+        private void SaveSettings()
         {
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            using (IDbContextTransaction transaction = context.Database.BeginTransaction())
+            Configuration configuration = ConfigurationHelper.CurrentConfig;
+            if (configuration == null)
+                configuration = new Configuration();
+
+            if (WindowState == FormWindowState.Maximized)
             {
-                try
-                {
-                    bool exists = true;
-                    Configuration configuration = null;
-                    SystemSettings systemSettings = await context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
-                    if (systemSettings != null)
-                        configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-                    else
-                    {
-                        systemSettings = new SystemSettings();
-                        exists = false;
-                    }
-
-                    if (configuration == null)
-                        configuration = new Configuration();
-
-                    if (WindowState == FormWindowState.Maximized)
-                    {
-                        configuration.X = FRAME_MAXIMIZED;
-                        configuration.Y = FRAME_MAXIMIZED;
-                        configuration.Width = FRAME_MAXIMIZED;
-                        configuration.Height = FRAME_MAXIMIZED;
-                    }
-                    else
-                    {
-                        configuration.X = Location.X;
-                        configuration.Y = Location.Y;
-                        configuration.Width = Size.Width;
-                        configuration.Height = Size.Height;
-                    }
-
-                    systemSettings.Configuration = JsonConvert.SerializeObject(configuration, Formatting.Indented);
-                    if (exists)
-                        context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                    else
-                        context.SystemSettings.Add(systemSettings);
-
-                    await context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch //(Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                }
+                configuration.X = FRAME_MAXIMIZED;
+                configuration.Y = FRAME_MAXIMIZED;
+                configuration.Width = FRAME_MAXIMIZED;
+                configuration.Height = FRAME_MAXIMIZED;
             }
+            else
+            {
+                configuration.X = Location.X;
+                configuration.Y = Location.Y;
+                configuration.Width = Size.Width;
+                configuration.Height = Size.Height;
+            }
+            ConfigurationHelper.CurrentConfig = configuration;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            ClosePanels();
             SaveSettings();
+        }
+
+        private void ClosePanels()
+        {
+            foreach (TabPage page in tabWorkspace.TabPages)
+            {
+                if (page.Controls[0] is SystemSettingsController)
+                {
+                    SystemSettingsController controller = (SystemSettingsController)page.Controls[0];
+                    controller.SaveData();
+                }
+                else if (page.Controls[0] is CommanderController)
+                {
+                    CommanderController controller = (CommanderController)page.Controls[0];
+                    controller.SaveConfig();
+                }
+            }
         }
 
         private void frmMain_Load(object sender, EventArgs e)
