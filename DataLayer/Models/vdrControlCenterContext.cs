@@ -99,10 +99,10 @@
                 entity.ToTable("EPG");
 
                 entity.HasIndex(e => new { e.ChannelRecId, e.EventId })
-                    .HasName("NCI_EventID");
+                    .HasDatabaseName("NCI_EventID");
 
                 entity.HasIndex(e => new { e.ChannelRecId, e.StartTime })
-                    .HasName("NCI_ChannelRecId_StartTime");
+                    .HasDatabaseName("NCI_ChannelRecId_StartTime");
 
                 entity.Property(e => e.EventId).HasColumnName("EventID");
 
@@ -175,11 +175,11 @@
                 entity.HasKey(e => e.RecId);
 
                 entity.HasIndex(e => e.HostAddress)
-                    .HasName("IX_Stations")
+                    .HasDatabaseName("IX_Stations")
                     .IsUnique();
 
                 entity.HasIndex(e => e.StationType)
-                    .HasName("NCI_StationType");
+                    .HasDatabaseName("NCI_StationType");
 
                 entity.Property(e => e.EnableWol).HasColumnName("EnableWOL");
 
@@ -263,10 +263,10 @@
                 entity.HasKey(e => e.RecId);
 
                 entity.HasIndex(e => e.ChannelRecId)
-                    .HasName("NCI_ChannelRecId");
+                    .HasDatabaseName("NCI_ChannelRecId");
 
                 entity.HasIndex(e => new { e.Title, e.StartTime, e.EndTime })
-                    .HasName("NCI_Title_StartTime_EndTime");
+                    .HasDatabaseName("NCI_Title_StartTime_EndTime");
 
                 entity.Property(e => e.EndTime).HasColumnType("datetime");
 

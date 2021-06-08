@@ -30,109 +30,124 @@ namespace vdrControlCenterUI.Dialogs
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dlgReports));
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.tabReport = new System.Windows.Forms.TabControl();
+            this.pageParameters = new System.Windows.Forms.TabPage();
+            this.pagePreview = new System.Windows.Forms.TabPage();
+            this.rptViewer = new vdrControlCenterUI.Controls.ReportView();
+            this.btnClose = new System.Windows.Forms.Button();
+            this.lblProgress = new System.Windows.Forms.Label();
             this.pbProgress = new System.Windows.Forms.ProgressBar();
-            this.lblPercent = new System.Windows.Forms.Label();
-            this.lblMessage = new System.Windows.Forms.Label();
-            this.panState = new System.Windows.Forms.Panel();
-            this.panState.SuspendLayout();
+            this.tabReport.SuspendLayout();
+            this.pagePreview.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnOK
+            // tabReport
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(438, 22);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(122, 24);
-            this.btnOK.TabIndex = 1;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            this.tabReport.Alignment = System.Windows.Forms.TabAlignment.Bottom;
+            this.tabReport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabReport.Controls.Add(this.pageParameters);
+            this.tabReport.Controls.Add(this.pagePreview);
+            this.tabReport.Location = new System.Drawing.Point(4, 4);
+            this.tabReport.Name = "tabReport";
+            this.tabReport.SelectedIndex = 0;
+            this.tabReport.Size = new System.Drawing.Size(1172, 520);
+            this.tabReport.TabIndex = 0;
             // 
-            // btnCancel
+            // pageParameters
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(438, 50);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(122, 24);
-            this.btnCancel.TabIndex = 2;
-            this.btnCancel.Text = "Abbrechen";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.pageParameters.Location = new System.Drawing.Point(4, 4);
+            this.pageParameters.Name = "pageParameters";
+            this.pageParameters.Padding = new System.Windows.Forms.Padding(3);
+            this.pageParameters.Size = new System.Drawing.Size(1164, 492);
+            this.pageParameters.TabIndex = 0;
+            this.pageParameters.Text = "Parameter";
+            this.pageParameters.UseVisualStyleBackColor = true;
+            // 
+            // pagePreview
+            // 
+            this.pagePreview.Controls.Add(this.rptViewer);
+            this.pagePreview.Location = new System.Drawing.Point(4, 4);
+            this.pagePreview.Name = "pagePreview";
+            this.pagePreview.Padding = new System.Windows.Forms.Padding(3);
+            this.pagePreview.Size = new System.Drawing.Size(1164, 492);
+            this.pagePreview.TabIndex = 1;
+            this.pagePreview.Text = "Voransicht";
+            this.pagePreview.UseVisualStyleBackColor = true;
+            // 
+            // rptViewer
+            // 
+            this.rptViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rptViewer.Location = new System.Drawing.Point(3, 3);
+            this.rptViewer.Name = "rptViewer";
+            this.rptViewer.Size = new System.Drawing.Size(1158, 486);
+            this.rptViewer.TabIndex = 0;
+            // 
+            // btnClose
+            // 
+            this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClose.Location = new System.Drawing.Point(1076, 530);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(96, 24);
+            this.btnClose.TabIndex = 1;
+            this.btnClose.Text = "Schliessen";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // lblProgress
+            // 
+            this.lblProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProgress.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lblProgress.Location = new System.Drawing.Point(6, 530);
+            this.lblProgress.Name = "lblProgress";
+            this.lblProgress.Size = new System.Drawing.Size(128, 13);
+            this.lblProgress.TabIndex = 13;
+            this.lblProgress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblProgress.Visible = false;
             // 
             // pbProgress
             // 
-            this.pbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.pbProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pbProgress.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbProgress.Location = new System.Drawing.Point(4, 20);
+            this.pbProgress.Location = new System.Drawing.Point(6, 546);
             this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(114, 11);
+            this.pbProgress.Size = new System.Drawing.Size(128, 10);
             this.pbProgress.Step = 1;
             this.pbProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.pbProgress.TabIndex = 3;
-            // 
-            // lblPercent
-            // 
-            this.lblPercent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPercent.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblPercent.Location = new System.Drawing.Point(6, 6);
-            this.lblPercent.Name = "lblPercent";
-            this.lblPercent.Size = new System.Drawing.Size(112, 12);
-            this.lblPercent.TabIndex = 4;
-            this.lblPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblMessage
-            // 
-            this.lblMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMessage.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblMessage.ForeColor = System.Drawing.Color.Black;
-            this.lblMessage.Location = new System.Drawing.Point(4, 34);
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(114, 78);
-            this.lblMessage.TabIndex = 5;
-            // 
-            // panState
-            // 
-            this.panState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.panState.Controls.Add(this.pbProgress);
-            this.panState.Controls.Add(this.lblPercent);
-            this.panState.Controls.Add(this.lblMessage);
-            this.panState.Location = new System.Drawing.Point(438, 88);
-            this.panState.Name = "panState";
-            this.panState.Size = new System.Drawing.Size(122, 118);
-            this.panState.TabIndex = 7;
-            this.panState.Visible = false;
+            this.pbProgress.TabIndex = 12;
+            this.pbProgress.Visible = false;
             // 
             // dlgReports
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(570, 215);
-            this.Controls.Add(this.panState);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
+            this.ClientSize = new System.Drawing.Size(1177, 560);
+            this.Controls.Add(this.lblProgress);
+            this.Controls.Add(this.pbProgress);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.tabReport);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "dlgReports";
             this.Text = "Ausgabe ";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.dlgReports_FormClosing);
-            this.panState.ResumeLayout(false);
+            this.tabReport.ResumeLayout(false);
+            this.pagePreview.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Button btnCancel;
+
+        private System.Windows.Forms.TabControl tabReport;
+        private System.Windows.Forms.TabPage pageParameters;
+        private System.Windows.Forms.TabPage pagePreview;
+        private System.Windows.Forms.Button btnClose;
+        private Controls.ReportView rptViewer;
+        private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.ProgressBar pbProgress;
-        private System.Windows.Forms.Label lblPercent;
-        private System.Windows.Forms.Label lblMessage;
-        private System.Windows.Forms.Panel panState;
     }
 }

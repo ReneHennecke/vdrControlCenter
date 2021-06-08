@@ -16,6 +16,7 @@
         private vdrControlCenterContext _context;
         private bool _inTransaction;
         private frmMain frmMain;
+        
         public frmMain MainForm
         {
             set { frmMain = value; }
@@ -31,8 +32,6 @@
 
         private async void PostInit()
         {
-            Disposed += SystemSettingsView_Disposed;
-
             btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SystemSettingsNewPng}");
             btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SystemSettingsDelPng}");
 
@@ -64,14 +63,11 @@
                 tePathToChannelLogogs.Text = systemSettings.PathToChannelLogos;
             }
 
+            _inTransaction = true;
             cmbStations.DataSource = await _context.Stations.OrderBy(x => x.HostAddress)
                                                             .ToListAsync();
             cmbStations.DisplayMember = "HostAddress";
-        }
-
-        private void SystemSettingsView_Disposed(object sender, EventArgs e)
-        {
-            SaveData();
+            _inTransaction = false;
         }
 
         private void btnPathToChannelLogos_Click(object sender, EventArgs e)
@@ -84,6 +80,8 @@
 
         private void LoadData()
         {
+            frmMain.AddMessage($"LOAD SETTINGS » {NetworkRaX.LocalAddress}");
+
             if (cmbStations.SelectedIndex == -1)
                 return;
 
@@ -113,12 +111,14 @@
 
         }
 
-        public void SaveData()
+        public void SaveData(bool current)
         {
             if (_inTransaction)
                 return;
 
-            Stations selected = (Stations)cmbStations.PreviousValue;
+            frmMain.AddMessage($"SAVE SETTINGS » {NetworkRaX.LocalAddress}");
+
+            Stations selected = current ? (Stations)cmbStations.SelectedValue : (Stations)cmbStations.PreviousValue;
             if (selected == null)
                 return;
 
@@ -247,7 +247,7 @@
 
         private void cmbStations_SelectedValueChanged(object sender, EventArgs e)
         {
-            SaveData();
+            SaveData(false);
 
             LoadData();
         }

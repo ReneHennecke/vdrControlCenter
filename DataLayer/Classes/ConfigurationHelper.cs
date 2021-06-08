@@ -1,11 +1,12 @@
 ﻿namespace DataLayer.Classes
 {
     using DataLayer.Models;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage;
     using Newtonsoft.Json;
     using System;
     using System.Linq;
-
+    using System.Threading.Tasks;
 
     public static class ConfigurationHelper
     {
@@ -37,14 +38,11 @@
             }
             set
             {
-                if (value == null)
-                    return;
-
                 using (vdrControlCenterContext context = new vdrControlCenterContext())
                 using (IDbContextTransaction transaction = context.Database.BeginTransaction())
                 {
                     try
-                    { 
+                    {
                         bool exists = true;
                         SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
                         if (systemSettings == null)
@@ -70,6 +68,5 @@
                 }
             }
         }
-
     }
 }

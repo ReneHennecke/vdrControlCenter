@@ -2,12 +2,10 @@
 
 namespace vdrControlServiceWebAPI.Controllers
 {
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Logging;
     using System;
-    using System.IO;
     using vdrControlService.Services;
 
     [Route("api/[controller]/[action]")]

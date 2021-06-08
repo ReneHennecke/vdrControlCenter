@@ -6,7 +6,9 @@
     using Microsoft.Reporting.WinForms;
     using System;
     using System.Drawing;
+    using System.Drawing.Printing;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlCenterUI.Enums;
     using vdrControlCenterUI.Reports.Dialogs;
@@ -15,20 +17,13 @@
     {
         private ReportType _reportType;
         private vdrControlCenterContext _context;
-        private ReportParameter[] _reportParameters;
-        private ReportDataSource _reportDataSource;
 
-        private int _max;
-        private int _counter;
+        private TabPage _previewPage;
+        private bool _cancel;
 
-        public ReportParameter[] ReportParameters
+        public bool Cancel
         {
-            get => _reportParameters;
-        }
-
-        public ReportDataSource ReportDataSource
-        {
-            get => _reportDataSource;
+            set => _cancel = value;
         }
 
         public dlgReports()
@@ -36,10 +31,14 @@
             InitializeComponent();
         }
 
-        public void PostInit(ReportType reportType)
+        public void PostInit(ReportType reportType, vdrControlCenterContext context)
         {
             _reportType = reportType;
-            _context = new vdrControlCenterContext();
+            _context = context;
+
+            // Voransicht erstmal verstecken
+            _previewPage = pagePreview;
+            tabReport.TabPages.Remove(_previewPage);
 
             switch (_reportType)
             {
@@ -50,13 +49,57 @@
                     ucFakeEpgGuide ucFakeEpgGuide = new ucFakeEpgGuide();
                     ucFakeEpgGuide.PostInit(_context);
                     ucFakeEpgGuide.Location = new Point(4, 6);
-                    Controls.Add(ucFakeEpgGuide);
-                    Size = new Size(Size.Width, ucFakeEpgGuide.Size.Height + 90);
+                    pageParameters.Controls.Add(ucFakeEpgGuide);
                     break;
             }
         }
 
-        private void btnOK_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Connection_InfoMessage(object sender, SqlInfoMessageEventArgs e)
+        {
+            const string PERCENT_COMPLETED = " PERCENT COMPLETED";
+
+            var message = e.Message;
+            if (!message.Contains(PERCENT_COMPLETED))
+                return;
+
+            message = message.Replace(PERCENT_COMPLETED, string.Empty);
+            if (!int.TryParse(message, out int percent))
+                return;
+
+            if (lblProgress.InvokeRequired)
+                lblProgress.Invoke((MethodInvoker)delegate
+                {
+                    lblProgress.Text = $"{message} %";
+                });
+            else
+                lblProgress.Text = $"{message} %";
+
+
+            if (pbProgress.InvokeRequired)
+                pbProgress.Invoke((MethodInvoker)delegate
+                {
+                    pbProgress.Value = percent;
+                });
+            else
+                pbProgress.Value = percent;
+        }
+
+        private void HandlePreview()
+        {
+            if (!tabReport.TabPages.Contains(_previewPage))
+                tabReport.TabPages.Add(_previewPage);
+            else
+                rptViewer.ReportViewer.Clear();
+
+            tabReport.SelectedTab = _previewPage;
+        }
+
+        public async void StartReporting()
         {
             switch (_reportType)
             {
@@ -64,49 +107,115 @@
                     break;
                 case ReportType.EpgGuide:
                     {
-                        panState.Visible = true;
 
-                        var connection = (SqlConnection)_context.Database.GetDbConnection(); 
-                        if (connection != null)
-                            connection.InfoMessage += FakeEpgGuideInfoMessage;
+                        HandlePreview();
 
                         ucFakeEpgGuide ucFakeEpgGuide = (ucFakeEpgGuide)Controls.OfType<ucFakeEpgGuide>().FirstOrDefault();
-                        Cursor = Cursors.WaitCursor;
+                        ucFakeEpgGuide.Enabler(false, true);
 
-                        _max = ucFakeEpgGuide.Days;
-                        _counter = 0;
+                        string channelLogoPath = string.Empty;
+                        SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
+                        if (systemSettings != null)
+                        {
+                            channelLogoPath = systemSettings.PathToChannelLogos;
+                            if (!string.IsNullOrWhiteSpace(channelLogoPath) && !channelLogoPath.EndsWith("/"))
+                                channelLogoPath += "/";
+                        }
 
-                        _reportParameters = ucFakeEpgGuide.RetrieveParameters();
-                        _reportDataSource = ucFakeEpgGuide.RetrieveReportDataSource();
-                        Cursor = Cursors.Default;
+                        ReportParameter[] reportParameters = new ReportParameter[]
+                        {
+                            new ReportParameter("Start", $"{ucFakeEpgGuide.Start:dd.MM.yyyy} 00:00:00.000"),
+                            new ReportParameter("Ende", $"{ucFakeEpgGuide.Ende:dd.MM.yyyy} 23:59:59.999"),
+                            new ReportParameter("HideShortDescription", $"{ucFakeEpgGuide.HideShortDescription}"),
+                            new ReportParameter("HideDescription", $"{ucFakeEpgGuide.HideDescription}"),
+                            new ReportParameter("ChannelLogoPath", channelLogoPath)
+                        };
 
-                        //panState.Visible = false;
+                        ReportDataSource reportDataSource = null;
+                        var connection = (SqlConnection)_context.Database.GetDbConnection();
+                        if (connection != null)
+                        {
+                            connection.FireInfoMessageEventOnUserErrors = true;
+                            connection.InfoMessage += Connection_InfoMessage;
+                        }
+
+                        _cancel = false;
+                        lblProgress.Visible = true;
+                        pbProgress.Visible = true;
+
+                        var task = Task.Factory.StartNew(() =>
+                        {
+                            if (_context != null)
+                            {
+                                DateTime start = new DateTime(ucFakeEpgGuide.Start.Year, ucFakeEpgGuide.Start.Month, ucFakeEpgGuide.Start.Day, 0, 0, 0, 0);
+                                DateTime ende = ucFakeEpgGuide.Ende.AddDays(1); // Bei SQL-Abfrage ist der Zeitstempel vom Vortag bis 23:59:59.999
+                                ende = new DateTime(ende.Year, ende.Month, ende.Day, 0, 0, 0, 0);
+
+                                var data = _context.GetFakeEpgGuide(start, ende, ucFakeEpgGuide.FavouritesOnly);
+                                data.ForEach(d =>
+                                {
+                                    if (d.RowCounter == 1)
+                                    {
+                                        d.ChannelImage_1 = false;
+                                        d.ChannelImage_2 = false;
+                                        d.ChannelImage_3 = false;
+                                        d.ChannelImage_4 = false;
+                                        d.ChannelImage_5 = false;
+                                        d.ChannelImage_6 = false;
+                                        d.ChannelImage_7 = false;
+
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_1))
+                                            d.ChannelImage_1 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_1}.png");
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_2))
+                                            d.ChannelImage_2 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_2}.png");
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_3))
+                                            d.ChannelImage_3 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_3}.png");
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_4))
+                                            d.ChannelImage_4 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_4}.png");
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_5))
+                                            d.ChannelImage_5 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_5}.png");
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_6))
+                                            d.ChannelImage_6 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_6}.png");
+                                        if (!string.IsNullOrWhiteSpace(d.ChannelName_7))
+                                            d.ChannelImage_7 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_7}.png");
+                                    }
+                                });
+
+                                reportDataSource = new ReportDataSource()
+                                {
+                                    Name = "FakeEpgGuideDS",
+                                    Value = data
+                                };
+                            }
+                        });
+
+                        await task.ContinueWith(resultTask =>
+                        {
+                            _cancel = false;
+                            lblProgress.Visible = false;
+                            pbProgress.Visible = false;
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
+
+                        const int margin = 15;
+                        PageSettings pageSettings = new PageSettings()
+                        {
+                            Landscape = true,
+                            Margins = new Margins(margin, margin, margin, margin)
+                        };
+
+                        rptViewer.ReportViewer.SetPageSettings(pageSettings);
+                        
+                        rptViewer.ReportViewer.LocalReport.EnableExternalImages = true;
+                        rptViewer.ReportViewer.LocalReport.ReportPath = $"{Environment.CurrentDirectory}\\Reports\\EpgGuide.rdlc";
+
+                        rptViewer.ReportViewer.LocalReport.SetParameters(reportParameters);
+                        rptViewer.ReportViewer.LocalReport.DataSources.Add(reportDataSource);
+
+                        rptViewer.ReportViewer.RefreshReport();
                     }
                     break;
             }
-
-            //DialogResult = DialogResult.OK;
-            //Close();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            //DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
-        public void FakeEpgGuideInfoMessage(object sender, SqlInfoMessageEventArgs e)
-        {
-            _counter++;
-            decimal percent = Math.Round((decimal)(_counter / _max * 100), 2);
-            lblPercent.Text = $"{percent}%";
-            pbProgress.Value = _counter / _max * 100;
-            lblMessage.Text = e.Message;
-        }
-
-        private async void dlgReports_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            await _context.DisposeAsync();
-        }
     }
 }

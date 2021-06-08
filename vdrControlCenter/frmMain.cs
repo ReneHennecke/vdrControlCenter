@@ -6,13 +6,7 @@
     using vdrControlCenterUI.Classes;
     using vdrControlCenterUI.Enums;
     using vdrControlCenterUI.Controls;
-    using Microsoft.EntityFrameworkCore.Storage;
-    using DataLayer.Models;
-    using Newtonsoft.Json;
-    using Microsoft.EntityFrameworkCore;
     using DataLayer.Classes;
-    using Microsoft.Reporting.WinForms;
-    using System.Linq;
 
     public partial class frmMain : Form
     {
@@ -22,8 +16,6 @@
         private const int FRAME_MAXIMIZED = -1;
 
         private delegate void AddMessageCallback(string msg);
-
-        private ReportViewer _reportViewer;
 
       
         public frmMain()
@@ -35,6 +27,8 @@
 
         private void PostInit()
         {
+            Visible = false;
+
             Text = ApplicationInfoRaX.ProductName + " " + ApplicationInfoRaX.Version + " " + ApplicationInfoRaX.CopyrightHolder + " " + ApplicationInfoRaX.CompanyName;
 
             _closeImage = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ClosePng}");
@@ -143,6 +137,7 @@
 
         private void tabWorkspace_MouseClick(object sender, MouseEventArgs e)
         {
+            // TabPage schliessen
             TabControl tabControl = (TabControl)sender;
             Point p = e.Location;
             int tabWidth = 0;
@@ -151,6 +146,7 @@
             r.Offset(tabWidth, _imgHitArea.Y);
             r.Width = 16;
             r.Height = 16;
+            bool closePanels = false;
             if (tabWorkspace.SelectedIndex >= 0)
             {
                 if (r.Contains(p))
@@ -161,7 +157,8 @@
                     {
                         case Navigation.Setup:
                             SystemSettingsController systemSettingsView = (SystemSettingsController)page.Controls[0];
-                            systemSettingsView.SaveData();
+                            systemSettingsView.SaveData(true);
+                            closePanels = true;
                             break;
                         case Navigation.Commander:
                             CommanderController commanderController = (CommanderController)page.Controls[0];
@@ -172,6 +169,14 @@
                     }
 
                     tabControl.TabPages.Remove(page);
+                    if (closePanels)
+                    {
+                        MessageBox.Show("Zum Laden der neuen Einstellungen werden alle geöffneten Panels geschlossen.",
+                                        "Einstellungen geändert",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
+                        ClosePanels();
+                    }
                 }
             }
         }
@@ -359,6 +364,7 @@
                 configuration.Width = Size.Width;
                 configuration.Height = Size.Height;
             }
+            
             ConfigurationHelper.CurrentConfig = configuration;
         }
 
@@ -375,7 +381,7 @@
                 if (page.Controls[0] is SystemSettingsController)
                 {
                     SystemSettingsController controller = (SystemSettingsController)page.Controls[0];
-                    controller.SaveData();
+                    controller.SaveData(true);
                 }
                 else if (page.Controls[0] is CommanderController)
                 {
@@ -388,22 +394,7 @@
         private void frmMain_Load(object sender, EventArgs e)
         {
             LoadSettings();
-        }
-
-        public void RptEpg(vdrControlCenterContext context)
-        {
-            if (_reportViewer == null)
-                _reportViewer = new ReportViewer();
-
-            _reportViewer.LocalReport.DataSources.Clear();
-
-            var data = context.Stations.ToListAsync();
-            var reportDataSource = new Microsoft.Reporting.WinForms.ReportDataSource();
-            reportDataSource.Name = "DataSet1";
-            reportDataSource.Value = data;
-            _reportViewer.LocalReport.DataSources.Add(reportDataSource);
-            _reportViewer.LocalReport.ReportEmbeddedResource = "..\\Reports\\EPG.rdlc";
-            _reportViewer.RefreshReport();
+            Visible = true;
         }
     }
 }

@@ -57,9 +57,6 @@
         {
             _init = true;
 
-            //Disposed += OnDispose;
-
-
             _enableRequest = true;
 
             // Nur das Datum ist interessant
@@ -70,11 +67,6 @@
                 _context = new vdrControlCenterContext();
 
             LoadChannels();
-        }
-
-        private void OnDispose(object sender, EventArgs e)
-        {
-            _context?.Dispose();
         }
 
         private void RefreshDisplay()
@@ -265,22 +257,9 @@
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
-            dlgReports reports = new dlgReports();
-            reports.PostInit(Enums.ReportType.EpgGuide);
-            if (reports.ShowDialog() == DialogResult.OK && reports.ReportParameters != null && reports.ReportDataSource != null)
-            {
-                const int margin = 15;
-
-                dlgReport dlg = new dlgReport();
-                dlg.Title = "EPG-Guide";
-                dlg.PageSettings = new System.Drawing.Printing.PageSettings()
-                {
-                    Landscape = true,
-                    Margins = new Margins(margin, margin, margin, margin)
-                };
-                dlg.PostInit(Enums.ReportType.EpgGuide, reports.ReportParameters, reports.ReportDataSource);
-                dlg.Show();
-            }
+            dlgReports dlg = new dlgReports();
+            dlg.PostInit(Enums.ReportType.EpgGuide, _context);
+            dlg.ShowDialog();
         }
     }
 }

@@ -30,6 +30,8 @@ namespace vdrControlCenterUI.Reports.Dialogs
         private void InitializeComponent()
         {
             this.grbParameters = new System.Windows.Forms.GroupBox();
+            this.chbFavouritesOnly = new System.Windows.Forms.CheckBox();
+            this.lblFavouritesOnly = new System.Windows.Forms.Label();
             this.chbHideDescription = new System.Windows.Forms.CheckBox();
             this.lblHideDescription = new System.Windows.Forms.Label();
             this.chbHideShortDescription = new System.Windows.Forms.CheckBox();
@@ -38,8 +40,8 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.lblEnde = new System.Windows.Forms.Label();
             this.dtpStart = new System.Windows.Forms.DateTimePicker();
             this.lblStart = new System.Windows.Forms.Label();
-            this.lblFavouritesOnly = new System.Windows.Forms.Label();
-            this.chbFavouritesOnly = new System.Windows.Forms.CheckBox();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.grbParameters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,6 +50,8 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.grbParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grbParameters.Controls.Add(this.btnCancel);
+            this.grbParameters.Controls.Add(this.btnStart);
             this.grbParameters.Controls.Add(this.chbFavouritesOnly);
             this.grbParameters.Controls.Add(this.lblFavouritesOnly);
             this.grbParameters.Controls.Add(this.chbHideDescription);
@@ -60,10 +64,30 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.grbParameters.Controls.Add(this.lblStart);
             this.grbParameters.Location = new System.Drawing.Point(4, 6);
             this.grbParameters.Name = "grbParameters";
-            this.grbParameters.Size = new System.Drawing.Size(406, 174);
+            this.grbParameters.Size = new System.Drawing.Size(534, 198);
             this.grbParameters.TabIndex = 0;
             this.grbParameters.TabStop = false;
             this.grbParameters.Text = "Parameter";
+            // 
+            // chbFavouritesOnly
+            // 
+            this.chbFavouritesOnly.AutoSize = true;
+            this.chbFavouritesOnly.Checked = true;
+            this.chbFavouritesOnly.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chbFavouritesOnly.Location = new System.Drawing.Point(188, 140);
+            this.chbFavouritesOnly.Name = "chbFavouritesOnly";
+            this.chbFavouritesOnly.Size = new System.Drawing.Size(15, 14);
+            this.chbFavouritesOnly.TabIndex = 9;
+            this.chbFavouritesOnly.UseVisualStyleBackColor = true;
+            // 
+            // lblFavouritesOnly
+            // 
+            this.lblFavouritesOnly.Location = new System.Drawing.Point(16, 136);
+            this.lblFavouritesOnly.Name = "lblFavouritesOnly";
+            this.lblFavouritesOnly.Size = new System.Drawing.Size(166, 22);
+            this.lblFavouritesOnly.TabIndex = 8;
+            this.lblFavouritesOnly.Text = "Nur Favoriten verwenden:";
+            this.lblFavouritesOnly.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // chbHideDescription
             // 
@@ -139,25 +163,28 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.lblStart.Text = "Von Datum:";
             this.lblStart.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lblFavouritesOnly
+            // btnStart
             // 
-            this.lblFavouritesOnly.Location = new System.Drawing.Point(16, 136);
-            this.lblFavouritesOnly.Name = "lblFavouritesOnly";
-            this.lblFavouritesOnly.Size = new System.Drawing.Size(166, 22);
-            this.lblFavouritesOnly.TabIndex = 8;
-            this.lblFavouritesOnly.Text = "Nur Favoriten verwenden:";
-            this.lblFavouritesOnly.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStart.Location = new System.Drawing.Point(446, 32);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
+            this.btnStart.TabIndex = 10;
+            this.btnStart.Text = "Start";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // chbFavouritesOnly
+            // btnCancel
             // 
-            this.chbFavouritesOnly.AutoSize = true;
-            this.chbFavouritesOnly.Checked = true;
-            this.chbFavouritesOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chbFavouritesOnly.Location = new System.Drawing.Point(188, 140);
-            this.chbFavouritesOnly.Name = "chbFavouritesOnly";
-            this.chbFavouritesOnly.Size = new System.Drawing.Size(15, 14);
-            this.chbFavouritesOnly.TabIndex = 9;
-            this.chbFavouritesOnly.UseVisualStyleBackColor = true;
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Location = new System.Drawing.Point(446, 58);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 11;
+            this.btnCancel.Text = "Abbrechen";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // ucFakeEpgGuide
             // 
@@ -165,7 +192,7 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grbParameters);
             this.Name = "ucFakeEpgGuide";
-            this.Size = new System.Drawing.Size(417, 184);
+            this.Size = new System.Drawing.Size(541, 208);
             this.grbParameters.ResumeLayout(false);
             this.grbParameters.PerformLayout();
             this.ResumeLayout(false);
@@ -185,5 +212,7 @@ namespace vdrControlCenterUI.Reports.Dialogs
         private System.Windows.Forms.Label lblStart;
         private System.Windows.Forms.CheckBox chbFavouritesOnly;
         private System.Windows.Forms.Label lblFavouritesOnly;
+        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
