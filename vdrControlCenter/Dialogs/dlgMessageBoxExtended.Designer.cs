@@ -73,7 +73,7 @@
             // 
             // btnOKOnly
             // 
-            this.btnOKOnly.Location = new System.Drawing.Point(120, 110);
+            this.btnOKOnly.Location = new System.Drawing.Point(128, 110);
             this.btnOKOnly.Name = "btnOKOnly";
             this.btnOKOnly.Size = new System.Drawing.Size(75, 23);
             this.btnOKOnly.TabIndex = 3;

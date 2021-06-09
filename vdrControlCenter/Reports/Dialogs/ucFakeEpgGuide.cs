@@ -75,14 +75,17 @@
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            dlgReports owner = (dlgReports)Parent;
-            owner.StartReporting();
+            GetOwner().StartReporting();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            dlgReports owner = (dlgReports)Parent;
-            owner.Cancel = true;
+            GetOwner().Cancel = true;
+        }
+
+        private dlgReports GetOwner()
+        {
+            return (dlgReports)Parent.Parent.Parent;
         }
 
         public void Enabler(bool startEnable, bool cancelEnable)

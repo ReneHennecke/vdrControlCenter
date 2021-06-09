@@ -130,8 +130,6 @@ namespace vdrControlCenterUI.Dialogs
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabReport);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "dlgReports";
             this.Text = "Ausgabe ";
             this.tabReport.ResumeLayout(false);

@@ -8,6 +8,7 @@
     using System.Drawing;
     using System.Drawing.Printing;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlCenterUI.Enums;
@@ -20,6 +21,8 @@
 
         private TabPage _previewPage;
         private bool _cancel;
+
+        private CancellationTokenSource _cts = new CancellationTokenSource();
 
         public bool Cancel
         {
@@ -48,7 +51,7 @@
                     Text += "«EPG-Guide»";
                     ucFakeEpgGuide ucFakeEpgGuide = new ucFakeEpgGuide();
                     ucFakeEpgGuide.PostInit(_context);
-                    ucFakeEpgGuide.Location = new Point(4, 6);
+                    ucFakeEpgGuide.Location = new Point(0, 0);
                     pageParameters.Controls.Add(ucFakeEpgGuide);
                     break;
             }
@@ -107,10 +110,9 @@
                     break;
                 case ReportType.EpgGuide:
                     {
+                        Cursor = Cursors.WaitCursor;
 
-                        HandlePreview();
-
-                        ucFakeEpgGuide ucFakeEpgGuide = (ucFakeEpgGuide)Controls.OfType<ucFakeEpgGuide>().FirstOrDefault();
+                        ucFakeEpgGuide ucFakeEpgGuide = (ucFakeEpgGuide)pageParameters.Controls.OfType<ucFakeEpgGuide>().FirstOrDefault();
                         ucFakeEpgGuide.Enabler(false, true);
 
                         string channelLogoPath = string.Empty;
@@ -143,6 +145,8 @@
                         lblProgress.Visible = true;
                         pbProgress.Visible = true;
 
+                        //var token = _cts.Token;
+
                         var task = Task.Factory.StartNew(() =>
                         {
                             if (_context != null)
@@ -150,6 +154,12 @@
                                 DateTime start = new DateTime(ucFakeEpgGuide.Start.Year, ucFakeEpgGuide.Start.Month, ucFakeEpgGuide.Start.Day, 0, 0, 0, 0);
                                 DateTime ende = ucFakeEpgGuide.Ende.AddDays(1); // Bei SQL-Abfrage ist der Zeitstempel vom Vortag bis 23:59:59.999
                                 ende = new DateTime(ende.Year, ende.Month, ende.Day, 0, 0, 0, 0);
+
+                                string BuildPngFileName(string channelName)
+                                {
+                                    return $"{ucFakeEpgGuide.ChannelLogoPath}{channelName}.png";
+                                }
+
 
                                 var data = _context.GetFakeEpgGuide(start, ende, ucFakeEpgGuide.FavouritesOnly);
                                 data.ForEach(d =>
@@ -165,19 +175,19 @@
                                         d.ChannelImage_7 = false;
 
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_1))
-                                            d.ChannelImage_1 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_1}.png");
+                                            d.ChannelImage_1 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_1));
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_2))
-                                            d.ChannelImage_2 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_2}.png");
+                                            d.ChannelImage_2 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_2));
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_3))
-                                            d.ChannelImage_3 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_3}.png");
+                                            d.ChannelImage_3 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_3));
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_4))
-                                            d.ChannelImage_4 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_4}.png");
+                                            d.ChannelImage_4 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_4));
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_5))
-                                            d.ChannelImage_5 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_5}.png");
+                                            d.ChannelImage_5 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_5));
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_6))
-                                            d.ChannelImage_6 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_6}.png");
+                                            d.ChannelImage_6 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_6));
                                         if (!string.IsNullOrWhiteSpace(d.ChannelName_7))
-                                            d.ChannelImage_7 = System.IO.File.Exists($"{ucFakeEpgGuide.ChannelLogoPath}{d.ChannelName_7}.png");
+                                            d.ChannelImage_7 = System.IO.File.Exists(BuildPngFileName(d.ChannelName_7));
                                     }
                                 });
 
@@ -194,6 +204,7 @@
                             _cancel = false;
                             lblProgress.Visible = false;
                             pbProgress.Visible = false;
+                            ucFakeEpgGuide.Enabler(true, false);
                         }, TaskScheduler.FromCurrentSynchronizationContext());
 
                         const int margin = 15;
@@ -212,10 +223,13 @@
                         rptViewer.ReportViewer.LocalReport.DataSources.Add(reportDataSource);
 
                         rptViewer.ReportViewer.RefreshReport();
+
+                        HandlePreview();
+
+                        Cursor = Cursors.Arrow;
                     }
                     break;
             }
         }
-
     }
 }
