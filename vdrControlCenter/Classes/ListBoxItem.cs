@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Classes
 {
-    public class ComboBoxItem
+    public class ListBoxItem
     {
         public string Text { get; set; }
         public object Value { get; set; }

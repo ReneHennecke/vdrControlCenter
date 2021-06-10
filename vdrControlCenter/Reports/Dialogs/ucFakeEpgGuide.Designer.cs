@@ -30,6 +30,12 @@ namespace vdrControlCenterUI.Reports.Dialogs
         private void InitializeComponent()
         {
             this.grbParameters = new System.Windows.Forms.GroupBox();
+            this.btnUndoChecked = new System.Windows.Forms.Button();
+            this.btnDoChecked = new System.Windows.Forms.Button();
+            this.clbChannels = new System.Windows.Forms.CheckedListBox();
+            this.lblChannels = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnStart = new System.Windows.Forms.Button();
             this.chbFavouritesOnly = new System.Windows.Forms.CheckBox();
             this.lblFavouritesOnly = new System.Windows.Forms.Label();
             this.chbHideDescription = new System.Windows.Forms.CheckBox();
@@ -40,8 +46,7 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.lblEnde = new System.Windows.Forms.Label();
             this.dtpStart = new System.Windows.Forms.DateTimePicker();
             this.lblStart = new System.Windows.Forms.Label();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSwapChecked = new System.Windows.Forms.Button();
             this.grbParameters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -50,6 +55,11 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.grbParameters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grbParameters.Controls.Add(this.btnSwapChecked);
+            this.grbParameters.Controls.Add(this.btnUndoChecked);
+            this.grbParameters.Controls.Add(this.btnDoChecked);
+            this.grbParameters.Controls.Add(this.clbChannels);
+            this.grbParameters.Controls.Add(this.lblChannels);
             this.grbParameters.Controls.Add(this.btnCancel);
             this.grbParameters.Controls.Add(this.btnStart);
             this.grbParameters.Controls.Add(this.chbFavouritesOnly);
@@ -64,10 +74,70 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.grbParameters.Controls.Add(this.lblStart);
             this.grbParameters.Location = new System.Drawing.Point(4, 6);
             this.grbParameters.Name = "grbParameters";
-            this.grbParameters.Size = new System.Drawing.Size(534, 198);
+            this.grbParameters.Size = new System.Drawing.Size(534, 431);
             this.grbParameters.TabIndex = 0;
             this.grbParameters.TabStop = false;
             this.grbParameters.Text = "Parameter";
+            // 
+            // btnUndoChecked
+            // 
+            this.btnUndoChecked.Location = new System.Drawing.Point(392, 186);
+            this.btnUndoChecked.Name = "btnUndoChecked";
+            this.btnUndoChecked.Size = new System.Drawing.Size(124, 24);
+            this.btnUndoChecked.TabIndex = 15;
+            this.btnUndoChecked.Text = "Auswahl rückgängig";
+            this.btnUndoChecked.UseVisualStyleBackColor = true;
+            this.btnUndoChecked.Click += new System.EventHandler(this.btnUndoChecked_Click);
+            // 
+            // btnDoChecked
+            // 
+            this.btnDoChecked.Location = new System.Drawing.Point(392, 160);
+            this.btnDoChecked.Name = "btnDoChecked";
+            this.btnDoChecked.Size = new System.Drawing.Size(124, 24);
+            this.btnDoChecked.TabIndex = 14;
+            this.btnDoChecked.Text = "Alle auswählen";
+            this.btnDoChecked.UseVisualStyleBackColor = true;
+            this.btnDoChecked.Click += new System.EventHandler(this.btnDoChecked_Click);
+            // 
+            // clbChannels
+            // 
+            this.clbChannels.FormattingEnabled = true;
+            this.clbChannels.Location = new System.Drawing.Point(188, 160);
+            this.clbChannels.Name = "clbChannels";
+            this.clbChannels.Size = new System.Drawing.Size(200, 220);
+            this.clbChannels.TabIndex = 13;
+            // 
+            // lblChannels
+            // 
+            this.lblChannels.Location = new System.Drawing.Point(16, 162);
+            this.lblChannels.Name = "lblChannels";
+            this.lblChannels.Size = new System.Drawing.Size(166, 22);
+            this.lblChannels.TabIndex = 12;
+            this.lblChannels.Text = "Folgende Kanäle verwenden:";
+            this.lblChannels.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Location = new System.Drawing.Point(446, 58);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 11;
+            this.btnCancel.Text = "Abbrechen";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnStart
+            // 
+            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStart.Location = new System.Drawing.Point(446, 32);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
+            this.btnStart.TabIndex = 10;
+            this.btnStart.Text = "Start";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // chbFavouritesOnly
             // 
@@ -163,28 +233,15 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.lblStart.Text = "Von Datum:";
             this.lblStart.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // btnStart
+            // btnSwapChecked
             // 
-            this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStart.Location = new System.Drawing.Point(446, 32);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(75, 23);
-            this.btnStart.TabIndex = 10;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Enabled = false;
-            this.btnCancel.Location = new System.Drawing.Point(446, 58);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 11;
-            this.btnCancel.Text = "Abbrechen";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnSwapChecked.Location = new System.Drawing.Point(392, 212);
+            this.btnSwapChecked.Name = "btnSwapChecked";
+            this.btnSwapChecked.Size = new System.Drawing.Size(124, 24);
+            this.btnSwapChecked.TabIndex = 16;
+            this.btnSwapChecked.Text = "Auswahl umkehren";
+            this.btnSwapChecked.UseVisualStyleBackColor = true;
+            this.btnSwapChecked.Click += new System.EventHandler(this.btnSwapChecked_Click);
             // 
             // ucFakeEpgGuide
             // 
@@ -192,7 +249,7 @@ namespace vdrControlCenterUI.Reports.Dialogs
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grbParameters);
             this.Name = "ucFakeEpgGuide";
-            this.Size = new System.Drawing.Size(541, 208);
+            this.Size = new System.Drawing.Size(541, 441);
             this.grbParameters.ResumeLayout(false);
             this.grbParameters.PerformLayout();
             this.ResumeLayout(false);
@@ -214,5 +271,10 @@ namespace vdrControlCenterUI.Reports.Dialogs
         private System.Windows.Forms.Label lblFavouritesOnly;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.CheckedListBox clbChannels;
+        private System.Windows.Forms.Label lblChannels;
+        private System.Windows.Forms.Button btnUndoChecked;
+        private System.Windows.Forms.Button btnDoChecked;
+        private System.Windows.Forms.Button btnSwapChecked;
     }
 }

@@ -11,7 +11,7 @@
     {
         public virtual DbSet<FakeEpgGuide> FakeEpgGuide { get; set; }
 
-        public List<FakeEpgGuide> GetFakeEpgGuide(DateTime startTime, DateTime endTime, bool favouritesOnly)
+        public List<FakeEpgGuide> GetFakeEpgGuide(DateTime startTime, DateTime endTime, bool favouritesOnly, string channelList)
         {
             var startTimePrm = new SqlParameter()
             {
@@ -39,7 +39,7 @@
 
             List<FakeEpgGuide> fakeEpgGuide = new List<FakeEpgGuide>();
 
-            fakeEpgGuide = FakeEpgGuide.FromSqlRaw("EXECUTE dbo.BuildEpgGuide {0}, {1}, {2}", startTimePrm, endTimePrm, favouritesOnly).ToList();
+            fakeEpgGuide = FakeEpgGuide.FromSqlRaw("EXECUTE dbo.BuildEpgGuide {0}, {1}, {2}, {3}", startTimePrm, endTimePrm, favouritesOnly, channelList).ToList();
 
             return fakeEpgGuide;
         }

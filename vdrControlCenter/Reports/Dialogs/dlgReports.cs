@@ -160,8 +160,7 @@
                                     return $"{ucFakeEpgGuide.ChannelLogoPath}{channelName}.png";
                                 }
 
-
-                                var data = _context.GetFakeEpgGuide(start, ende, ucFakeEpgGuide.FavouritesOnly);
+                                var data = _context.GetFakeEpgGuide(start, ende, ucFakeEpgGuide.FavouritesOnly, ucFakeEpgGuide.CheckedChannels);
                                 data.ForEach(d =>
                                 {
                                     if (d.RowCounter == 1)
