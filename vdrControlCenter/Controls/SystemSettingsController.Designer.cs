@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.grbSystemSettings = new System.Windows.Forms.GroupBox();
+            this.lblLastupdateStatusValue = new System.Windows.Forms.Label();
+            this.lblUpdateStatus = new System.Windows.Forms.Label();
             this.btnPathToChannelLogos = new System.Windows.Forms.Button();
             this.tePathToChannelLogogs = new System.Windows.Forms.TextBox();
             this.lblPathToChannelLogogs = new System.Windows.Forms.Label();
@@ -90,8 +92,6 @@
             this.teDescription = new System.Windows.Forms.TextBox();
             this.lblDescription = new System.Windows.Forms.Label();
             this.lblHostAddress = new System.Windows.Forms.Label();
-            this.lblUpdateStatus = new System.Windows.Forms.Label();
-            this.lblLastupdateStatusValue = new System.Windows.Forms.Label();
             this.grbSystemSettings.SuspendLayout();
             this.grbStation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMacExclamation)).BeginInit();
@@ -128,7 +128,24 @@
             this.grbSystemSettings.Size = new System.Drawing.Size(586, 318);
             this.grbSystemSettings.TabIndex = 0;
             this.grbSystemSettings.TabStop = false;
-            this.grbSystemSettings.Text = "Globale Einstellungen";
+            this.grbSystemSettings.Text = "Lokale Einstellungen";
+            // 
+            // lblLastupdateStatusValue
+            // 
+            this.lblLastupdateStatusValue.Location = new System.Drawing.Point(184, 248);
+            this.lblLastupdateStatusValue.Name = "lblLastupdateStatusValue";
+            this.lblLastupdateStatusValue.Size = new System.Drawing.Size(214, 22);
+            this.lblLastupdateStatusValue.TabIndex = 20;
+            this.lblLastupdateStatusValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblUpdateStatus
+            // 
+            this.lblUpdateStatus.Location = new System.Drawing.Point(18, 248);
+            this.lblUpdateStatus.Name = "lblUpdateStatus";
+            this.lblUpdateStatus.Size = new System.Drawing.Size(160, 22);
+            this.lblUpdateStatus.TabIndex = 19;
+            this.lblUpdateStatus.Text = "Abfrage Status:";
+            this.lblUpdateStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnPathToChannelLogos
             // 
@@ -726,30 +743,13 @@
             this.lblHostAddress.Text = "Host-Addresse:";
             this.lblHostAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lblUpdateStatus
-            // 
-            this.lblUpdateStatus.Location = new System.Drawing.Point(18, 248);
-            this.lblUpdateStatus.Name = "lblUpdateStatus";
-            this.lblUpdateStatus.Size = new System.Drawing.Size(160, 22);
-            this.lblUpdateStatus.TabIndex = 19;
-            this.lblUpdateStatus.Text = "Abfrage Status:";
-            this.lblUpdateStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblLastupdateStatusValue
-            // 
-            this.lblLastupdateStatusValue.Location = new System.Drawing.Point(184, 248);
-            this.lblLastupdateStatusValue.Name = "lblLastupdateStatusValue";
-            this.lblLastupdateStatusValue.Size = new System.Drawing.Size(214, 22);
-            this.lblLastupdateStatusValue.TabIndex = 20;
-            this.lblLastupdateStatusValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // SystemSettingsView
+            // SystemSettingsController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.grbStation);
             this.Controls.Add(this.grbSystemSettings);
-            this.Name = "SystemSettingsView";
+            this.Name = "SystemSettingsController";
             this.Size = new System.Drawing.Size(1400, 741);
             this.grbSystemSettings.ResumeLayout(false);
             this.grbSystemSettings.PerformLayout();

@@ -176,6 +176,8 @@
                                         MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
                         ClosePanels();
+
+                        viewStations.PopulateData();
                     }
                 }
             }
