@@ -22,6 +22,12 @@
         private ImageList _imageListRight;
         private Image _imageNoLogo;
 
+        private const int ILE_RADIO = 0;
+        private const int ILE_TV = 1;
+
+        private const int ILE_EMPTY = 0;
+        private const int ILE_FAVOURITE = 1;
+
         public bool RequestEnable
         {
             get { return btnRequest.Enabled; }
@@ -275,13 +281,13 @@
                     {
                         string vpid = (string)dgvChannels.Rows[e.RowIndex].Cells["VPID"].Value;
 
-                        e.Graphics.DrawImage(vpid == "0" ? _imageListLeft.Images[0] : _imageListLeft.Images[1], point);
+                        e.Graphics.DrawImage(vpid == "0" ? _imageListLeft.Images[ILE_RADIO] : _imageListLeft.Images[ILE_TV], point);
                     }
                     else if (e.ColumnIndex == dgvChannels.Columns["DisplayFavourite"].Index)
                     {
                         bool favourite = (bool)dgvChannels.Rows[e.RowIndex].Cells["Favourite"].Value;
 
-                        e.Graphics.DrawImage(favourite ? _imageListRight.Images[1] : _imageListRight.Images[0], point);
+                        e.Graphics.DrawImage(favourite ? _imageListRight.Images[ILE_FAVOURITE] : _imageListRight.Images[ILE_EMPTY], point);
                     }
                     else if (e.ColumnIndex == dgvChannels.Columns["DisplayLogo"].Index)
                     {
@@ -343,13 +349,18 @@
                             await _context.SaveChangesAsync();
                             await transaction.CommitAsync();
                         }
-                        catch //(Exception ex)
+                        catch // (DbUpdateException ex)
                         {
                             await transaction.RollbackAsync();
                         }
                     }
                 }
             }
+        }
+
+        private void btnDel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

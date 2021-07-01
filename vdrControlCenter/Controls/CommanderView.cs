@@ -33,6 +33,10 @@
         private Ping _ping;
         private string _name;
 
+        private const int ILE_FOLDER = 0;
+        private const int ILE_FILE = 1;
+        private const int ILE_ROOT = 2;
+
         public CommanderPanelView CommanderPanelView
         {
             get => _commanderPanelView;
@@ -175,7 +179,7 @@
                 item.SubItems.Add("<DIR>");
                 item.SubItems.Add("D");
                 item.Tag = f;
-                item.ImageIndex = 0;
+                item.ImageIndex = ILE_ROOT;
                 livFileSystem.Items.Add(item);
             }
 
@@ -189,7 +193,7 @@
                     item.SubItems.Add("<DIR>");
                     item.SubItems.Add($"{fse.AttributeString}");
                     item.Tag = fse;
-                    item.ImageIndex = 0;
+                    item.ImageIndex = ILE_FOLDER;
                     livFileSystem.Items.Add(item);
                 }
             }
@@ -204,7 +208,7 @@
                     item.SubItems.Add($"{fse.Size}");
                     item.SubItems.Add($"{fse.AttributeString}");
                     item.Tag = fse;
-                    item.ImageIndex = 1;
+                    item.ImageIndex = ILE_FILE;
                     livFileSystem.Items.Add(item);
                 }
             }

@@ -221,6 +221,8 @@
                             tmTimeOut.Enabled = true;
                         }
                         break;
+
+                    // Timer -->
                     case SvdrpRequest.GetTimerList:
                         if (_svdrpBuffer.Content.Contains(REQ_MSG_NO_TIMERS_DEFINED))
                         {
@@ -236,6 +238,31 @@
                             tmTimeOut.Enabled = true;
                         }
                         break;
+                   case SvdrpRequest.AddTimer:
+                        if (_svdrpBuffer.Content.StartsWith(REQ_250))
+                        {
+                            dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP", "Die Anlage des Timers war erfolgreich.", 2);
+                            dlg.ShowDialog();
+
+                            SendGetTimerListRequest();
+                        }
+                        RefreshRequestControls(true);
+                        break;
+                    case SvdrpRequest.RemoveTimer:
+                        {
+                            string msg = "Der Timer ";
+                            if (_svdrpBuffer.Content.StartsWith(REQ_250))
+                                msg += "wurde erfolgreich gelöscht.";
+                            else
+                                msg += "konnte nicht gelöscht werden.";
+                            dlgMessageBoxExtended dlg = new dlgMessageBoxExtended("SVDRP", msg, 2);
+                            dlg.ShowDialog();
+                            SendGetTimerListRequest();
+                            RefreshRequestControls(true);
+                        }
+                        break;
+                    // <--
+
                     case SvdrpRequest.GetRecordings:
                         if (_svdrpBuffer.Content.StartsWith(REQ_250))
                         {
@@ -258,12 +285,7 @@
                             _svdrpBuffer.CloseLogFile();
                         }
                         break;
-                    case SvdrpRequest.AddTimer:
-                        if (_svdrpBuffer.Content.StartsWith(REQ_250))
-                        {
-
-                        }
-                        break;
+                    
                     default:
                         break;
                 }
@@ -356,6 +378,20 @@
             _client.SendAsync($"LSTT{EOL}");
         }
 
+        public void SendCheckTimerRequest()
+        {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
+
+            frmMain.AddMessage($"GET TIMER");
+
+            _svdrpRequest = SvdrpRequest.CheckTimer;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"LSTT {EOL}");
+        }
+
         public async void SendAddTimerRequest(List<long> selectedItems)
         {
             if (!_client.IsConnected)
@@ -388,6 +424,20 @@
                     _client.SendAsync($"NEWT {timer}{EOL}");
                 }
             }
+        }
+
+        public void SendRemoveTimerRequest(int number)
+        {
+            if (!_client.IsConnected)
+                return;
+
+            RefreshRequestControls(false);
+
+            frmMain.AddMessage($"DEL TIMER {number}");
+
+            _svdrpRequest = SvdrpRequest.RemoveTimer;
+            _svdrpBuffer.Clear();
+            _client.SendAsync($"DELT {number}{EOL}");
         }
         #endregion
 
@@ -490,9 +540,9 @@
                 grbBuffer.Size = _bufferControlSize;
         }
 
-        private void SvdrpController_Load(object sender, EventArgs e)
+        public void Disconnect()
         {
-
+            SendDisconnectRequest();
         }
     }
 }

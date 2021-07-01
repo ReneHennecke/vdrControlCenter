@@ -8,12 +8,16 @@
     using System.Linq;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
+    using vdrControlCenterUI.Enums;
 
-    public partial class SvdrpRecordingsView : UserControl
+    public partial class SvdrpRecordingView : UserControl
     {
         private SvdrpController _controller;
         private vdrControlCenterContext _context;
         private ImageList _imageList;
+
+        private const int ILE_EMPTY = 0;
+        private const int ILE_CUT = 1;
 
         public bool RequestEnable
         {
@@ -23,7 +27,7 @@
                 }
         }
 
-        public SvdrpRecordingsView()
+        public SvdrpRecordingView()
         {
             InitializeComponent();
 
@@ -138,7 +142,7 @@
             {
                 try
                 {
-                    await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Recordings];");
+                    _context.Recordings.RemoveRange(_context.Recordings);
 
                     await _context.Recordings.AddRangeAsync(recordingList.Recordings);
 
@@ -201,7 +205,7 @@
                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
                     // Draw the image over cell at specific location.  
                     Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(title.StartsWith("%") ? _imageList.Images[1] : _imageList.Images[0], point);
+                    e.Graphics.DrawImage(title.StartsWith("%") ? _imageList.Images[ILE_CUT] : _imageList.Images[ILE_EMPTY], point);
                     dgvRecordings.Rows[e.RowIndex].Cells["DisplayCut"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
 
                     e.Handled = true;

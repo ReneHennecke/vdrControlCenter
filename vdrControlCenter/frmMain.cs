@@ -164,6 +164,10 @@
                             CommanderController commanderController = (CommanderController)page.Controls[0];
                             commanderController.SaveConfig();
                             break;
+                        case Navigation.SVDRP:
+                            SvdrpController svdrpController = (SvdrpController)page.Controls[0];
+                            svdrpController.Disconnect();
+                            break;
                         default:
                             break;
                     }
@@ -389,6 +393,11 @@
                 {
                     CommanderController controller = (CommanderController)page.Controls[0];
                     controller.SaveConfig();
+                }
+                else if (page.Controls[0] is SvdrpController)
+                {
+                    SvdrpController controller = (SvdrpController)page.Controls[0];
+                    controller.Disconnect();
                 }
             }
         }

@@ -15,6 +15,9 @@
         private vdrControlCenterContext _context;
         private ImageList _imageList;
 
+        private const int ILE_PASSIVE = 1;
+        private const int ILE_ACTIVE = 0;
+
         public bool RequestEnable
         {
             get { return btnRequest.Enabled; }
@@ -73,19 +76,27 @@
             dgvTimers.Columns.Add(imageColumn);
 
             DataGridViewTextBoxColumn textColumn = new DataGridViewTextBoxColumn();
+            textColumn.HeaderText = "No.";
+            textColumn.DataPropertyName = "Number";
+            textColumn.Name = "Number";
+            textColumn.Width = 30;
+            textColumn.DisplayIndex = 1;
+            dgvTimers.Columns.Add(textColumn);
+
+            textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Kanal";
             textColumn.DataPropertyName = "ChannelName";
             textColumn.Name = "ChannelName";
             textColumn.Width = 150;
-            textColumn.DisplayIndex = 1;
+            textColumn.DisplayIndex = 2;
             dgvTimers.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.HeaderText = "Titel";
             textColumn.DataPropertyName = "Title";
             textColumn.Name = "Title";
-            textColumn.Width = 250;
-            textColumn.DisplayIndex = 2;
+            textColumn.Width = 220;
+            textColumn.DisplayIndex = 3;
             dgvTimers.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
@@ -93,7 +104,7 @@
             textColumn.DataPropertyName = "StartTime";
             textColumn.Name = "StartTime";
             textColumn.Width = 120;
-            textColumn.DisplayIndex = 3;
+            textColumn.DisplayIndex = 4;
             dgvTimers.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
@@ -101,7 +112,7 @@
             textColumn.DataPropertyName = "EndTime";
             textColumn.Name = "EndTime";
             textColumn.Width = 120;
-            textColumn.DisplayIndex = 4;
+            textColumn.DisplayIndex = 5;
             dgvTimers.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
@@ -109,14 +120,14 @@
             textColumn.DataPropertyName = "Duration";
             textColumn.Name = "Duration";
             textColumn.Width = 70;
-            textColumn.DisplayIndex = 5;
+            textColumn.DisplayIndex = 6;
             dgvTimers.Columns.Add(textColumn);
 
             textColumn = new DataGridViewTextBoxColumn();
             textColumn.DataPropertyName = "RecId";
             textColumn.Name = "RecId";
             textColumn.Width = 100;
-            textColumn.DisplayIndex = 6;
+            textColumn.DisplayIndex = 7;
             textColumn.Visible = false;
             dgvTimers.Columns.Add(textColumn);
 
@@ -124,10 +135,11 @@
             textColumn.DataPropertyName = "Active";
             textColumn.Name = "Active";
             textColumn.Width = 100;
-            textColumn.DisplayIndex = 7;
+            textColumn.DisplayIndex = 8;
             textColumn.Visible = false;
             dgvTimers.Columns.Add(textColumn);
 
+           
             btnNew.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.StvNewPng}");
             btnDel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.StvDelPng}");
             btnRequest.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.StvRequestPng}");
@@ -152,8 +164,7 @@
             {
                 try
                 {
-                    await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Timers];");
-
+                    _context.Timers.RemoveRange(_context.Timers);
                     if (timerList != null)
                         await _context.Timers.AddRangeAsync(timerList.Timers);
 
@@ -169,7 +180,7 @@
 
                     reload = true;
                 }
-                catch 
+                catch
                 {
                     await transaction.RollbackAsync();
                 }
@@ -214,7 +225,7 @@
                     e.Graphics.DrawLine(gridLinePen, e.CellBounds.Right - 1, e.CellBounds.Top, e.CellBounds.Right - 1, e.CellBounds.Bottom);
                     // Draw the image over cell at specific location.  
                     Point point = new Point(e.CellBounds.X + 7, e.CellBounds.Y + 3);
-                    e.Graphics.DrawImage(active ? _imageList.Images[1] : _imageList.Images[0], point);
+                    e.Graphics.DrawImage(active ? _imageList.Images[ILE_ACTIVE] : _imageList.Images[ILE_PASSIVE], point);
                     dgvTimers.Rows[e.RowIndex].Cells["DisplayActive"].ReadOnly = true; // make cell readonly so below text will not dispaly on double click over cell.  
                 
 
@@ -228,7 +239,11 @@
             if (e.Value == null)
                 return;
 
-            if (e.ColumnIndex == dgvTimers.Columns["Duration"].Index)
+            if (e.ColumnIndex == dgvTimers.Columns["Number"].Index)
+            {
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+            else if (e.ColumnIndex == dgvTimers.Columns["Duration"].Index)
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             }
@@ -239,6 +254,23 @@
             else if (e.ColumnIndex == dgvTimers.Columns["EndTime"].Index)
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+        }
+
+        private void btnDel_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow currentRow = dgvTimers.CurrentRow;
+            if (currentRow == null)
+                return;
+
+            int number = (int)currentRow.Cells["Number"].Value;
+
+            if (MessageBox.Show($"Möchten Sie den aktuellen Timer No. {number} wirklich löschen ?", 
+                                "SVDRP-Timer löschen",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                _controller.SendRemoveTimerRequest(number);
             }
         }
     }

@@ -12,6 +12,9 @@
 
     public class ListViewStations : ListView
     {
+        private const int ILE_RED = 0;
+        private const int ILE_GREEN = 1;
+
         // TODO : Schriftarten nachbearbeiten
 
         public delegate void RefreshPingStatusCallback(List<Classes.PingReplyRaX> lpr);
@@ -45,7 +48,7 @@
                 {
                     ListViewItem item = FindItemWithText(pr.PingedHostAddress.ToString());
                     if (item != null)
-                        item.ImageIndex = pr.Reply.Status == System.Net.NetworkInformation.IPStatus.Success ? 1 : 0;
+                        item.ImageIndex = pr.Reply.Status == System.Net.NetworkInformation.IPStatus.Success ? ILE_GREEN : ILE_RED;
                 }
             }
         }

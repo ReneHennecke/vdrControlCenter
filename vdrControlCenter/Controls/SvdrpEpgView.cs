@@ -18,7 +18,14 @@
         private ImageList _imageList;
         private List<FakeEpg> _unfiltered;
         private List<FakeEpg> _filtered;
-        
+
+
+        private const int ILE_EMPTY = 0;
+        private const int ILE_FAVOURITE = 1;
+        private const int ILE_TIMER = 2;
+        private const int ILE_RECORD = 2;
+        private const int ILE_SELECT = 3;
+
         public bool RequestEnable
         {
             get { return btnRequest.Enabled; }
@@ -204,8 +211,24 @@
         private void btnFind_Click(object sender, System.EventArgs e)
         {
             dlgFindEPG dlg = new dlgFindEPG();
-            if (dlg.ShowDialog() == DialogResult.OK)
+            dlg.EnableTimerButton = btnTimer.Enabled;
+            DialogResult result = dlg.ShowDialog();
+            if (result == DialogResult.OK) // Gehe zu
+            {
+                foreach (long recId in dlg.SelectedItems)
+                {
+                    DataGridViewRow row = dgvEPG.Rows
+                                                .Cast<DataGridViewRow>()
+                                                .Where(r => (long)r.Cells["RecId"].Value == recId)
+                                                .FirstOrDefault();
+                    if (row != null && (int)row.Cells["SymbolIndex"].Value == ILE_EMPTY)
+                        row.Cells["SymbolIndex"].Value = ILE_SELECT;
+                }
+            }
+            else if (result == DialogResult.Yes)
+            {
                 SaveTimers(dlg.SelectedItems);
+            }
         }
 
         private void btnTimer_Click(object sender, System.EventArgs e)
@@ -303,7 +326,7 @@
         private void dgvEPG_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
 
-            if (e.RowIndex > -1)
+            if (e.Button == MouseButtons.Right && e.RowIndex > -1)
             {
                 if (_filtered != null)
                 {

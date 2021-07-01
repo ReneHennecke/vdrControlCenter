@@ -1,6 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
-    partial class SvdrpRecordingsView
+    partial class SvdrpRecordingView
     {
         /// <summary> 
         /// Erforderliche Designervariable.

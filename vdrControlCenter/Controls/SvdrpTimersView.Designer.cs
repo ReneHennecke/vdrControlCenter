@@ -113,6 +113,7 @@
             this.btnDel.Text = "Löschen";
             this.btnDel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnDel.UseVisualStyleBackColor = true;
+            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
             // 
             // btnNew
             // 
@@ -127,12 +128,12 @@
             this.btnNew.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnNew.UseVisualStyleBackColor = true;
             // 
-            // TimersView
+            // SvdrpTimersView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panBox);
-            this.Name = "TimersView";
+            this.Name = "SvdrpTimersView";
             this.Size = new System.Drawing.Size(480, 254);
             this.panBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTimers)).EndInit();

@@ -8,6 +8,7 @@
     <Version>2.0.0.1</Version>
     <Authors>René Hennecke</Authors>
     <Description>UI zur Steuerung des vdr</Description>
+    <ApplicationIcon>vdr.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>

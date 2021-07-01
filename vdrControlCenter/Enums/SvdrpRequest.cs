@@ -25,7 +25,8 @@
         GetTimerList,
         AddTimer,
         RemoveTimer,
-
+        CheckTimer,
+        
         // EPG
         GetEPGList,
 

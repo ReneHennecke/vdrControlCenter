@@ -15,7 +15,7 @@
         private const int IS_EPG_ENTRY = 0;
         
         private ImageList _imageList;
-        private List<long> _selectedItems;
+        private List<long> _selectedItems = new List<long>();
         private List<Epg> _foundList;
 
         private List<FindEntry> _unfiltered;
@@ -24,6 +24,11 @@
         public List<long> SelectedItems
         {
             get { return _selectedItems; }
+        }
+
+        public bool EnableTimerButton
+        {
+            set { btnTimer.Enabled = value; }
         }
         
         public List<Epg> FoundList
@@ -198,7 +203,6 @@
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-            Close();
         }
 
         private void dgvFind_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -254,15 +258,19 @@
 
         private void btnTimer_Click(object sender, EventArgs e)
         {
-            _selectedItems = new List<long>();
+
+            GetSelectedItems();
+            DialogResult = DialogResult.Yes;  // DialogResult.Yes wird hier "missbraucht"
+        }
+
+        private void GetSelectedItems()
+        {
+            _selectedItems.Clear();
             foreach (DataGridViewRow row in dgvFind.Rows)
             {
                 if ((int)row.Cells["SymbolIndex"].Value == ENTRY_SELECTED)
                     _selectedItems.Add((long)row.Cells["RecId"].Value);
             }
-
-            DialogResult = DialogResult.OK;
-            Close();
         }
 
         private void dgvFind_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -286,7 +294,9 @@
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            // Markieren
+            GetSelectedItems();
+            DialogResult = DialogResult.OK; // DialogResult.Yes wird hier "missbraucht"
         }
 
         private void PreSelect()
@@ -312,7 +322,7 @@
         private void dgvFind_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
 
-            if (e.RowIndex > -1)
+            if (e.Button == MouseButtons.Right && e.RowIndex > -1)
             {
                 if (_filtered != null)
                 {

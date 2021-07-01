@@ -36,7 +36,7 @@
             this.svdrpConnector = new vdrControlCenterUI.Controls.SvdrpConnectorView();
             this.svdrpChannelsView = new vdrControlCenterUI.Controls.SvdrpChannelsView();
             this.svdrpTimersView = new vdrControlCenterUI.Controls.SvdrpTimersView();
-            this.svdrpRecordingsView = new vdrControlCenterUI.Controls.SvdrpRecordingsView();
+            this.svdrpRecordingsView = new vdrControlCenterUI.Controls.SvdrpRecordingView();
             this.svdrpEpgListView = new vdrControlCenterUI.Controls.SvdrpEpgView();
             this.svdrpStatusInfoView = new vdrControlCenterUI.Controls.SvdrpStatusInfoView();
             this.grbBuffer.SuspendLayout();
@@ -150,7 +150,6 @@
             this.Controls.Add(this.grbBuffer);
             this.Name = "SvdrpController";
             this.Size = new System.Drawing.Size(1679, 729);
-            this.Load += new System.EventHandler(this.SvdrpController_Load);
             this.grbBuffer.ResumeLayout(false);
             this.grbBuffer.PerformLayout();
             this.ResumeLayout(false);
@@ -165,7 +164,7 @@
         private SvdrpConnectorView svdrpConnector;
         private SvdrpChannelsView svdrpChannelsView;
         private SvdrpTimersView svdrpTimersView;
-        private SvdrpRecordingsView svdrpRecordingsView;
+        private SvdrpRecordingView svdrpRecordingsView;
         private SvdrpEpgView svdrpEpgListView;
         private SvdrpStatusInfoView svdrpStatusInfoView;
     }

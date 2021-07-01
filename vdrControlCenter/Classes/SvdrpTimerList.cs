@@ -50,7 +50,7 @@
                                 timer.Number = number;
                                 timer.ChannelRecId = channel.RecId;
 
-                                int.TryParse(prms[0], out j);
+                                int.TryParse(prm[0], out j);
                                 timer.Active = (j == 1);
 
                                 timer.StartTime = DataLayer.Classes.TimeExtension.CalcStartTime(prm[2], prm[3]);
