@@ -267,16 +267,15 @@
         {
             dgvEPG.DataSource = null;
 
-            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
+
+            SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName); 
             if (systemSettings != null)
             {
                 lblRequestInfo.Text = $"{systemSettings.LastUpdateEpg:dd.MM.yyyy HH:mm:ss}";
 
-                DateTime date = DateTime.Now;
-                if (dtpDate.Value.Date.CompareTo(date.Date) != 0)
-                    date = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+                DateTime date = new DateTime(dtpDate.Value.Date.Year, dtpDate.Value.Month, dtpDate.Value.Day, 0, 0, 0);
 
-                _unfiltered = _context.GetFakeEpgs(date, 0, false);
+                _unfiltered = _context.GetFakeEpg(date, 0, false);
                 dgvEPG.DataSource = _unfiltered;
             }
         }

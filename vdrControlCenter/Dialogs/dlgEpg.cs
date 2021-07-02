@@ -11,10 +11,10 @@
             InitializeComponent();
         }
 
-        public void PostInit(Epg epg)
+        public void PostInit(FakeEpg epg)
         {
             lblTitleValue.Text = epg.Title;
-            lblChannelNameValue.Text = epg.ChannelNameComputed;
+            lblChannelNameValue.Text = epg.ChannelName;
             lblStartTimeValue.Text = $"{epg.StartTime:dd.MM.yyyy HH:mm}";
             lblDurationValue.Text = $"{epg.Duration / 60}";
             lblEndTimeValue.Text = $"{epg.StartTime.Value.AddSeconds(epg.Duration.Value):dd.MM.yyyy HH:mm}";

@@ -19,7 +19,7 @@
         private Color _colorFirstFind = Color.LightGoldenrodYellow;         // show find first color
         private Color _colorSecondFind = Color.DarkGoldenrod;               // show find second color
 
-        private Epg _epg;
+        private FakeEpg _epg;
         private ToolTip _toolTip = new ToolTip();
 
         private bool _enableRequest = false;
@@ -167,7 +167,7 @@
             }
         }
 
-        public Epg Epg
+        public FakeEpg Epg
         {
             get { return _epg; }
             set 

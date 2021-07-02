@@ -141,14 +141,13 @@
             else
                 ende = _channelList.Count;
 
-            List<Epg> epg;
+            List<FakeEpg> epg;
 
             for (int i = _lastChannelIndex; i < ende; i++)
             {
                 long channelRecId = _channelList[i].RecId;
 
-                epg = await _context.Epg.Where(x => x.ChannelRecId == channelRecId && x.StartTime >= dtStart && x.StartTime <= dtEnde)
-                                        .ToListAsync();
+                epg = _context.GetFakeEpgForChannel(channelRecId, dtStart, dtEnde);
 
                 EpgGuideLine timeLine = new EpgGuideLine();
                 timeLine.ChannelName = _channelList[i].ChannelName;
@@ -178,7 +177,7 @@
         {
             CleanUp();
 
-            // Muss synchron sein, da sonst _channelLiost == null
+            // Muss synchron sein, da sonst _channelList == null
             _channelList = _context.Channels.OrderBy(x => x.ChannelName).ToList();
 
             SystemSettings systemSettings = _context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
@@ -214,9 +213,21 @@
         {
             dlgFindEPG dlg = new dlgFindEPG();
             dlg.FoundList = _foundList;
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            dlg.EnableTimerButton = true;
+            DialogResult result = dlg.ShowDialog();
+            if (result == DialogResult.OK || result == DialogResult.Yes)
             {
                 _foundList = dlg.FoundList;
+                if (result == DialogResult.OK) // Markieren
+                {
+                    
+                }
+                else // Timer
+                {
+
+                }
+
+
                 RefreshDisplay();
             }
         }

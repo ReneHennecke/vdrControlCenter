@@ -14,7 +14,7 @@
 
     public partial class EpgGuideLine : UserControl
     {
-        private List<Epg> _epgList;
+        private List<FakeEpg> _epgList;
         private List<Timers> _timerList;
         private List<Recordings> _recordingList;
         private List<Epg> _foundList;
@@ -102,7 +102,7 @@
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<Epg> EpgList
+        public List<FakeEpg> EpgList
         {
             get { return _epgList; }
             set { _epgList = value; }
@@ -148,7 +148,7 @@
                     int x2;
                     int y2 = lblTimeLineTable.Size.Height;
 
-                    foreach (Epg epg in _epgList)
+                    foreach (FakeEpg epg in _epgList)
                     {
                         x1 = CalcPositionByDateTime(epg.StartTime.Value);
                         x2 = CalcPositionByDateTime(epg.StartTime.Value.AddSeconds((double)epg.Duration));
