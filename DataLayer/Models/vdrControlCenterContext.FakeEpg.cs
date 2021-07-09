@@ -14,7 +14,6 @@
 
         public List<FakeEpg> GetFakeEpg(DateTime startTime, short channelType, bool favouritesOnly)
         {
-
             var startTimePrm = new SqlParameter()
             {
                 ParameterName = "@startTime",
@@ -47,16 +46,17 @@
             return epgs;
         }
 
-        public List<FakeEpg> GetFakeEpgForChannel(long channelRecId, DateTime startTime, DateTime endTime)
+        public List<FakeEpg> GetFakeEpgForChannels(string channelList, DateTime startTime)
         {
-
-            var channelRecIdPrm= new SqlParameter()
+            var channelListPrm = new SqlParameter()
             {
-                ParameterName = "@channelRecId",
-                SqlDbType = SqlDbType.BigInt,
+                ParameterName = "@channelList",
+                SqlDbType = SqlDbType.NVarChar,
+                Size = 4000,
                 Direction = ParameterDirection.Input,
-                Value = channelRecId
+                Value = channelList
             };
+
 
             var startTimePrm = new SqlParameter()
             {
@@ -66,17 +66,9 @@
                 Value = startTime
             };
 
-            var endTimePrm = new SqlParameter()
-            {
-                ParameterName = "@endTime",
-                SqlDbType = SqlDbType.DateTime,
-                Direction = ParameterDirection.Input,
-                Value = endTime
-            };
-
             List<FakeEpg> epgs = new List<FakeEpg>();
 
-            epgs = FakeEpgs.FromSqlRaw("EXECUTE dbo.GetFakeEpgForChannel {0}, {1}, {2}", channelRecIdPrm, startTimePrm, endTimePrm).ToList();
+            epgs = FakeEpgs.FromSqlRaw("EXECUTE dbo.GetFakeEpgForChannel {0}, {1}", channelListPrm, startTimePrm).ToList();
 
             return epgs;
         }

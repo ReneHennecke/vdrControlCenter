@@ -287,6 +287,7 @@
                             page.ImageIndex = (int)Navigation.EPGGuide;
                             EpgGuideLineController controller = new EpgGuideLineController();
                             controller.MainForm = this;
+                            controller.LoadData();
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
                         }
@@ -384,20 +385,23 @@
         {
             foreach (TabPage page in tabWorkspace.TabPages)
             {
-                if (page.Controls[0] is SystemSettingsController)
+                if (page.Controls.Count > 0)
                 {
-                    SystemSettingsController controller = (SystemSettingsController)page.Controls[0];
-                    controller.SaveData(true);
-                }
-                else if (page.Controls[0] is CommanderController)
-                {
-                    CommanderController controller = (CommanderController)page.Controls[0];
-                    controller.SaveConfig();
-                }
-                else if (page.Controls[0] is SvdrpController)
-                {
-                    SvdrpController controller = (SvdrpController)page.Controls[0];
-                    controller.Disconnect();
+                    if (page.Controls[0] is SystemSettingsController)
+                    {
+                        SystemSettingsController controller = (SystemSettingsController)page.Controls[0];
+                        controller.SaveData(true);
+                    }
+                    else if (page.Controls[0] is CommanderController)
+                    {
+                        CommanderController controller = (CommanderController)page.Controls[0];
+                        controller.SaveConfig();
+                    }
+                    else if (page.Controls[0] is SvdrpController)
+                    {
+                        SvdrpController controller = (SvdrpController)page.Controls[0];
+                        controller.Disconnect();
+                    }
                 }
             }
         }

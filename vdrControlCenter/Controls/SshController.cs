@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using DataLayer.Models;
-    using Microsoft.EntityFrameworkCore;
     using Renci.SshNet;
     using vdrControlCenterUI.Classes;
 

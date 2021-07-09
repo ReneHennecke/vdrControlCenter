@@ -37,8 +37,10 @@ namespace vdrControlCenterUI.Controls
             this.btnUp = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.panTimeLineControls = new vdrControlCenterUI.Controls.EpgGuideLinePanel();
-            this.chbIgnorePast = new System.Windows.Forms.CheckBox();
             this.btnPrint = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.chbEntriesFromPast = new System.Windows.Forms.CheckBox();
+            this.gcClock = new vdrControlCenterUI.Controls.EpgGuideClock();
             this.SuspendLayout();
             // 
             // lblCurrentDate
@@ -51,6 +53,7 @@ namespace vdrControlCenterUI.Controls
             this.lblCurrentDate.Size = new System.Drawing.Size(160, 23);
             this.lblCurrentDate.TabIndex = 3;
             this.lblCurrentDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblCurrentDate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lblCurrentDate_MouseClick);
             // 
             // btnFind
             // 
@@ -111,22 +114,13 @@ namespace vdrControlCenterUI.Controls
             this.panTimeLineControls.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panTimeLineControls.Location = new System.Drawing.Point(5, 32);
+            this.panTimeLineControls.BackColor = System.Drawing.Color.Transparent;
+            this.panTimeLineControls.Location = new System.Drawing.Point(5, 70);
             this.panTimeLineControls.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.panTimeLineControls.Name = "panTimeLineControls";
-            this.panTimeLineControls.Size = new System.Drawing.Size(1607, 644);
+            this.panTimeLineControls.Size = new System.Drawing.Size(1607, 602);
             this.panTimeLineControls.TabIndex = 6;
             this.panTimeLineControls.SizeChanged += new System.EventHandler(this.panTimeLineControls_SizeChanged);
-            // 
-            // chbIgnorePast
-            // 
-            this.chbIgnorePast.Location = new System.Drawing.Point(586, 6);
-            this.chbIgnorePast.Name = "chbIgnorePast";
-            this.chbIgnorePast.Size = new System.Drawing.Size(228, 24);
-            this.chbIgnorePast.TabIndex = 8;
-            this.chbIgnorePast.Text = "Vergangene Einträge nicht anzeigen";
-            this.chbIgnorePast.UseVisualStyleBackColor = true;
-            this.chbIgnorePast.CheckedChanged += new System.EventHandler(this.chbIgnorePast_CheckedChanged);
             // 
             // btnPrint
             // 
@@ -138,12 +132,45 @@ namespace vdrControlCenterUI.Controls
             this.btnPrint.UseVisualStyleBackColor = true;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1122, 4);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // chbEntriesFromPast
+            // 
+            this.chbEntriesFromPast.Location = new System.Drawing.Point(598, 8);
+            this.chbEntriesFromPast.Name = "chbEntriesFromPast";
+            this.chbEntriesFromPast.Size = new System.Drawing.Size(192, 20);
+            this.chbEntriesFromPast.TabIndex = 11;
+            this.chbEntriesFromPast.Text = "Einträge aus der Vergangenheit";
+            this.chbEntriesFromPast.UseVisualStyleBackColor = true;
+            this.chbEntriesFromPast.CheckedChanged += new System.EventHandler(this.chbEntriesFromPast_CheckedChanged);
+            // 
+            // gcClock
+            // 
+            this.gcClock.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gcClock.BackColor = System.Drawing.Color.Transparent;
+            this.gcClock.Location = new System.Drawing.Point(4, 32);
+            this.gcClock.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.gcClock.Name = "gcClock";
+            this.gcClock.Size = new System.Drawing.Size(1608, 36);
+            this.gcClock.TabIndex = 12;
+            // 
             // EpgGuideLineController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.gcClock);
+            this.Controls.Add(this.chbEntriesFromPast);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnPrint);
-            this.Controls.Add(this.chbIgnorePast);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.panTimeLineControls);
             this.Controls.Add(this.btnNext);
@@ -167,7 +194,9 @@ namespace vdrControlCenterUI.Controls
         private Button btnNext;
         private Controls.EpgGuideLinePanel panTimeLineControls;
         private Button btnFind;
-        private CheckBox chbIgnorePast;
         private Button btnPrint;
+        private Button button1;
+        private CheckBox chbEntriesFromPast;
+        private EpgGuideClock gcClock;
     }
 }

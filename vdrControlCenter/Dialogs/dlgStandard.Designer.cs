@@ -32,6 +32,7 @@ namespace vdrControlCenterUI.Dialogs
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dlgStandard));
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.panBox = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // btnOK
@@ -40,7 +41,7 @@ namespace vdrControlCenterUI.Dialogs
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOK.Location = new System.Drawing.Point(63, 65);
+            this.btnOK.Location = new System.Drawing.Point(147, 125);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(134, 23);
             this.btnOK.TabIndex = 0;
@@ -55,7 +56,7 @@ namespace vdrControlCenterUI.Dialogs
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCancel.Location = new System.Drawing.Point(203, 65);
+            this.btnCancel.Location = new System.Drawing.Point(287, 125);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(134, 23);
             this.btnCancel.TabIndex = 1;
@@ -65,11 +66,23 @@ namespace vdrControlCenterUI.Dialogs
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             this.btnCancel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btnCancel_KeyDown);
             // 
+            // panBox
+            // 
+            this.panBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panBox.Location = new System.Drawing.Point(14, 12);
+            this.panBox.Name = "panBox";
+            this.panBox.Size = new System.Drawing.Size(407, 101);
+            this.panBox.TabIndex = 2;
+            // 
             // dlgStandard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(347, 99);
+            this.ClientSize = new System.Drawing.Size(437, 159);
+            this.Controls.Add(this.panBox);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -87,5 +100,6 @@ namespace vdrControlCenterUI.Dialogs
 
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Panel panBox;
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace vdrControlCenterUI.Dialogs
 {
-    partial class dlgUrl
+    partial class dlgStart
     {
         /// <summary>
         /// Required designer variable.
@@ -29,12 +29,12 @@ namespace vdrControlCenterUI.Dialogs
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dlgUrl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(dlgStart));
             this.panBox = new System.Windows.Forms.Panel();
-            this.teUrl = new System.Windows.Forms.TextBox();
             this.lblUrl = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
+            this.dtpStart = new System.Windows.Forms.DateTimePicker();
             this.panBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,29 +43,20 @@ namespace vdrControlCenterUI.Dialogs
             this.panBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panBox.Controls.Add(this.teUrl);
+            this.panBox.Controls.Add(this.dtpStart);
             this.panBox.Controls.Add(this.lblUrl);
             this.panBox.Location = new System.Drawing.Point(6, 6);
             this.panBox.Name = "panBox";
-            this.panBox.Size = new System.Drawing.Size(782, 54);
+            this.panBox.Size = new System.Drawing.Size(364, 54);
             this.panBox.TabIndex = 0;
-            // 
-            // teUrl
-            // 
-            this.teUrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.teUrl.Location = new System.Drawing.Point(72, 16);
-            this.teUrl.Name = "teUrl";
-            this.teUrl.Size = new System.Drawing.Size(700, 23);
-            this.teUrl.TabIndex = 1;
-            this.teUrl.TextChanged += new System.EventHandler(this.teUrl_TextChanged);
             // 
             // lblUrl
             // 
             this.lblUrl.Location = new System.Drawing.Point(10, 16);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(58, 22);
+            this.lblUrl.Size = new System.Drawing.Size(118, 22);
             this.lblUrl.TabIndex = 0;
-            this.lblUrl.Text = "URL:";
+            this.lblUrl.Text = "Startdatum:";
             this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnCancel
@@ -73,7 +64,7 @@ namespace vdrControlCenterUI.Dialogs
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCancel.Location = new System.Drawing.Point(654, 74);
+            this.btnCancel.Location = new System.Drawing.Point(236, 74);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(134, 23);
             this.btnCancel.TabIndex = 3;
@@ -88,7 +79,7 @@ namespace vdrControlCenterUI.Dialogs
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnOK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnOK.Location = new System.Drawing.Point(514, 74);
+            this.btnOK.Location = new System.Drawing.Point(96, 74);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(134, 23);
             this.btnOK.TabIndex = 2;
@@ -97,22 +88,28 @@ namespace vdrControlCenterUI.Dialogs
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // dlgUrl
+            // dtpStart
+            // 
+            this.dtpStart.Location = new System.Drawing.Point(134, 16);
+            this.dtpStart.Name = "dtpStart";
+            this.dtpStart.Size = new System.Drawing.Size(200, 23);
+            this.dtpStart.TabIndex = 1;
+            // 
+            // dlgStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(794, 104);
+            this.ClientSize = new System.Drawing.Size(376, 104);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.panBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "dlgUrl";
+            this.Name = "dlgStart";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Medium öffnen";
+            this.Text = "Startdatum für EPG-Daten";
             this.panBox.ResumeLayout(false);
-            this.panBox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -120,9 +117,9 @@ namespace vdrControlCenterUI.Dialogs
         #endregion
 
         private System.Windows.Forms.Panel panBox;
-        private System.Windows.Forms.TextBox teUrl;
         private System.Windows.Forms.Label lblUrl;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.DateTimePicker dtpStart;
     }
 }

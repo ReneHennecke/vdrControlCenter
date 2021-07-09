@@ -8,7 +8,6 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
 
@@ -58,7 +57,7 @@
 
         private void PostInit()
         {
-
+            DoubleBuffered = true;
         }
 
         private int CalcPositionByDateTime(DateTime dateTime)
@@ -105,7 +104,11 @@
         public List<FakeEpg> EpgList
         {
             get { return _epgList; }
-            set { _epgList = value; }
+            set 
+            { 
+                _epgList = value;
+                DrawTimeLineEntries();
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -129,7 +132,7 @@
             set { _foundList = value; }
         }
 
-        public void DrawTimeLineEntries()
+        private void DrawTimeLineEntries()
         {
             if (lblTimeLineTable.InvokeRequired)
             {
@@ -157,9 +160,9 @@
                         timeLineEntry.Location = new Point(x1, y1);
                         timeLineEntry.Size = new Size(x2 - x1, y2);
                         timeLineEntry.Epg = epg;
-                        timeLineEntry.IsTimer = _timerList == null ? false : _timerList.Exists(x => x.ChannelRecId == epg.ChannelRecId && x.Title == epg.Title && x.StartTime.Value.CompareTo(epg.StartTime) == 0);
-                        timeLineEntry.IsRecording = _recordingList == null ? false : _recordingList.Exists(x => x.Title == epg.Title);
-                        timeLineEntry.IsFound = _foundList == null ? false : _foundList.Exists(x => x.RecId == epg.RecId);
+                        timeLineEntry.IsTimer = false; // _timerList == null ? false : _timerList.Exists(x => x.ChannelRecId == epg.ChannelRecId && x.Title == epg.Title && x.StartTime.Value.CompareTo(epg.StartTime) == 0);
+                        timeLineEntry.IsRecording = false; // _recordingList == null ? false : _recordingList.Exists(x => x.Title == epg.Title);
+                        timeLineEntry.IsFound = false; // _foundList == null ? false : _foundList.Exists(x => x.RecId == epg.RecId);
 
                         lblTimeLineTable.Controls.Add(timeLineEntry);
                     }

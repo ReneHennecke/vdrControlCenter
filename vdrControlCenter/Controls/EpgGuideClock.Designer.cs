@@ -2,7 +2,7 @@
 
 namespace vdrControlCenterUI.Controls
 {
-    partial class EpgGuideLinePanel : UserControl
+    partial class EpgGuideClock : UserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,20 +30,29 @@ namespace vdrControlCenterUI.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.tmClock = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // EpgGuideLinePanel
+            // tmClock
+            // 
+            this.tmClock.Interval = 60000;
+            this.tmClock.Tick += new System.EventHandler(this.tmClock_Tick);
+            // 
+            // EpgGuideClock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.Name = "EpgGuideLinePanel";
-            this.Size = new System.Drawing.Size(1036, 398);
+            this.Name = "EpgGuideClock";
+            this.Size = new System.Drawing.Size(1036, 56);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private Timer tmClock;
     }
 }

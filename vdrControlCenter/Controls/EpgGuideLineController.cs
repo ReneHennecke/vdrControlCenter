@@ -18,6 +18,8 @@
         private int _lastChannelIndex;
         private bool _enableRequest = false;
         private vdrControlCenterContext _context;
+
+        private List<FakeEpg> _epg;
         private List<Epg> _foundList;
 
         private int _countTimeLines;
@@ -25,11 +27,8 @@
 
         private const int EPG_GUIDE_LINE_HEIGHT = 30;
 
-        private frmMain frmMain;
-        public frmMain MainForm
-        {
-            set { frmMain = value; }
-        }
+        private frmMain _frmMain;
+        private DateTime _startDateTime;
 
         public bool EnableRequest
         {
@@ -45,6 +44,11 @@
             }
         }
 
+        public frmMain MainForm
+        {
+            set => _frmMain = value;
+        }
+
         public EpgGuideLineController()
         {
             InitializeComponent();
@@ -53,6 +57,7 @@
                 PostInit();
         }
 
+
         private void PostInit()
         {
             _init = true;
@@ -60,20 +65,17 @@
             _enableRequest = true;
 
             // Nur das Datum ist interessant
-            _currentDateTime = DateTime.Now.Date;
+            _startDateTime = _currentDateTime = DateTime.Now.Date;
             _lastChannelIndex = 0;
 
             if (_context == null)
                 _context = new vdrControlCenterContext();
-
-            LoadChannels();
         }
 
         private void RefreshDisplay()
         {
             lblCurrentDate.Text = $"{_currentDateTime:dddd, dd.MM.yyyy}";
-
-            DrawTimeLines();
+            gcClock.CurrentDate = _currentDateTime;
         }
 
         private void btnDown_Click(object sender, EventArgs e)
@@ -83,7 +85,7 @@
             else
                 _lastChannelIndex = 0;
 
-            DrawTimeLines();
+            DrawTimeLines(true);
         }
 
         private void btnUp_Click(object sender, EventArgs e)
@@ -91,13 +93,14 @@
             if (_lastChannelIndex + _countTimeLines < _channelList.Count - 1)
                 _lastChannelIndex += _countTimeLines;
 
-            DrawTimeLines();
+            DrawTimeLines(true);
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             _currentDateTime = _currentDateTime.AddDays(-1);
             RefreshDisplay();
+            DrawTimeLines(false);
         }
 
 
@@ -105,35 +108,28 @@
         {
             _currentDateTime = _currentDateTime.AddDays(1);
             RefreshDisplay();
+            DrawTimeLines(false);
         }
 
-        private async void DrawTimeLines()
+        private void DrawTimeLines(bool refreshChannels)
         {
             if (_channelList == null)
                 return;
 
             panTimeLineControls.SuspendLayout();
-            ClearTimeLineControls();
+            if (refreshChannels)
+                ClearTimeLineControls();
 
-            DateTime dtStart = new DateTime(_currentDateTime.Year, _currentDateTime.Month, _currentDateTime.Day, 0, 0, 0);
-            if (!chbIgnorePast.Checked)
+            DateTime dtStart = _currentDateTime.Date;
+            DateTime dtEnde = dtStart.AddDays(1).AddMilliseconds(-1);
+            if (!chbEntriesFromPast.Checked)
             {
                 DateTime now = DateTime.Now;
-                switch (_currentDateTime.Date.CompareTo(now.Date))
-                {
-                    case -1:
-                        panTimeLineControls.ResumeLayout();
-                        return;
-                    case 0:
-                        dtStart = new DateTime(_currentDateTime.Year, _currentDateTime.Month, _currentDateTime.Day, now.Hour, now.Minute, 0);
-                        break;
-                    default:
-                        break;
-                }
+                if (dtStart.CompareTo(now) < 0)
+                    dtStart = now;
             }
-            DateTime dtEnde = new DateTime(_currentDateTime.Year, _currentDateTime.Month, _currentDateTime.Day, 23, 59, 59);
-
-            int y = EPG_GUIDE_LINE_HEIGHT + 2;
+            
+            int y = 2;
 
             int ende;
             if (_lastChannelIndex + _countTimeLines < _channelList.Count - 1)
@@ -141,66 +137,89 @@
             else
                 ende = _channelList.Count;
 
-            List<FakeEpg> epg;
-
             for (int i = _lastChannelIndex; i < ende; i++)
             {
                 long channelRecId = _channelList[i].RecId;
 
-                epg = _context.GetFakeEpgForChannel(channelRecId, dtStart, dtEnde);
+                var epg = _epg.Where(x => x.ChannelRecId == channelRecId && x.StartTime.Value.CompareTo(dtStart) >= 0 && x.StartTime.Value.CompareTo(dtEnde) <= 0).ToList();
 
-                EpgGuideLine timeLine = new EpgGuideLine();
-                timeLine.ChannelName = _channelList[i].ChannelName;
+                EpgGuideLine timeLine = GetEpgGuideLine(channelRecId, _channelList[i].ChannelName);
                 timeLine.Location = new Point(2, y);
                 timeLine.TabIndex = i;
                 timeLine.EnableRequest = _enableRequest;
-                timeLine.ChannelRecId = channelRecId;
-                timeLine.TimerList = await _context.Timers.Where(x => x.ChannelRecId == channelRecId).ToListAsync();
-                timeLine.RecordingList = await _context.Recordings.ToListAsync();
-                timeLine.FoundList = _foundList;
+                //timeLine.TimerList = await _context.Timers.Where(x => x.ChannelRecId == channelRecId).ToListAsync();
+                //timeLine.RecordingList = await _context.Recordings.ToListAsync();
+                //timeLine.FoundList = _foundList;
                 timeLine.EpgList = epg;
 
                 panTimeLineControls.Controls.Add(timeLine);
 
-                y += timeLine.Size.Height + 2;
+                y += timeLine.Size.Height + 4;
             }
 
             btnDown.Enabled = _lastChannelIndex >= 0;
             btnUp.Enabled = _lastChannelIndex + _countTimeLines < _channelList.Count - 1;
 
             panTimeLineControls.ResumeLayout();
+        }
 
-            RefreshTimeLines();
+        private EpgGuideLine GetEpgGuideLine(long channelRecId, string channelName)
+        {
+            EpgGuideLine epgGuideLine = panTimeLineControls.Controls.OfType<EpgGuideLine>().FirstOrDefault(x => x.ChannelRecId == channelRecId);
+            if (epgGuideLine == null)
+            {
+                epgGuideLine = new EpgGuideLine()
+                {
+                    ChannelRecId = channelRecId,
+                    ChannelName = channelName
+                };
+            }
+            else
+                epgGuideLine.ClearEpgEntries();
+
+            return epgGuideLine;
         }
 
         private void LoadChannels()
         {
             CleanUp();
 
-            // Muss synchron sein, da sonst _channelList == null
-            _channelList = _context.Channels.OrderBy(x => x.ChannelName).ToList();
+            short channelType = (short)Enums.ChannelType.Alle;
+            bool favourites = false;
 
             SystemSettings systemSettings = _context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
-            if (systemSettings.ChannelListType == (short)Enums.ChannelType.TV)
-                _channelList = _channelList.Where(x => x.Vpid.Contains("=")).ToList();
-            else if (systemSettings.ChannelListType == (short)Enums.ChannelType.Radio)
-                _channelList = _channelList.Where(x => !x.Vpid.Contains("=")).ToList();
-        }
-
-        private void CalcCountTimeLines()
-        {
-            const int EPG_GUIDE_HEADER_AREA = 3; // Entspricht 3 EPG-Zeilen
-
-            _countTimeLines = panTimeLineControls.Size.Height / EPG_GUIDE_LINE_HEIGHT - EPG_GUIDE_HEADER_AREA;
-        }
-
-        private async void RefreshTimeLines()
-        {
-            foreach (EpgGuideLine timeLine in panTimeLineControls.Controls)
+            if (systemSettings != null)
             {
-                frmMain.AddMessage($"EPG-Daten » {timeLine.ChannelName}");
-                await Task.Run(() => timeLine.DrawTimeLineEntries());
+                if (systemSettings.ChannelListType.HasValue)
+                    channelType = systemSettings.ChannelListType.Value;
+                if (systemSettings.FavouritesOnly.HasValue)
+                    favourites = systemSettings.FavouritesOnly.Value;
             }
+
+            _frmMain.AddMessage("GET Kanalliste");
+            _channelList = _context.Channels
+                                    .OrderBy(x => x.ChannelName)
+                                    .ToList();
+
+            if (channelType == (short)Enums.ChannelType.TV)
+                _channelList = _channelList.Where(x => x.Vpid.Contains("=")).ToList();
+            else if (channelType == (short)Enums.ChannelType.Radio)
+                _channelList = _channelList.Where(x => !x.Vpid.Contains("=")).ToList();
+
+            if (favourites)
+                _channelList = _channelList.Where(x => x.Favourite.Value).ToList();
+        }
+
+        private void LoadEpg()
+        {
+            _frmMain.AddMessage("GET EPG-Daten");
+            string channelList = string.Empty;
+            _channelList.ForEach(x =>
+            {
+                channelList += $"{x.RecId},";
+            });
+
+            _epg = _context.GetFakeEpgForChannels(channelList, _startDateTime);
         }
 
         private  void CleanUp()
@@ -234,8 +253,9 @@
 
         private void CalculcateAndRedrawDisplay()
         {
-            CalcCountTimeLines();
-            RefreshDisplay();
+            _countTimeLines = panTimeLineControls.Size.Height / EPG_GUIDE_LINE_HEIGHT - 3;
+
+            DrawTimeLines(false);
         }
 
         private void panTimeLineControls_SizeChanged(object sender, EventArgs e)
@@ -251,19 +271,14 @@
 
         private void ClearTimeLineControls()
         {
-            foreach (EpgGuideLine line in panTimeLineControls.Controls.OfType<EpgGuideLine>())
+            foreach (EpgGuideLine epgGuideLine in panTimeLineControls.Controls.OfType<EpgGuideLine>())
             {
                 // Elemente der Line löschen
-                line.ClearEpgEntries();
+                epgGuideLine.ClearEpgEntries();
                 // Zeile selbst freigeben
-                line.Dispose();
+                epgGuideLine.Dispose();
             }
             panTimeLineControls.Controls.Clear();
-        }
-
-        private void chbIgnorePast_CheckedChanged(object sender, EventArgs e)
-        {
-            panTimeLineControls_SizeChanged(null, null);
         }
 
         private void btnPrint_Click(object sender, EventArgs e)
@@ -271,6 +286,39 @@
             dlgReports dlg = new dlgReports();
             dlg.PostInit(Enums.ReportType.EpgGuide, _context);
             dlg.ShowDialog();
+        }
+
+        public void LoadData()
+        {
+            ClearTimeLineControls();
+            LoadChannels();
+            LoadEpg();
+            RefreshDisplay();
+            //DrawTimeLines(true);
+        }
+
+        private void lblCurrentDate_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                dlgStart dlg = new dlgStart();
+                dlg.Start = _startDateTime;
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    _startDateTime = dlg.Start;
+                    LoadData();
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DrawTimeLines(false);
+        }
+
+        private void chbEntriesFromPast_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadData();
         }
     }
 }

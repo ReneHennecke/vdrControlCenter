@@ -39,6 +39,12 @@
     <Compile Update="Controls\CommanderController.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Controls\EpgGuideClock.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Dialogs\dlgStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Reports\EPGGuideDS.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
