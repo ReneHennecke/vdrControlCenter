@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DataLayer.Models
+﻿namespace DataLayer.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class SystemSettings
     {
         public SystemSettings()
@@ -27,7 +27,6 @@ namespace DataLayer.Models
         public DateTime? LastUpdateStatus { get; set; }
         public string PathToChannelLogos { get; set; }
         public virtual ICollection<StatusInfo> StatusInfo { get; set; }
-
         public string Configuration { get; set; }
     }
 }

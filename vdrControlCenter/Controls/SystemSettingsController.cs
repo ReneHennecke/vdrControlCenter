@@ -108,7 +108,6 @@
             teVDRAdminPort.Text = (stations.VdradminPort.HasValue ? Convert.ToString(stations.VdradminPort.Value) : "0");
             teVDRAdminUserName.Text = stations.VdradminUserName;
             teVDRAdminPassword.Text = stations.VdradminPassword;
-
         }
 
         public void SaveData(bool current)
@@ -173,7 +172,7 @@
                     _context.SaveChanges();
                     transaction.CommitAsync();
                 }
-                catch
+                catch //(Exception ex)
                 {
                     transaction.Rollback();
                 }

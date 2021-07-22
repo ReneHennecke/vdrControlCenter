@@ -475,7 +475,12 @@
 
         private void tmTimeOut_Tick(object sender, EventArgs e)
         {
-            int received = Convert.ToInt32(lblBufferLength.Text ?? "0");
+
+            // Wenn logging aus dann, wegfangen
+            if (string.IsNullOrWhiteSpace(lblBufferLength.Text))
+                return;
+
+            int.TryParse(lblBufferLength.Text, out int received);
             if (received != _received)
             { 
                 _received = received;

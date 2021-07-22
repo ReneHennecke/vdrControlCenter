@@ -38,7 +38,6 @@ namespace vdrControlCenterUI.Controls
             this.btnDown = new System.Windows.Forms.Button();
             this.panTimeLineControls = new vdrControlCenterUI.Controls.EpgGuideLinePanel();
             this.btnPrint = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.chbEntriesFromPast = new System.Windows.Forms.CheckBox();
             this.gcClock = new vdrControlCenterUI.Controls.EpgGuideClock();
             this.SuspendLayout();
@@ -115,12 +114,11 @@ namespace vdrControlCenterUI.Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panTimeLineControls.BackColor = System.Drawing.Color.Transparent;
-            this.panTimeLineControls.Location = new System.Drawing.Point(5, 70);
+            this.panTimeLineControls.Location = new System.Drawing.Point(4, 70);
             this.panTimeLineControls.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             this.panTimeLineControls.Name = "panTimeLineControls";
             this.panTimeLineControls.Size = new System.Drawing.Size(1607, 602);
             this.panTimeLineControls.TabIndex = 6;
-            this.panTimeLineControls.SizeChanged += new System.EventHandler(this.panTimeLineControls_SizeChanged);
             // 
             // btnPrint
             // 
@@ -131,16 +129,6 @@ namespace vdrControlCenterUI.Controls
             this.btnPrint.Text = "Drucken";
             this.btnPrint.UseVisualStyleBackColor = true;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1122, 4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // chbEntriesFromPast
             // 
@@ -169,7 +157,6 @@ namespace vdrControlCenterUI.Controls
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gcClock);
             this.Controls.Add(this.chbEntriesFromPast);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.btnFind);
             this.Controls.Add(this.panTimeLineControls);
@@ -195,7 +182,6 @@ namespace vdrControlCenterUI.Controls
         private Controls.EpgGuideLinePanel panTimeLineControls;
         private Button btnFind;
         private Button btnPrint;
-        private Button button1;
         private CheckBox chbEntriesFromPast;
         private EpgGuideClock gcClock;
     }

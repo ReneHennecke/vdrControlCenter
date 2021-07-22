@@ -1,5 +1,6 @@
 ﻿namespace vdrControlCenterUI.Controls
 {
+    using DataLayer.Enums;
     using DataLayer.Models;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -20,12 +21,12 @@
         private vdrControlCenterContext _context;
 
         private List<FakeEpg> _epg;
-        private List<Epg> _foundList;
+        private List<Epg> _foundList = new List<Epg>();
+        private List<Timers> _timerList = new List<Timers>();
 
         private int _countTimeLines;
-        private bool _init;
 
-        private const int EPG_GUIDE_LINE_HEIGHT = 30;
+        private const int EPG_GUIDE_LINE_HEIGHT = 34; // Höhe der EpgGuideLine + 4 Pixel Rand oben und unten
 
         private frmMain _frmMain;
         private DateTime _startDateTime;
@@ -60,8 +61,6 @@
 
         private void PostInit()
         {
-            _init = true;
-
             _enableRequest = true;
 
             // Nur das Datum ist interessant
@@ -72,42 +71,53 @@
                 _context = new vdrControlCenterContext();
         }
 
-        private void RefreshDisplay()
-        {
-            lblCurrentDate.Text = $"{_currentDateTime:dddd, dd.MM.yyyy}";
-            gcClock.CurrentDate = _currentDateTime;
-        }
-
         private void btnDown_Click(object sender, EventArgs e)
         {
+            int lastIndex = _lastChannelIndex;
             if (_lastChannelIndex - _countTimeLines > 0)
                 _lastChannelIndex -= _countTimeLines;
             else
                 _lastChannelIndex = 0;
 
-            DrawTimeLines(true);
+            if (lastIndex != _lastChannelIndex)
+                RefreshList();
         }
 
         private void btnUp_Click(object sender, EventArgs e)
         {
+            int lastIndex = _lastChannelIndex;
             if (_lastChannelIndex + _countTimeLines < _channelList.Count - 1)
                 _lastChannelIndex += _countTimeLines;
 
-            DrawTimeLines(true);
+            if (lastIndex != _lastChannelIndex)
+                RefreshList();
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)
         {
-            _currentDateTime = _currentDateTime.AddDays(-1);
-            RefreshDisplay();
-            DrawTimeLines(false);
+            RefreshDay(EpgRefreshState.Backward);
         }
 
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            _currentDateTime = _currentDateTime.AddDays(1);
-            RefreshDisplay();
+            RefreshDay(EpgRefreshState.Forward);
+        }
+
+        private void RefreshList()
+        {
+            DrawTimeLines(true);
+            DrawEpgGuideLineEntries();
+        }
+
+        private void RefreshDay(EpgRefreshState state)
+        {
+            if (state != EpgRefreshState.Current)
+                _currentDateTime = _currentDateTime.AddDays((int)state);
+
+            lblCurrentDate.Text = $"{_currentDateTime:dddd, dd.MM.yyyy}";
+            gcClock.CurrentDate = _currentDateTime;
+
             DrawTimeLines(false);
         }
 
@@ -115,6 +125,8 @@
         {
             if (_channelList == null)
                 return;
+
+            _frmMain.AddMessage("BUILD EPG-Einträge");
 
             panTimeLineControls.SuspendLayout();
             if (refreshChannels)
@@ -149,7 +161,7 @@
                 timeLine.EnableRequest = _enableRequest;
                 //timeLine.TimerList = await _context.Timers.Where(x => x.ChannelRecId == channelRecId).ToListAsync();
                 //timeLine.RecordingList = await _context.Recordings.ToListAsync();
-                //timeLine.FoundList = _foundList;
+                timeLine.FoundList = _foundList;
                 timeLine.EpgList = epg;
 
                 panTimeLineControls.Controls.Add(timeLine);
@@ -175,7 +187,7 @@
                 };
             }
             else
-                epgGuideLine.ClearEpgEntries();
+                epgGuideLine.ClearTimeLineEntries();
 
             return epgGuideLine;
         }
@@ -228,7 +240,7 @@
             _context.SaveChanges();
         }
 
-        private void btnFind_Click(object sender, EventArgs e)
+        private async void btnFind_Click(object sender, EventArgs e)
         {
             dlgFindEPG dlg = new dlgFindEPG();
             dlg.FoundList = _foundList;
@@ -239,34 +251,47 @@
                 _foundList = dlg.FoundList;
                 if (result == DialogResult.OK) // Markieren
                 {
-                    
+                    List<Task> tasks = new List<Task>();
+                    panTimeLineControls.Controls.OfType<EpgGuideLine>().ToList().ForEach(x =>
+                    {
+                        Task t = Task.Run(() =>
+                        {
+                            x.ForceRedraw = true;
+                            x.FoundList = _foundList;
+                        });
+                        tasks.Add(t);
+                    });
+                    await Task.WhenAll(tasks);
                 }
                 else // Timer
                 {
+                    //_timerList = dlg.FoundList;
+                    List<Task> tasks = new List<Task>();
+                    panTimeLineControls.Controls.OfType<EpgGuideLine>().ToList().ForEach(x =>
+                    {
+                        Task t = Task.Run(() =>
+                        {
+                            x.ForceRedraw = true;
+                            x.TimerList = _timerList;
+                        });
+                        tasks.Add(t);
+                    });
+                    await Task.WhenAll(tasks);
 
                 }
-
-
-                RefreshDisplay();
             }
         }
 
         private void CalculcateAndRedrawDisplay()
         {
-            _countTimeLines = panTimeLineControls.Size.Height / EPG_GUIDE_LINE_HEIGHT - 3;
+            int countLines = _countTimeLines;
+            _countTimeLines = panTimeLineControls.Size.Height / EPG_GUIDE_LINE_HEIGHT;
 
-            DrawTimeLines(false);
-        }
-
-        private void panTimeLineControls_SizeChanged(object sender, EventArgs e)
-        {
-            if (_init)
+            if (countLines != _countTimeLines)
             {
-                _init = false;
-                return;
+                DrawTimeLines(true);
+                DrawEpgGuideLineEntries();
             }
-
-            CalculcateAndRedrawDisplay();
         }
 
         private void ClearTimeLineControls()
@@ -274,7 +299,7 @@
             foreach (EpgGuideLine epgGuideLine in panTimeLineControls.Controls.OfType<EpgGuideLine>())
             {
                 // Elemente der Line löschen
-                epgGuideLine.ClearEpgEntries();
+                epgGuideLine.ClearTimeLineEntries();
                 // Zeile selbst freigeben
                 epgGuideLine.Dispose();
             }
@@ -293,8 +318,7 @@
             ClearTimeLineControls();
             LoadChannels();
             LoadEpg();
-            RefreshDisplay();
-            //DrawTimeLines(true);
+            RefreshDay(EpgRefreshState.Current);
         }
 
         private void lblCurrentDate_MouseClick(object sender, MouseEventArgs e)
@@ -311,14 +335,29 @@
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            DrawTimeLines(false);
-        }
-
         private void chbEntriesFromPast_CheckedChanged(object sender, EventArgs e)
         {
             LoadData();
+        }
+
+        private async void DrawEpgGuideLineEntries()
+        {
+            List<Task> tasks = new List<Task>();
+            panTimeLineControls.Controls.OfType<EpgGuideLine>().ToList().ForEach(x =>
+            {
+                Task t = Task.Run(() =>
+                {
+                    x.DrawEpgEntries();
+                });
+                tasks.Add(t);
+            });
+
+            await Task.WhenAll(tasks);
+        }
+
+        public void Redraw()
+        {
+           CalculcateAndRedrawDisplay();
         }
     }
 }

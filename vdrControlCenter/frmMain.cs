@@ -17,7 +17,11 @@
 
         private delegate void AddMessageCallback(string msg);
 
-      
+        // Winuser.h Konstanten
+        private const int WM_SYSCOMMAND = 0x0112;
+        private const int SC_MAXIMIZE = 0xF030;
+        private const int SC_RESTORE = 0xF120;
+        
         public frmMain()
         {
             InitializeComponent();
@@ -236,6 +240,7 @@
                 };
 
                 string title = string.Empty;
+                bool resize = false;
                 switch (navigation)
                 {
                     case Navigation.Setup:
@@ -287,9 +292,10 @@
                             page.ImageIndex = (int)Navigation.EPGGuide;
                             EpgGuideLineController controller = new EpgGuideLineController();
                             controller.MainForm = this;
-                            controller.LoadData();
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
+                            controller.LoadData();
+                            resize = true;
                         }
                         break;
                     case Navigation.Video:
@@ -317,6 +323,8 @@
                 }
 
                 tabWorkspace.TabPages.Add(page);
+                if (resize)
+                    frmMain_ResizeEnd(null, null);
             }
 
             tabWorkspace.SelectedTab = page;
@@ -410,6 +418,32 @@
         {
             LoadSettings();
             Visible = true;
+        }
+
+        private void frmMain_ResizeEnd(object sender, EventArgs e)
+        {
+            foreach (TabPage page in tabWorkspace.TabPages)
+            {
+                if (page.Controls.Count > 0)
+                {
+                    if (page.Controls[0] is EpgGuideLineController)
+                    {
+                        EpgGuideLineController controller = (EpgGuideLineController)page.Controls[0];
+                        controller.Redraw();
+                    }
+                }
+            }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            base.WndProc(ref m);
+
+            if (m.Msg == WM_SYSCOMMAND)
+            {
+                if (m.WParam == new IntPtr(SC_MAXIMIZE) || m.WParam == new IntPtr(SC_RESTORE))
+                    frmMain_ResizeEnd(null, null);
+            }
         }
     }
 }
