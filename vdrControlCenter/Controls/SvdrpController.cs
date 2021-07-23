@@ -110,8 +110,7 @@
 
         private void AddBuffer(string data)
         {
-            if (!grbBuffer.Visible || mleBuffer.IsDisposed
-                )
+            if (!grbBuffer.Visible || mleBuffer.IsDisposed)
                 return;
 
             mleBuffer.AppendText($"{data}{Environment.NewLine}");
@@ -475,18 +474,17 @@
 
         private void tmTimeOut_Tick(object sender, EventArgs e)
         {
+            if (grbBuffer.Visible)
+            {
+                if (!int.TryParse(lblBufferLength.Text, out int received))
+                    return;
 
-            // Wenn logging aus dann, wegfangen
-            if (string.IsNullOrWhiteSpace(lblBufferLength.Text))
-                return;
-
-            int.TryParse(lblBufferLength.Text, out int received);
-            if (received != _received)
-            { 
-                _received = received;
-                return;
+                if (received != _received)
+                {
+                    _received = received;
+                    return;
+                }
             }
-
             tmTimeOut.Enabled = false;
 
             switch (_svdrpRequest)
