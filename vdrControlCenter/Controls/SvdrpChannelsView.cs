@@ -77,9 +77,6 @@
             };
             dgvChannels.RowsDefaultCellStyle = cellStyle;
 
-            DataGridViewCellStyle cellCenterStyle = new DataGridViewCellStyle(cellStyle);
-            cellCenterStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-
             DataGridViewImageColumn imageColumn = new DataGridViewImageColumn();
             imageColumn.HeaderText = "·";
             imageColumn.ImageLayout = DataGridViewImageCellLayout.Normal;
