@@ -236,7 +236,7 @@ namespace vdrControlCenterUI.Classes
         public static string ChannelLogoPath(vdrControlCenterContext context)
         {
             string channelLogoPath = string.Empty;
-            SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
+            SystemSetting systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
             if (systemSettings != null)
             {
                 channelLogoPath = systemSettings.PathToChannelLogos;

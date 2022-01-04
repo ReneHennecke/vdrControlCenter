@@ -1,76 +1,68 @@
-﻿namespace DataLayer.Models
+﻿namespace DataLayer.Models;
+
+public partial class vdrControlCenterContext
 {
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Threading.Tasks;
+    public virtual DbSet<FakeEpg> FakeEpgs { get; set; }
 
-    public partial class vdrControlCenterContext
+    public List<FakeEpg> GetFakeEpg(DateTime startTime, short channelType, bool favouritesOnly)
     {
-        public virtual DbSet<FakeEpg> FakeEpgs { get; set; }
-
-        public List<FakeEpg> GetFakeEpg(DateTime startTime, short channelType, bool favouritesOnly)
+        var startTimePrm = new SqlParameter()
         {
-            var startTimePrm = new SqlParameter()
-            {
-                ParameterName = "@startTime",
-                SqlDbType = SqlDbType.DateTime,
-                Direction = ParameterDirection.Input,
-                Value = startTime
-            };
+            ParameterName = "@startTime",
+            SqlDbType = SqlDbType.DateTime,
+            Direction = ParameterDirection.Input,
+            Value = startTime
+        };
 
 
-            var channelTypePrm = new SqlParameter()
-            {
-                ParameterName = "@channelType",
-                SqlDbType = SqlDbType.SmallInt,
-                Direction = ParameterDirection.Input,
-                Value = channelType
-            };
+        var channelTypePrm = new SqlParameter()
+        {
+            ParameterName = "@channelType",
+            SqlDbType = SqlDbType.SmallInt,
+            Direction = ParameterDirection.Input,
+            Value = channelType
+        };
 
-            var favouritesOnlyPrm = new SqlParameter()
-            {
-                ParameterName = "@favouritesOnly",
-                SqlDbType = SqlDbType.Bit,
-                Direction = ParameterDirection.Input,
-                Value = favouritesOnly
-            };
+        var favouritesOnlyPrm = new SqlParameter()
+        {
+            ParameterName = "@favouritesOnly",
+            SqlDbType = SqlDbType.Bit,
+            Direction = ParameterDirection.Input,
+            Value = favouritesOnly
+        };
 
-            List<FakeEpg> epgs = new List<FakeEpg>();
+        List<FakeEpg> epgs = new List<FakeEpg>();
 
-            epgs = FakeEpgs.FromSqlRaw("EXECUTE dbo.GetFakeEpg {0}, {1}, {2}", startTimePrm, channelTypePrm, favouritesOnlyPrm).ToList();
+        epgs = FakeEpgs.FromSqlRaw("EXECUTE dbo.GetFakeEpg {0}, {1}, {2}", startTimePrm, channelTypePrm, favouritesOnlyPrm).ToList();
             
-            return epgs;
-        }
+        return epgs;
+    }
 
-        public List<FakeEpg> GetFakeEpgForChannels(string channelList, DateTime startTime)
+    public List<FakeEpg> GetFakeEpgForChannels(string channelList, DateTime startTime)
+    {
+        var channelListPrm = new SqlParameter()
         {
-            var channelListPrm = new SqlParameter()
-            {
-                ParameterName = "@channelList",
-                SqlDbType = SqlDbType.NVarChar,
-                Size = 4000,
-                Direction = ParameterDirection.Input,
-                Value = channelList
-            };
+            ParameterName = "@channelList",
+            SqlDbType = SqlDbType.NVarChar,
+            Size = 4000,
+            Direction = ParameterDirection.Input,
+            Value = channelList
+        };
 
 
-            var startTimePrm = new SqlParameter()
-            {
-                ParameterName = "@startTime",
-                SqlDbType = SqlDbType.DateTime,
-                Direction = ParameterDirection.Input,
-                Value = startTime
-            };
+        var startTimePrm = new SqlParameter()
+        {
+            ParameterName = "@startTime",
+            SqlDbType = SqlDbType.DateTime,
+            Direction = ParameterDirection.Input,
+            Value = startTime
+        };
 
-            List<FakeEpg> epgs = new List<FakeEpg>();
+        List<FakeEpg> epgs = new List<FakeEpg>();
 
-            epgs = FakeEpgs.FromSqlRaw("EXECUTE dbo.GetFakeEpgForChannel {0}, {1}", channelListPrm, startTimePrm).ToList();
+        epgs = FakeEpgs.FromSqlRaw("EXECUTE dbo.GetFakeEpgForChannel {0}, {1}", channelListPrm, startTimePrm).ToList();
 
-            return epgs;
-        }
+        return epgs;
     }
 }
+

@@ -6,16 +6,16 @@
 
     public class SvdrpChannelList
     {
-        public List<Channels> Channels { get; private set; }
+        public List<Channel> Channels { get; private set; }
 
         public SvdrpChannelList()
         {
-            Channels = new List<Channels>();
+            Channels = new List<Channel>();
         }
 
         public void ParseMessage(string[] response)
         {
-            Channels channel;
+            Channel channel;
             string[] prms;
             string[] nm;
             foreach (string row in response)
@@ -33,7 +33,7 @@
                     prms = resp.Substring(pos + 1).Split(':');
                     nm = prms[0].Split(';');
 
-                    channel = new Channels();
+                    channel = new Channel();
                     int.TryParse(number, out j);
                     channel.Number = j;
                     channel.ChannelName = nm[0].Replace("|", ":");

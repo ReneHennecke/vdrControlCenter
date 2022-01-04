@@ -1,9 +1,9 @@
-﻿namespace DataLayer.Enums
+﻿namespace DataLayer.Enums;
+
+public enum EpgRefreshState
 {
-    public enum EpgRefreshState
-    {
-        Backward = -1,
-        Current,
-        Forward
-    }
+    Backward = -1,
+    Current,
+    Forward
 }
+

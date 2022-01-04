@@ -2,6 +2,7 @@
 {
     using System.Net;
     using vdrControlCenterUI.Enums;
+
     public class ShareConnect
     {
         public string MachineName { get; set; }

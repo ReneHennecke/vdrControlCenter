@@ -92,12 +92,14 @@
             this.dgvEPG.RowHeadersVisible = false;
             this.dgvEPG.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvEPG.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvEPG.ShowCellToolTips = false;
             this.dgvEPG.Size = new System.Drawing.Size(670, 300);
             this.dgvEPG.TabIndex = 0;
             this.dgvEPG.Text = "dataGridView1";
             this.dgvEPG.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvEPG_CellFormatting);
             this.dgvEPG.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvEPG_CellMouseClick);
             this.dgvEPG.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvEPG_CellPainting);
+            this.dgvEPG.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dgvEPG_MouseMove);
             // 
             // btnRequest
             // 

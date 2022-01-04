@@ -7,11 +7,11 @@
 
     public class SvdrpRecordingList
     {
-        public List<Recordings> Recordings { get; private set; }
+        public List<Recording> Recordings { get; private set; }
 
         public SvdrpRecordingList()
         {
-            Recordings = new List<Recordings>();
+            Recordings = new List<Recording>();
         }
 
         public void ParseMessage(string[] response)
@@ -30,7 +30,7 @@
                     {
                         int.TryParse(prms[0], out int j);
 
-                        Recordings recording = new Recordings();
+                        Recording recording = new Recording();
                         recording.Number = j;
                         recording.Title = prms[4];
                         for (int i = 5; i < prms.Length; i++)

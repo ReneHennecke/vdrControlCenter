@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿namespace vdrControlCenterUI.Controls;
 
-namespace vdrControlCenterUI.Controls
+public class TransparentButton : Button
 {
-    public class TransparentButton : Button
+    public TransparentButton()
     {
-        public TransparentButton()
-        {
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            BackColor = Color.Transparent;
-        }
+        SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+        BackColor = Color.Transparent;
     }
 }
+

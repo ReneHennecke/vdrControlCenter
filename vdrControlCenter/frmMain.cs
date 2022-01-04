@@ -33,7 +33,7 @@
         {
             Visible = false;
 
-            Text = ApplicationInfoRaX.ProductName + " " + ApplicationInfoRaX.Version + " " + ApplicationInfoRaX.CopyrightHolder + " " + ApplicationInfoRaX.CompanyName;
+            Text = RaX.Extensions.Data.ApplicationInfo.ProductName + " " + RaX.Extensions.Data.ApplicationInfo.Version + " " + RaX.Extensions.Data.ApplicationInfo.CopyrightHolder + " " + RaX.Extensions.Data.ApplicationInfo.CompanyName;
 
             _closeImage = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ClosePng}");
             tabWorkspace.Padding = new Point(20, 4);
@@ -139,7 +139,7 @@
             return tabPage;
         }
 
-        private void tabWorkspace_MouseClick(object sender, MouseEventArgs e)
+        private async void tabWorkspace_MouseClick(object sender, MouseEventArgs e)
         {
             // TabPage schliessen
             TabControl tabControl = (TabControl)sender;
@@ -161,7 +161,7 @@
                     {
                         case Navigation.Setup:
                             SystemSettingsController systemSettingsView = (SystemSettingsController)page.Controls[0];
-                            systemSettingsView.SaveData(true);
+                            await systemSettingsView.SaveData();
                             closePanels = true;
                             break;
                         case Navigation.Commander:
@@ -389,7 +389,7 @@
             SaveSettings();
         }
 
-        private void ClosePanels()
+        private async void ClosePanels()
         {
             foreach (TabPage page in tabWorkspace.TabPages)
             {
@@ -398,7 +398,7 @@
                     if (page.Controls[0] is SystemSettingsController)
                     {
                         SystemSettingsController controller = (SystemSettingsController)page.Controls[0];
-                        controller.SaveData(true);
+                        await controller.SaveData();
                     }
                     else if (page.Controls[0] is CommanderController)
                     {

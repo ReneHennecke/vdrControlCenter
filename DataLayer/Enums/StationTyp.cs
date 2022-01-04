@@ -1,10 +1,10 @@
-﻿namespace DataLayer.Enums
+﻿namespace DataLayer.Enums;
+
+public enum StationType
 {
-    public enum StationType
-    {
-        Undefined,
-        Workstation,
-        Server,
-        RaspberryPI
-    }
+    Undefined,
+    Workstation,
+    Server,
+    RaspberryPI
 }
+

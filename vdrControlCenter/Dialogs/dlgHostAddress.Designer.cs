@@ -78,7 +78,6 @@ namespace vdrControlCenterUI.Dialogs
             this.btnCancel.Text = "Abbrechen";
             this.btnCancel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOK
             // 
@@ -92,7 +91,6 @@ namespace vdrControlCenterUI.Dialogs
             this.btnOK.Text = "OK";
             this.btnOK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // dlgHostAddress
             // 

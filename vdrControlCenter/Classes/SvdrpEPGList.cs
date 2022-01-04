@@ -16,7 +16,7 @@
 
         public void ParseMessage(string[] response)
         {
-            List<Channels> channels = new List<Channels>();
+            List<Channel> channels = new List<Channel>();
             using (vdrControlCenterContext context = new vdrControlCenterContext())
             {
                 channels = context.Channels.ToList();
@@ -66,7 +66,7 @@
                                 continue;
                             }
 
-                            Channels channel = channels.FirstOrDefault(x => x.ChannelId == channelID);
+                            Channel channel = channels.FirstOrDefault(x => x.ChannelId == channelID);
                             if (channel != null)
                             {
                                 epg = new Epg();

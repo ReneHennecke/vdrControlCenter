@@ -116,7 +116,7 @@
                         ucFakeEpgGuide.Enabler(false, true);
 
                         string channelLogoPath = string.Empty;
-                        SystemSettings systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
+                        SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
                         if (systemSettings != null)
                         {
                             channelLogoPath = systemSettings.PathToChannelLogos;

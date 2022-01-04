@@ -683,8 +683,10 @@
             this.cmbStations.Location = new System.Drawing.Point(140, 34);
             this.cmbStations.Name = "cmbStations";
             this.cmbStations.Size = new System.Drawing.Size(164, 23);
+            this.cmbStations.Sorted = true;
             this.cmbStations.TabIndex = 1;
-            this.cmbStations.SelectedValueChanged += new System.EventHandler(this.cmbStations_SelectedValueChanged);
+            this.cmbStations.SelectedIndexChanged += new System.EventHandler(this.cmbStations_SelectedIndexChanged);
+            this.cmbStations.SelectionChangeCommitted += new System.EventHandler(this.cmbStations_SelectionChangeCommitted);
             // 
             // chbEnableWOL
             // 

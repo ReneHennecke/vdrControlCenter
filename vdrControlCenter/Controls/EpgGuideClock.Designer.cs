@@ -53,6 +53,6 @@ namespace vdrControlCenterUI.Controls
 
         #endregion
 
-        private Timer tmClock;
+        private System.Windows.Forms.Timer tmClock;
     }
 }

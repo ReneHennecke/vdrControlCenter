@@ -1,72 +1,72 @@
-﻿namespace DataLayer.Classes
-{
-    using DataLayer.Models;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
+﻿namespace DataLayer.Classes;
 
-    public static class ConfigurationHelper
+using DataLayer.Models;
+
+public static class ConfigurationHelper
+{ 
+    public static Configuration CurrentConfig
     {
-        public static Configuration CurrentConfig
+        get
         {
-            get
+            Configuration configuration = null;
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
             {
-                Configuration configuration = null;
-                using (vdrControlCenterContext context = new vdrControlCenterContext())
-                {
-                    SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
-                    if (systemSettings == null)
-                        systemSettings = new SystemSettings();
+                SystemSetting systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
+                if (systemSettings == null)
+                    systemSettings = new SystemSetting();
 
-                    if (!string.IsNullOrWhiteSpace(systemSettings.Configuration))
-                    {
-                        try
-                        {
-                            configuration = JsonConvert.DeserializeObject<Configuration>(systemSettings.Configuration);
-                        }
-                        catch //(Exception ex)
-                        {
-
-                        }
-                    }
-                }
-
-                return configuration;
-            }
-            set
-            {
-                using (vdrControlCenterContext context = new vdrControlCenterContext())
-                using (IDbContextTransaction transaction = context.Database.BeginTransaction())
+                if (!string.IsNullOrWhiteSpace(systemSettings.Configuration))
                 {
                     try
                     {
-                        bool exists = true;
-                        SystemSettings systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
-                        if (systemSettings == null)
-                        {
-                            systemSettings = new SystemSettings();
-                            exists = false;
-                        }
-                        else
-                            systemSettings.Configuration = JsonConvert.SerializeObject(value, Formatting.Indented);
-
-                        if (exists)
-                            context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                        else
-                            context.SystemSettings.Add(systemSettings);
-
-                        context.SaveChanges();
-                        transaction.Commit();
+                        configuration = JsonSerializer.Deserialize<Configuration>(systemSettings.Configuration);
                     }
                     catch //(Exception ex)
                     {
-                        transaction.Rollback();
+
                     }
+                }
+            }
+
+            return configuration;
+        }
+        set
+        {
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
+            using (IDbContextTransaction transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    bool exists = true;
+                    SystemSetting systemSettings = context.SystemSettings.FirstOrDefault(x => x.MachineName == Environment.MachineName);
+                    if (systemSettings == null)
+                    {
+                        systemSettings = new SystemSetting();
+                        exists = false;
+                    }
+                    else
+                    {
+                        var options = new JsonSerializerOptions
+                        {
+                            WriteIndented = true,
+                        };
+                        systemSettings.Configuration = JsonSerializer.Serialize(value, options);
+                    }
+
+                    if (exists)
+                        context.Entry(systemSettings).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    else
+                        context.SystemSettings.Add(systemSettings);
+
+                    context.SaveChanges();
+                    transaction.Commit();
+                }
+                catch //(Exception ex)
+                {
+                    transaction.Rollback();
                 }
             }
         }
     }
 }
+

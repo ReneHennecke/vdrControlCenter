@@ -1,9 +1,9 @@
-﻿namespace DataLayer.Enums
+﻿namespace DataLayer.Enums;
+
+public enum ChannelType
 {
-    public enum ChannelType
-    {
-        Alle = -1,
-        Radio,
-        TV
-    }
+    Alle = -1,
+    Radio,
+    TV
 }
+

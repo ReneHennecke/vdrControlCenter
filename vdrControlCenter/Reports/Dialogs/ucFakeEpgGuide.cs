@@ -53,7 +53,7 @@
                 foreach (var checkedItem in clbChannels.CheckedItems)
                 {
                     ListBoxItem item = (ListBoxItem)checkedItem;
-                    Channels checkedChannel = (Channels)item.Value;
+                    Channel checkedChannel = (Channel)item.Value;
 
                     checkedChannels += $"{checkedChannel.RecId},";
                 }
@@ -79,9 +79,9 @@
 
             dtpEnde.Value = dtpStart.Value.CompareTo(max) <= 0 ? max.AddDays(-1) : dtpStart.Value.AddDays(1);
             
-            List<Channels> channels = await _context.Channels.OrderBy(x => x.ChannelName).ToListAsync();
+            List<Channel> channels = await _context.Channels.OrderBy(x => x.ChannelName).ToListAsync();
             int index = 0;
-            foreach (Channels channel in channels)
+            foreach (Channel channel in channels)
             {
                 ListBoxItem item = new ListBoxItem();
                 item.Text = channel.ChannelName;

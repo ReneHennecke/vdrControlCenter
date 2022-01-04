@@ -1,30 +1,26 @@
-﻿namespace DataLayer.Classes
+﻿namespace DataLayer.Classes;
+
+using DataLayer.Models;
+public static class ModelHelper
 {
-    using DataLayer.Models;
-    using System;
-    using System.IO;
-    using System.Linq;
-
-    public static class ModelHelper
+    public static string PathToChannelLogos
     {
-        public static string PathToChannelLogos
+        get
         {
-            get
+            string retval = string.Empty;
+
+            using (vdrControlCenterContext context = new vdrControlCenterContext())
             {
-                string retval = string.Empty;
+                string p;
+                SystemSetting systemSettings = context.SystemSettings.FirstOrDefault();
+                p = systemSettings?.PathToChannelLogos;
 
-                using (vdrControlCenterContext context = new vdrControlCenterContext())
-                {
-                    string p;
-                    SystemSettings systemSettings = context.SystemSettings.FirstOrDefault();
-                    p = systemSettings?.PathToChannelLogos;
-
-                    if (!string.IsNullOrWhiteSpace(p) && Directory.Exists(p))
-                        retval = p + (p.EndsWith("/") ? string.Empty : "/");
-                }
-
-                return retval;
+                if (!string.IsNullOrWhiteSpace(p) && Directory.Exists(p))
+                    retval = p + (p.EndsWith("/") ? string.Empty : "/");
             }
+
+            return retval;
         }
     }
 }
+

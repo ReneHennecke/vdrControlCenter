@@ -7,22 +7,22 @@
 
     public class SvdrpTimerList
     {
-        public List<Timers> Timers { get; private set; }
+        public List<Timer> Timers { get; private set; }
 
         public SvdrpTimerList()
         {
-            Timers = new List<Timers>();
+            Timers = new List<Timer>();
         }
 
         public void ParseMessage(string[] response)
         {
-            List<Channels> channels = new List<Channels>();
+            List<Channel> channels = new List<Channel>();
             using (vdrControlCenterContext context = new vdrControlCenterContext())
             {
                 channels = context.Channels.ToList();
             }
 
-            Timers timer;
+            Timer timer;
             string[] prms;
             string[] prm;
 
@@ -43,10 +43,10 @@
                         {
                             // ChannelRecId via Kanalnummer ermitteln 
                             int.TryParse(prm[1], out int j);
-                            Channels channel = channels.FirstOrDefault(x => x.Number == j);
+                            Channel channel = channels.FirstOrDefault(x => x.Number == j);
                             if (channel != null)
                             {
-                                timer = new Timers();
+                                timer = new Timer();
                                 timer.Number = number;
                                 timer.ChannelRecId = channel.RecId;
 

@@ -4,7 +4,6 @@
     using DataLayer.Models;
     using Extensions.Classes;
     using Microsoft.EntityFrameworkCore;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -14,6 +13,7 @@
     using System.Net.Http;
     using System.Net.NetworkInformation;
     using System.Text;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using vdrControlCenterUI.Classes;
@@ -105,8 +105,8 @@
             }
 
             const int SMB_PORT = 445;
-            List<Stations> stations = await _context.Stations.Where(x => x.MachineName != Environment.MachineName && !string.IsNullOrWhiteSpace(x.SambaUserName)).ToListAsync();
-            foreach (Stations station in stations)
+            List<Station> stations = await _context.Stations.Where(x => x.MachineName != Environment.MachineName && !string.IsNullOrWhiteSpace(x.SambaUserName)).ToListAsync();
+            foreach (Station station in stations)
             {
                 shareConnect = new ShareConnect()
                 {
@@ -120,7 +120,7 @@
             }
 
             stations = await _context.Stations.Where(x => x.MachineName != Environment.MachineName && x.VdrControlServicePort > 0).ToListAsync(); 
-            foreach (Stations station in stations)
+            foreach (Station station in stations)
             {
                 
                 shareConnect = new ShareConnect()
@@ -343,7 +343,11 @@
         private async Task<string> PostData(string action, object json)
         {
             string retval = string.Empty;
-            using (var content = new StringContent(JsonConvert.SerializeObject(json, Formatting.Indented), System.Text.Encoding.UTF8, "application/json"))
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            };
+            using (var content = new StringContent(JsonSerializer.Serialize(json, options), System.Text.Encoding.UTF8, "application/json"))
             {
                 HttpResponseMessage result = await _httpClient.PostAsync(action, content);
                 if (!result.IsSuccessStatusCode)
@@ -509,7 +513,7 @@
 
                     string json = await PostData(action, request);
 
-                    var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                    var response = JsonSerializer.Deserialize<FileSystemResponse>(json);
                     if (response != null)
                     {
                         _fileSystemEntry = response.Source;
@@ -557,7 +561,7 @@
                         string action = $"{url}FileSystem/ReadFileContent";
                         string json = await PostData(action, request);
 
-                        var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                        var response = JsonSerializer.Deserialize<FileSystemResponse>(json);
                         if (response == null)
                             ShowApiError();
                         else if (!response.ErrorResult.Success)
@@ -581,7 +585,7 @@
                             string action = $"{url}FileSystem/WriteFileContent";
                             string json = await PostData(action, request);
 
-                            var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                            var response = JsonSerializer.Deserialize<FileSystemResponse>(json);
                             if (response == null)
                                 ShowApiError();
                             else if (!response.ErrorResult.Success)
@@ -655,7 +659,7 @@
                 string action = $"{url}FileSystem/DeleteFileSystemEntry";
                 string json = await PostData(action, request);
 
-                var response = JsonConvert.DeserializeObject<FileSystemResponse>(json);
+                var response = JsonSerializer.Deserialize<FileSystemResponse>(json);
                 if (response == null)
                     ShowApiError();
                 else if (!response.ErrorResult.Success)

@@ -1,24 +1,12 @@
-﻿namespace vdrControlCenterUI.Controls
-{
-    using DataLayer.Models;
-    using Svg;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Drawing;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-    using vdrControlCenterUI.Classes;
+﻿namespace vdrControlCenterUI.Controls;
 
     public partial class EpgGuideLine : UserControl
     {
         private List<EpgGuideLineEntry> _epgGuideLineEntries = new List<EpgGuideLineEntry>();
 
         private List<FakeEpg> _epgList;
-        private List<Timers> _timerList;
-        private List<Recordings> _recordingList;
+        private List<DataLayer.Models.Timer> _timerList;
+        private List<Recording> _recordingList;
         private List<Epg> _foundList;
         private bool _enableRequest = false;
         private long _channelRecId;
@@ -123,7 +111,7 @@
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<Timers> TimerList
+        public List<DataLayer.Models.Timer> TimerList
         {
             get { return _timerList; }
             set 
@@ -146,7 +134,7 @@
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public List<Recordings> RecordingList
+        public List<Recording> RecordingList
         {
             get { return _recordingList; }
             set 
@@ -271,4 +259,4 @@
             DrawTimeLineEntries();
         }
     }
-}
+

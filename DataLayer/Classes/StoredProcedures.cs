@@ -1,19 +1,15 @@
-﻿using DataLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace DataLayer.Classes;
 
-namespace DataLayer.Classes
+using DataLayer.Models;
+
+public class StoredProcedures
 {
-    public class StoredProcedures
+    public void GetEPGList()
     {
-        public void GetEPGList()
+        using (vdrControlCenterContext context = new vdrControlCenterContext())
         {
-            using (vdrControlCenterContext context = new vdrControlCenterContext())
-            {
-                //System.Linq.IQueryable<Epg> epgs = context.Epg.FromSql("");
-            }
+            //System.Linq.IQueryable<Epg> epgs = context.Epg.FromSql("");
         }
     }
 }
+

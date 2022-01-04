@@ -2,19 +2,30 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject>vdrControlCenterUI.Program</StartupObject>
     <Version>2.0.0.1</Version>
     <Authors>René Hennecke</Authors>
     <Description>UI zur Steuerung des vdr</Description>
     <ApplicationIcon>vdr.ico</ApplicationIcon>
+    <AssemblyVersion>2.0.0.*</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+	<ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Deterministic>False</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Deterministic>False</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LibVLCSharp" Version="3.6.1" />
     <PackageReference Include="LibVLCSharp.WinForms" Version="3.6.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.7">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -23,6 +34,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NetCoreServer" Version="5.1.0" />
+    <PackageReference Include="RaX.Extensions.Data" Version="1.0.1-beta" />
+    <PackageReference Include="RaX.Extensions.Drawing" Version="1.0.1" />
+    <PackageReference Include="RaX.Extensions.Network" Version="1.0.1" />
     <PackageReference Include="ReportViewerCore.WinForms" Version="15.1.14" />
     <PackageReference Include="SSH.NET" Version="2020.0.1" />
     <PackageReference Include="Svg" Version="3.3.0" />

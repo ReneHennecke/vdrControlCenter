@@ -1,47 +1,40 @@
-﻿namespace DataLayer.Models
+﻿namespace DataLayer.Models;
+
+public partial class vdrControlCenterContext
 {
-    using Microsoft.Data.SqlClient;
-    using Microsoft.EntityFrameworkCore;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
+    public virtual DbSet<FakeEpgGuide> FakeEpgGuide { get; set; }
 
-    public partial class vdrControlCenterContext
+    public List<FakeEpgGuide> GetFakeEpgGuide(DateTime startTime, DateTime endTime, bool favouritesOnly, string channelList)
     {
-        public virtual DbSet<FakeEpgGuide> FakeEpgGuide { get; set; }
-
-        public List<FakeEpgGuide> GetFakeEpgGuide(DateTime startTime, DateTime endTime, bool favouritesOnly, string channelList)
+        var startTimePrm = new SqlParameter()
         {
-            var startTimePrm = new SqlParameter()
-            {
-                ParameterName = "@start",
-                SqlDbType = SqlDbType.Date,
-                Direction = ParameterDirection.Input,
-                Value = startTime
-            };
+            ParameterName = "@start",
+            SqlDbType = SqlDbType.Date,
+            Direction = ParameterDirection.Input,
+            Value = startTime
+        };
 
-            var endTimePrm = new SqlParameter()
-            {
-                ParameterName = "@ende",
-                SqlDbType = SqlDbType.Date,
-                Direction = ParameterDirection.Input,
-                Value = endTime
-            };
+        var endTimePrm = new SqlParameter()
+        {
+            ParameterName = "@ende",
+            SqlDbType = SqlDbType.Date,
+            Direction = ParameterDirection.Input,
+            Value = endTime
+        };
 
-            var favouritesOnlyPrm = new SqlParameter()
-            {
-                ParameterName = "@favouritesOnly",
-                SqlDbType = SqlDbType.Bit,
-                Direction = ParameterDirection.Input,
-                Value = favouritesOnly
-            };
+        var favouritesOnlyPrm = new SqlParameter()
+        {
+            ParameterName = "@favouritesOnly",
+            SqlDbType = SqlDbType.Bit,
+            Direction = ParameterDirection.Input,
+            Value = favouritesOnly
+        };
 
-            List<FakeEpgGuide> fakeEpgGuide = new List<FakeEpgGuide>();
+        List<FakeEpgGuide> fakeEpgGuide = new List<FakeEpgGuide>();
 
-            fakeEpgGuide = FakeEpgGuide.FromSqlRaw("EXECUTE dbo.BuildEpgGuide {0}, {1}, {2}, {3}", startTimePrm, endTimePrm, favouritesOnly, channelList).ToList();
+        fakeEpgGuide = FakeEpgGuide.FromSqlRaw("EXECUTE dbo.BuildEpgGuide {0}, {1}, {2}, {3}", startTimePrm, endTimePrm, favouritesOnly, channelList).ToList();
 
-            return fakeEpgGuide;
-        }
+        return fakeEpgGuide;
     }
 }
+

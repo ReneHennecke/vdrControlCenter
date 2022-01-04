@@ -1,21 +1,17 @@
-﻿namespace DataLayer.Models
+﻿namespace DataLayer.Models;
+
+public partial class vdrControlCenterContext
 {
-    using Microsoft.EntityFrameworkCore;
-    using System.Collections.Generic;
-    using System.Linq;
+    public virtual DbSet<FakeTimer> FakeTimers { get; set; }
 
-    public partial class vdrControlCenterContext
+    public List<FakeTimer> GetFakeTimers()
     {
-        public virtual DbSet<FakeTimer> FakeTimers { get; set; }
 
-        public List<FakeTimer> GetFakeTimers()
-        {
+        List<FakeTimer> timers = new List<FakeTimer>();
 
-            List<FakeTimer> timers = new List<FakeTimer>();
+        timers = FakeTimers.FromSqlRaw("EXECUTE dbo.GetFakeTimer").ToList();
 
-            timers = FakeTimers.FromSqlRaw("EXECUTE dbo.GetFakeTimer").ToList();
-
-            return timers;
-        }
+        return timers;
     }
 }
+

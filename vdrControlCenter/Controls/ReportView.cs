@@ -1,24 +1,23 @@
-﻿namespace vdrControlCenterUI.Controls
+﻿namespace vdrControlCenterUI.Controls;
+
+using Microsoft.Reporting.WinForms;
+
+public partial class ReportView : UserControl
 {
-    using Microsoft.Reporting.WinForms;
-    using System.Windows.Forms;
+    private readonly ReportViewer _reportViewer;
 
-    public partial class ReportView : UserControl
+    public ReportViewer ReportViewer
     {
-        private readonly ReportViewer _reportViewer;
+        get => _reportViewer;
+    }
 
-        public ReportViewer ReportViewer
-        {
-            get => _reportViewer;
-        }
+    public ReportView()
+    {
+        InitializeComponent();
 
-        public ReportView()
-        {
-            InitializeComponent();
-
-            _reportViewer = new ReportViewer();
-            _reportViewer.Dock = DockStyle.Fill;
-            Controls.Add(_reportViewer);
-        }
+        _reportViewer = new ReportViewer();
+        _reportViewer.Dock = DockStyle.Fill;
+        Controls.Add(_reportViewer);
     }
 }
+

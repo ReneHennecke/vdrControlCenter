@@ -1,83 +1,73 @@
-﻿namespace vdrControlCenterUI.Controls
+﻿namespace vdrControlCenterUI.Controls;
+
+public partial class CommanderController : UserControl
 {
-    using DataLayer.Classes;
-    using DataLayer.Models;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Windows.Forms;
-    using vdrControlService.Models;
+    private vdrControlCenterContext _context;
 
-    public partial class CommanderController : UserControl
+    private frmMain _mainForm;
+    public frmMain MainForm
     {
-        private vdrControlCenterContext _context;
+        set => _mainForm = value;
+    }
 
-        private frmMain _mainForm;
-        public frmMain MainForm
+    public CommanderController()
+    {
+        InitializeComponent();
+
+        if (!DesignMode)
+            PostInit();
+    }
+
+    protected override void OnHandleDestroyed(EventArgs e)
+    {
+        if (_context != null)
         {
-            set => _mainForm = value;
+            SaveConfig();
+            _context.DisposeAsync();
         }
 
-        public CommanderController()
-        {
-            InitializeComponent();
+        base.OnHandleDestroyed(e);
+    }
 
-            if (!DesignMode)
-                PostInit();
-        }
+    private void PostInit()
+    {
+        if (_context == null)
+            _context = new vdrControlCenterContext();
 
-        protected override void OnHandleDestroyed(EventArgs e)
-        {
-            if (_context != null)
-            {
-                SaveConfig();
-                _context.DisposeAsync();
-            }
+        DataLayer.Classes.Configuration configuration = ConfigurationHelper.CurrentConfig;
 
-            base.OnHandleDestroyed(e);
-        }
+        CommanderPanelView commanderPanelView = configuration.LastCommanderPanelViewLeft;
+        cmvLeft.Controller = this;
+        cmvLeft.LoadData(commanderPanelView, "cmvLeft");
 
-        private void PostInit()
-        {
-            if (_context == null)
-                _context = new vdrControlCenterContext();
+        commanderPanelView = configuration.LastCommanderPanelViewRight;
+        cmvRight.Controller = this;
+        cmvRight.LoadData(commanderPanelView, "cmvRight");
+    }
 
-            Configuration configuration = ConfigurationHelper.CurrentConfig;
+    public void SaveConfig()
+    {
+        Configuration configuration = ConfigurationHelper.CurrentConfig;
+        configuration.LastCommanderPanelViewLeft = cmvLeft.CommanderPanelView;
+        configuration.LastCommanderPanelViewRight = cmvRight.CommanderPanelView;
+        ConfigurationHelper.CurrentConfig = configuration;
+    }
 
-            CommanderPanelView commanderPanelView = configuration.LastCommanderPanelViewLeft;
-            cmvLeft.Controller = this;
-            cmvLeft.LoadData(commanderPanelView, "cmvLeft");
+    private CommanderView GetTargetView(string name)
+    {
+        return name == "cmvLeft" ? cmvRight : cmvLeft;
+    }
 
-            commanderPanelView = configuration.LastCommanderPanelViewRight;
-            cmvRight.Controller = this;
-            cmvRight.LoadData(commanderPanelView, "cmvRight");
-        }
+    public FileSystemEntry GetTargetFileSystemEntry(string name)
+    {
+        CommanderView target = GetTargetView(name);
+        return target.CurrentFileSystemEntry;
+    }
 
-        public void SaveConfig()
-        {
-            Configuration configuration = ConfigurationHelper.CurrentConfig;
-            configuration.LastCommanderPanelViewLeft = cmvLeft.CommanderPanelView;
-            configuration.LastCommanderPanelViewRight = cmvRight.CommanderPanelView;
-            ConfigurationHelper.CurrentConfig = configuration;
-        }
-
-        private CommanderView GetTargetView(string name)
-        {
-            return name == "cmvLeft" ? cmvRight : cmvLeft;
-        }
-
-        public FileSystemEntry GetTargetFileSystemEntry(string name)
-        {
-            CommanderView target = GetTargetView(name);
-            return target.CurrentFileSystemEntry;
-        }
-
-        public void RefreshTarget(string name)
-        {
-            CommanderView target = GetTargetView(name);
-            target.RefreshView();
-        }
+    public void RefreshTarget(string name)
+    {
+        CommanderView target = GetTargetView(name);
+        target.RefreshView();
     }
 }
+
