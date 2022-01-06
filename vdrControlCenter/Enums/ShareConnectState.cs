@@ -1,11 +1,11 @@
-﻿namespace vdrControlCenterUI.Enums
+﻿namespace vdrControlCenterUI.Enums;
+
+public enum ShareConnectState
 {
-    public enum ShareConnectState
-    {
-        DisConnected,
-        Connected,
-        Idle,
-        InRequest,
-        IsAlive
-    }
+    DisConnected,
+    Connected,
+    Idle,
+    InRequest,
+    IsAlive
 }
+

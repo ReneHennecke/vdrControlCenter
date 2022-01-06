@@ -1,9 +1,6 @@
-﻿namespace vdrControlCenterUI
+﻿namespace vdrControlCenterUI.Classes;
+public class SvdrpEPGListEventArgs : EventArgs
 {
-    using System;
-
-    public class SvdrpEPGListEventArgs : EventArgs
-    {
-        public SvdrpEPGList EPGList { get; set; }
-    }
+    public SvdrpEPGList EPGList { get; set; }
 }
+

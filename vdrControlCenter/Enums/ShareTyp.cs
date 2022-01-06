@@ -1,10 +1,10 @@
-﻿namespace vdrControlCenterUI.Enums
+﻿namespace vdrControlCenterUI.Enums;
+
+public enum ShareTyp
 {
-    public enum ShareTyp
-    {
-        Undefined,
-        Local,
-        SMB,
-        vdrControlService
-    }
+    Undefined,
+    Local,
+    SMB,
+    vdrControlService
 }
+

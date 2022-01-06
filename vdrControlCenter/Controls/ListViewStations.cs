@@ -119,7 +119,7 @@ public class ListViewStations : ListView
                 if (macAddress?.Length == MAC_ADDRESS_LEN)
                 {
                     macAddress = macAddress.Replace("-", string.Empty).Replace(":", string.Empty);
-                    byte[] b = StringRaX.HexStringToByteArray(macAddress);
+                    byte[] b = RaX.Extensions.Data.StringHelper.HexStringToByteArray(macAddress);
                     RaX.Extensions.Network.NetHelper.WakeOnLan(b);
 
                     macAddress = string.Join(":", Enumerable.Range(0, 6).Select(i => macAddress.Substring(i * 2, 2)));

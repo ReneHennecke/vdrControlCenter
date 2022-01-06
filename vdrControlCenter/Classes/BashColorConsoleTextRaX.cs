@@ -1,10 +1,7 @@
-﻿namespace vdrControlCenterUI.Classes
+﻿namespace vdrControlCenterUI.Classes;
+public class BashColorConsoleTextRaX
 {
-    using System.Drawing;
-
-    public class BashColorConsoleTextRaX
-    {
-        public Color Color { get; set; }
-        public string Text { get; set; }
-    }
+    public Color Color { get; set; }
+    public string Text { get; set; }
 }
+

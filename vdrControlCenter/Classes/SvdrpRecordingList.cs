@@ -1,59 +1,54 @@
-﻿namespace vdrControlCenterUI
+﻿namespace vdrControlCenterUI.Classes;
+
+public class SvdrpRecordingList
 {
-    using DataLayer.Classes;
-    using DataLayer.Models;
-    using System;
-    using System.Collections.Generic;
+    public List<Recording> Recordings { get; private set; }
 
-    public class SvdrpRecordingList
+    public SvdrpRecordingList()
     {
-        public List<Recording> Recordings { get; private set; }
+        Recordings = new List<Recording>();
+    }
 
-        public SvdrpRecordingList()
+    public void ParseMessage(string[] response)
+    {
+        string[] prms;
+        foreach (string row in response)
         {
-            Recordings = new List<Recording>();
-        }
+            if (row.Length < 5)
+                continue;
 
-        public void ParseMessage(string[] response)
-        {
-            string[] prms;
-            foreach (string row in response)
+            string resp = row.Substring(4);
+            if (resp.Length > 0)
             {
-                if (row.Length < 5)
-                    continue;
-
-                string resp = row.Substring(4);
-                if (resp.Length > 0)
+                prms = resp.Split(' ');
+                if (prms.Length > 0)
                 {
-                    prms = resp.Split(' ');
-                    if (prms.Length > 0)
+                    int.TryParse(prms[0], out int j);
+
+                    Recording recording = new Recording();
+                    recording.Number = j;
+                    recording.Title = prms[4];
+                    for (int i = 5; i < prms.Length; i++)
                     {
-                        int.TryParse(prms[0], out int j);
-
-                        Recording recording = new Recording();
-                        recording.Number = j;
-                        recording.Title = prms[4];
-                        for (int i = 5; i < prms.Length; i++)
-                        {
-                            recording.Title += " " + prms[i];
-                        }
-                        recording.Title = recording.Title.TrimStart();
-
-                        TimeExtensionHelper helper = new TimeExtensionHelper(prms[1], prms[2], prms[3]);
-                        recording.RecordingTime = helper.RecordingTime;
-                        recording.Duration = helper.Duration;
-                        recording.Modtime = DateTime.Now;
-                        string[] p = recording.Title.Split('~');
-                        if (p.Length > 1)
-                        {
-                            recording.RecordingPath = p[0];
-                            recording.Title = p[1];
-                        }
-
-                        Recordings.Add(recording);
+                        recording.Title += " " + prms[i];
                     }
+                    recording.Title = recording.Title.TrimStart();
+
+                    TimeExtensionHelper helper = new TimeExtensionHelper(prms[1], prms[2], prms[3]);
+                    recording.RecordingTime = helper.RecordingTime;
+                    recording.Duration = helper.Duration;
+                    recording.Modtime = DateTime.Now;
+                    string[] p = recording.Title.Split('~');
+                    if (p.Length > 1)
+                    {
+                        recording.RecordingPath = p[0];
+                        recording.Title = p[1];
+                    }
+
+                    Recordings.Add(recording);
                 }
             }
         }
     }
 }
+

@@ -1,14 +1,14 @@
-﻿namespace vdrControlCenterUI.Enums
+﻿namespace vdrControlCenterUI.Enums;
+
+public enum Navigation
 {
-    public enum Navigation
-    {
-        Setup,
-        SSH,
-        Commander,
-        VDRAdmin,
-        SVDRP,
-        Editor,
-        EPGGuide,
-        Video
-    }
+    Setup,
+    SSH,
+    Commander,
+    VDRAdmin,
+    SVDRP,
+    Editor,
+    EPGGuide,
+    Video
 }
+

@@ -1,14 +1,14 @@
-﻿namespace vdrControlCenterUI.Enums
+﻿namespace vdrControlCenterUI.Enums;
+
+public enum ImageListType
 {
-    public enum ImageListType
-    {
-        MainForm,
-        StationView,
-        SvdrpChannelsViewLeft,
-        SvdrpChannelsViewRight,
-        SvdrpTimersView,
-        SvdrpRecordingsView,
-        SvdrpEpgView,
-        CommandView
-    }
+    MainForm,
+    StationView,
+    SvdrpChannelsViewLeft,
+    SvdrpChannelsViewRight,
+    SvdrpTimersView,
+    SvdrpRecordingsView,
+    SvdrpEpgView,
+    CommandView
 }
+

@@ -1,6 +1,6 @@
-﻿namespace vdrControlCenterUI.Classes
+﻿namespace vdrControlCenterUI.Classes;
+
+public class ItemDesignConfig : DesignConfig
 {
-    public class ItemDesignConfig : DesignConfig
-    {
-    }
 }
+

@@ -1,8 +1,8 @@
-﻿namespace vdrControlCenterUI.Enums
+﻿namespace vdrControlCenterUI.Enums;
+
+public enum ReportType
 {
-    public enum ReportType
-    {
-        Undefined,
-        EpgGuide
-    }
+    Undefined,
+    EpgGuide
 }
+

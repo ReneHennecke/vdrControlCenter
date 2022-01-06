@@ -1,40 +1,40 @@
-﻿namespace vdrControlCenterUI.Enums
+﻿namespace vdrControlCenterUI.Enums;
+
+public enum SvdrpRequest : ushort
 {
-    public enum SvdrpRequest : ushort
-    {
-        // Verbindung
-        Connect,
-        Disconnect,
+    // Verbindung
+    Connect,
+    Disconnect,
 
-        // Status
-        GetStatusInfo,
+    // Status
+    GetStatusInfo,
 
-        // Kanäle
-        GetChannelList,
-        AddChannel,
-        RemoveChannel,
+    // Kanäle
+    GetChannelList,
+    AddChannel,
+    RemoveChannel,
 
-        // Aufnahmen
-        GetRecordings,
-        GetRecording,
-        RemoveRecording,
-        UpdateRecordings,
-        CutRecording,
+    // Aufnahmen
+    GetRecordings,
+    GetRecording,
+    RemoveRecording,
+    UpdateRecordings,
+    CutRecording,
 
-        // Timer
-        GetTimerList,
-        AddTimer,
-        RemoveTimer,
-        CheckTimer,
+    // Timer
+    GetTimerList,
+    AddTimer,
+    RemoveTimer,
+    CheckTimer,
         
-        // EPG
-        GetEPGList,
+    // EPG
+    GetEPGList,
 
-        // Weiteres
-        Check,
-        Send_message,
-        Hitk,
-        Undefined = 999
-    };
-}
+    // Weiteres
+    Check,
+    Send_message,
+    Hitk,
+    Undefined = 999
+};
+
 
