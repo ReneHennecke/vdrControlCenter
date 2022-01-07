@@ -10,17 +10,6 @@ public partial class vdrControlCenterContext : DbContext, IDataProtectionKeyCont
 
     public vdrControlCenterContext()
     {
-        //var info = new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Keys"));
-
-        //var provider = DataProtectionProvider.Create(info, x =>
-        //{
-        //    x.SetApplicationName("vdrControlCenter");
-        //    x.PersistKeysToFileSystem(info);
-        //});
-
-        //_dataProtectionProvider = provider;
-        //InitDataProtectionProvider();
-
         _dataProtectionProvider = DataProtectionProvider.Create("vdrControlCenterContext");
         _dataProtector = _dataProtectionProvider.CreateProtector("ProtectedFields");
     }

@@ -2,7 +2,6 @@
 {
     using DataLayer.Classes;
     using DataLayer.Models;
-    using Extensions.Classes;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -96,7 +95,7 @@
                     shareConnect = new ShareConnect()
                     {
                         MachineName = Environment.MachineName,
-                        HostAddress = NetworkExtension.LocalAddress.ToString(),
+                        HostAddress = RaX.Extensions.Network.NetHelper.LocalAddress.ToString(),
                         ShareTyp = Enums.ShareTyp.Local,
                         FullPath = $"{di.Name.Substring(0, 1)}:/"
                     };
@@ -276,19 +275,19 @@
                                 if (reply.Status == IPStatus.Success)
                                 {
                                     string address = $"\\\\{shareConnect.HostAddress}\\data";
-                                    ConnectToSharedFolder cs = null;
+                                    RaX.Extensions.Network.SharedFolderConnector sfc = null;
                                     try
                                     {
-                                        cs = new ConnectToSharedFolder(address, shareConnect.NetworkCredential);
+                                        sfc = new RaX.Extensions.Network.SharedFolderConnector(address, shareConnect.NetworkCredential);
                                     }
                                     catch
                                     {
                                         if (shareConnect.Tag != null)
-                                            ((ConnectToSharedFolder)shareConnect.Tag).Dispose();
+                                            ((RaX.Extensions.Network.SharedFolderConnector)shareConnect.Tag).Dispose();
                                     }
 
-                                    shareConnect.Tag = cs;
-                                    if (cs != null)
+                                    shareConnect.Tag = sfc;
+                                    if (sfc != null)
                                     {
                                         shareConnect.State = Enums.ShareConnectState.Connected;
                                         shareConnect.FullPath = address;

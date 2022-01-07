@@ -45,7 +45,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
-    <ProjectReference Include="..\Extensions\Extensions.csproj" />
     <ProjectReference Include="..\vdrControlService\vdrControlService.csproj" />
   </ItemGroup>
 

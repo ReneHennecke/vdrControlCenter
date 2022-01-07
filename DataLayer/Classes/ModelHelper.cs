@@ -1,6 +1,5 @@
 ﻿namespace DataLayer.Classes;
 
-using DataLayer.Models;
 public static class ModelHelper
 {
     public static string PathToChannelLogos

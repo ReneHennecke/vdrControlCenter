@@ -1,7 +1,5 @@
 ﻿namespace DataLayer.Classes;
 
-using DataLayer.Models;
-
 public class StoredProcedures
 {
     public void GetEPGList()

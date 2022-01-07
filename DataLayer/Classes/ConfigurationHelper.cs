@@ -1,7 +1,5 @@
 ﻿namespace DataLayer.Classes;
 
-using DataLayer.Models;
-
 public static class ConfigurationHelper
 { 
     public static Configuration CurrentConfig

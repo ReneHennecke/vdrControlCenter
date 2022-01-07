@@ -1,6 +1,6 @@
 ﻿namespace Extensions.Classes;
 
-public class ConnectToSharedFolder : IDisposable
+public class ConnectToSharedFolder22 : IDisposable
 {
     [DllImport("mpr.dll")]
     private static extern int WNetAddConnection2(NetResource netResource, string password, string userName, int flags);
@@ -10,7 +10,7 @@ public class ConnectToSharedFolder : IDisposable
 
     private readonly string _networkName;
 
-    public ConnectToSharedFolder(string networkName, NetworkCredential credential)
+    public ConnectToSharedFolder22(string networkName, NetworkCredential credential)
     {
         _networkName = networkName;
 
@@ -30,7 +30,7 @@ public class ConnectToSharedFolder : IDisposable
             throw new IOException("Error connecting to remote share", result);
     }
 
-    ~ConnectToSharedFolder()
+    ~ConnectToSharedFolder22()
     {
         Dispose(false);
     }
