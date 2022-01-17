@@ -9,6 +9,7 @@ public enum Navigation
     SVDRP,
     Editor,
     EPGGuide,
-    Video
+    Video,
+    UPnPBrowser
 }
 

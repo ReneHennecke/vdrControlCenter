@@ -202,6 +202,7 @@
             this.dgvFind.ReadOnly = true;
             this.dgvFind.RowHeadersVisible = false;
             this.dgvFind.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvFind.ShowCellToolTips = false;
             this.dgvFind.Size = new System.Drawing.Size(1128, 268);
             this.dgvFind.TabIndex = 7;
             this.dgvFind.Text = "dataGridView1";
@@ -209,6 +210,7 @@
             this.dgvFind.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvFind_CellMouseClick);
             this.dgvFind.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvFind_CellMouseDoubleClick);
             this.dgvFind.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvFind_CellPainting);
+            this.dgvFind.MouseMove += new System.Windows.Forms.MouseEventHandler(this.dgvFind_MouseMove);
             // 
             // tbFind
             // 

@@ -21,6 +21,10 @@
         private List<FindEntry> _unfiltered;
         private List<FindEntry> _filtered;
 
+        private int _hitRow = -1;
+        private int _hitCol = -1;
+        private ToolTip _toolTip;
+
         public List<long> SelectedItems
         {
             get { return _selectedItems; }
@@ -168,10 +172,25 @@
             textColumn.Visible = false;
             dgvFind.Columns.Add(textColumn);
 
+            textColumn = new DataGridViewTextBoxColumn();
+            textColumn.DataPropertyName = "Description";
+            textColumn.Name = "Description";
+            textColumn.Width = 100;
+            textColumn.DisplayIndex = 8;
+            textColumn.Visible = false;
+            dgvFind.Columns.Add(textColumn);
+
             btnFind.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_FindPng}");
             btnOK.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_OkPng}");
             btnTimer.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_TimerPng}");
             btnCancel.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.Find_CancelPng}");
+
+            _hitRow = -1;
+            _hitCol = -1;
+            _toolTip = new ToolTip();
+            _toolTip.InitialDelay = 1000;
+            _toolTip.ShowAlways = true;
+            _toolTip.IsBalloon = true;
 
             tbFind_TextChanged(null, null);
         }
@@ -373,6 +392,38 @@
                     if (_filtered != null)
                         dgvFind.DataSource = _filtered;
                 }
+            }
+        }
+
+        private void dgvFind_MouseMove(object sender, MouseEventArgs e)
+        {
+            var hti = dgvFind.HitTest(e.X, e.Y);
+            if (hti.Type == DataGridViewHitTestType.Cell && (hti.RowIndex != _hitRow || hti.ColumnIndex != _hitCol))
+            { //new hit row 
+                _hitRow = hti.RowIndex;
+                _hitCol = hti.ColumnIndex;
+                if (_toolTip != null && _toolTip.Active)
+                    _toolTip.Active = false;
+                {
+                    var channel = (string)dgvFind.Rows[_hitRow].Cells["ChannelName"].Value;
+                    var start = (DateTime)dgvFind.Rows[_hitRow].Cells["StartTime"].Value;
+                    var duration = (int)dgvFind.Rows[_hitRow].Cells["DurationMinutes"].Value;
+                    var title = (string)dgvFind.Rows[_hitRow].Cells["Title"].Value;
+                    var shortDescription = (string)dgvFind.Rows[_hitRow].Cells["ShortDescription"].Value;
+                    var description = (string)dgvFind.Rows[_hitRow].Cells["Description"].Value;
+
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine(channel);
+                    sb.AppendLine($"{start:dd.MM.yyyy HH:mm} {duration} min");
+                    sb.AppendLine(title);
+                    sb.AppendLine();
+                    sb.AppendLine(shortDescription);
+                    sb.AppendLine();
+                    sb.Append(RaX.Extensions.Data.StringHelper.SpliceText(description, 40));
+
+                    _toolTip.SetToolTip(dgvFind, sb.ToString());
+                }
+                _toolTip.Active = true;
             }
         }
     }

@@ -12,8 +12,9 @@ public static class Globals
     public const string NavSvdrpPng = "dail-connection-connect-icon24x24.png";
     public const string NavEditPng = "document-edit-icon24x24.png";
     public const string NavEpgPng = "tv-guide-icon24x24.png";
-    public const string VideoPng = "file-movies-icon24x24.png";
-    public const string CommanderPng = "total-commander-icon24x24.png";
+    public const string NavVideoPng = "file-movies-icon24x24.png";
+    public const string NavCommanderPng = "total-commander-icon24x24.png";
+    public const string NavUPnPServicePng = "services-icon24x24.png";
 
     // TabPages in Workspace
     public const string ClosePng = "cancel-icon16x16.png";
@@ -92,10 +93,14 @@ public static class Globals
     public const string DlgCancelPng = "cancel-icon16x16.png";
     public const string DlgOkPng = "ok-icon16x16.png";
 
-    //CommandView
+    // CommandView
     public const string CvFolderPng = "folder16x16.png";
     public const string CvFilePng = "file16x16.png";
 
+    // UPnPBrowser
+    public const string UPnPServicePng = "services-icon16x16.png";
+    public const string UPnPFolderPng = "pc-a-icon16x16.png";
+    public const string UPnPFilePng = "vlc-media-player-icon16x16.png";
 
     public static ImageList LoadImageList(ImageListType type)
     {
@@ -112,10 +117,10 @@ public static class Globals
                 fileName = $"{ImageFolder}/{NavSshPng}";
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
-                fileName = $"{ImageFolder}/{NavServicePng}";
+                fileName = $"{ImageFolder}/{NavCommanderPng}"; 
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
-                fileName = $"{ImageFolder}/{NavSvdrpPng}";
+                fileName = $"{ImageFolder}/{NavServicePng}"; 
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
                 fileName = $"{ImageFolder}/{NavVdrAdminPng}";
@@ -127,10 +132,10 @@ public static class Globals
                 fileName = $"{ImageFolder}/{NavEpgPng}";
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
-                fileName = $"{ImageFolder}/{VideoPng}";
+                fileName = $"{ImageFolder}/{NavVideoPng}";
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
-                fileName = $"{ImageFolder}/{CommanderPng}";
+                fileName = $"{ImageFolder}/{NavUPnPServicePng}";
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
                 break;
@@ -206,6 +211,19 @@ public static class Globals
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
                 break;
+            case ImageListType.UPnPBrowser:
+                imageList.ImageSize = new Size(16, 16);
+                fileName = $"{ImageFolder}/{UPnPServicePng}";
+                if (File.Exists(fileName))
+                    imageList.Images.Add(Image.FromFile(fileName));
+                fileName = $"{ImageFolder}/{UPnPFolderPng}";
+                if (File.Exists(fileName))
+                    imageList.Images.Add(Image.FromFile(fileName));
+                fileName = $"{ImageFolder}/{UPnPFilePng}";
+                if (File.Exists(fileName))
+                    imageList.Images.Add(Image.FromFile(fileName));
+                break;
+
         }
 
         return imageList;

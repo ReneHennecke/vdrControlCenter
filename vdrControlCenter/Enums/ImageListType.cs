@@ -9,6 +9,7 @@ public enum ImageListType
     SvdrpTimersView,
     SvdrpRecordingsView,
     SvdrpEpgView,
-    CommandView
+    CommandView,
+    UPnPBrowser
 }
 

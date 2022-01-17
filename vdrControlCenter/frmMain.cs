@@ -118,6 +118,15 @@
             };
             trvNavigation.Nodes.Add(node);
 
+            node = new TreeNode()
+            {
+                Text = "UPnP - Manager",
+                ImageIndex = (int)Navigation.UPnPBrowser,
+                SelectedImageIndex = (int)Navigation.UPnPBrowser,
+                Tag = Navigation.UPnPBrowser
+            };
+            trvNavigation.Nodes.Add(node);
+
             trvNavigation.SelectedNode = null;
 
             viewStations.PopulateData();
@@ -160,16 +169,16 @@
                     switch (navigation)
                     {
                         case Navigation.Setup:
-                            SystemSettingsController systemSettingsView = (SystemSettingsController)page.Controls[0];
+                            var systemSettingsView = (SystemSettingsController)page.Controls[0];
                             await systemSettingsView.SaveData();
                             closePanels = true;
                             break;
                         case Navigation.Commander:
-                            CommanderController commanderController = (CommanderController)page.Controls[0];
+                            var commanderController = (CommanderController)page.Controls[0];
                             commanderController.SaveConfig();
                             break;
                         case Navigation.SVDRP:
-                            SvdrpController svdrpController = (SvdrpController)page.Controls[0];
+                            var svdrpController = (SvdrpController)page.Controls[0];
                             svdrpController.Disconnect();
                             break;
                         default:
@@ -247,7 +256,7 @@
                         {
                             page.Text = "Setup";
                             page.ImageIndex = (int)Navigation.Setup;
-                            SystemSettingsController controller = new SystemSettingsController();
+                            var controller = new SystemSettingsController();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
@@ -257,7 +266,7 @@
                         {
                             page.Text = "SSH";
                             page.ImageIndex = (int)Navigation.SSH;
-                            SshController controller = new SshController();
+                            var controller = new SshController();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
@@ -267,7 +276,7 @@
                         {
                             page.Text = "VDR-Admin";
                             page.ImageIndex = (int)Navigation.VDRAdmin;
-                            VDRAdmindController controller = new VDRAdmindController();
+                            var controller = new VDRAdmindController();
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
                         }
@@ -276,7 +285,7 @@
                         {
                             page.Text = "SVDRP";
                             page.ImageIndex = (int)Navigation.SVDRP;
-                            SvdrpController controller = new SvdrpController();
+                            var controller = new SvdrpController();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
@@ -290,7 +299,7 @@
                         {
                             page.Text = "EPG-Guide";
                             page.ImageIndex = (int)Navigation.EPGGuide;
-                            EpgGuideLineController controller = new EpgGuideLineController();
+                            var controller = new EpgGuideLineController();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
@@ -302,7 +311,7 @@
                         {
                             page.Text = "Video";
                             page.ImageIndex = (int)Navigation.Video;
-                            MediaController controller = new MediaController();
+                            var controller = new MediaController();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
@@ -312,7 +321,17 @@
                         {
                             page.Text = "Datei Manager";
                             page.ImageIndex = (int)Navigation.Commander;
-                            CommanderController controller = new CommanderController();
+                            var controller = new CommanderController();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
+                        break;
+                    case Navigation.UPnPBrowser:
+                        {
+                            page.Text = "UPNP Manager";
+                            page.ImageIndex = (int)Navigation.UPnPBrowser;
+                            var controller = new UPnPBrowser();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);

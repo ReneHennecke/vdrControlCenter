@@ -7,6 +7,7 @@ global using System.Net;
 global using System.Net.Sockets;
 global using System.Net.NetworkInformation;
 global using System.Text;
+global using System.Diagnostics;
 
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Storage;
@@ -25,3 +26,5 @@ global using DataLayer.Classes;
 global using Svg;
 
 global using Renci.SshNet;
+
+global using LibVLCSharp.Shared;
