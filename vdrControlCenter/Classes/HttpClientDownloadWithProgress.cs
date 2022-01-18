@@ -23,7 +23,7 @@ public class HttpClientDownloadWithProgress : IDisposable
     public HttpClientDownloadWithProgress(string downloadUrl, string destinationFilePath)
     {
         _downloadUrl = downloadUrl;
-        _destinationFilePath = destinationFilePath;
+        _destinationFilePath = "D:\\test.mpeg"; // destinationFilePath;
         _cts = new CancellationTokenSource();
         _stopWatch = new Stopwatch();
     }
@@ -48,7 +48,7 @@ public class HttpClientDownloadWithProgress : IDisposable
         };
 
         var totalBytes = response.Content.Headers.ContentLength;
-                
+
         using (var contentStream = await response.Content.ReadAsStreamAsync())
             await ProcessContentStream(totalBytes, contentStream);
     }
@@ -72,6 +72,7 @@ public class HttpClientDownloadWithProgress : IDisposable
             {
                 if (_cts.IsCancellationRequested)
                     break;
+
 
                 var bytesRead = await contentStream.ReadAsync(buffer, 0, buffer.Length, _cts.Token);
                 if (bytesRead == 0)

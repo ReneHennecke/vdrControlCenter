@@ -39,5 +39,10 @@ public partial class SystemSetting
     public virtual ICollection<StatusInfo> StatusInfo { get; set; }
 
     public string Configuration { get; set; }
+
+    [MaxLength(255)]
+    public string? UPnPDownloadPath { get; set; }
+
+    public bool? OverWriteUPnPDownload { get; set; }
 }
 

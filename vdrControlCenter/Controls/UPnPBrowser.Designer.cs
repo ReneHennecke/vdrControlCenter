@@ -40,6 +40,7 @@
             this.lblName = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
             this.lblMrl = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.grbDetails.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,6 +59,7 @@
             this.grbDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grbDetails.Controls.Add(this.button1);
             this.grbDetails.Controls.Add(this.pbProgress);
             this.grbDetails.Controls.Add(this.lblTotalBytesDownLoaded);
             this.grbDetails.Controls.Add(this.lblTotalFileSize);
@@ -166,6 +168,16 @@
             this.lblMrl.Text = "MRL:";
             this.lblMrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(398, 278);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // UPnPBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -192,5 +204,6 @@
         private Label lblTotalFileSize;
         private Label lblTotalBytesDownLoaded;
         private ProgressBar pbProgress;
+        private Button button1;
     }
 }

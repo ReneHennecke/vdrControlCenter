@@ -135,8 +135,7 @@ public partial class UPnPBrowser : UserControl
 
             grbDetails.Visible = true;
 
-            var pl = new MediaPlayer(mediaItem.Media);
-            var t = pl.Media.Duration;
+           
         }
     }
 
@@ -181,6 +180,18 @@ public partial class UPnPBrowser : UserControl
         }
     }
 
+    private void button1_Click(object sender, EventArgs e)
+    {
+        var node = trvBrowser.SelectedNode;
+        var mediaItem = (MediaItem)node.Tag;
+            
+        var pl = new MediaPlayer(mediaItem.Media);
+        pl.Play();
+        Task.Delay(3000);
+        pl.Stop();
+
+        var t = pl.Media.Duration;
+    }
 }
 
 
