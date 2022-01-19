@@ -32,7 +32,7 @@
             this.grbDetails = new System.Windows.Forms.GroupBox();
             this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.lblTotalBytesDownLoaded = new System.Windows.Forms.Label();
-            this.lblTotalFileSize = new System.Windows.Forms.Label();
+            this.lblMbps = new System.Windows.Forms.Label();
             this.btnDownload = new System.Windows.Forms.Button();
             this.lblDurationValue = new System.Windows.Forms.Label();
             this.lblMrlValue = new System.Windows.Forms.Label();
@@ -40,7 +40,6 @@
             this.lblName = new System.Windows.Forms.Label();
             this.lblDuration = new System.Windows.Forms.Label();
             this.lblMrl = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.grbDetails.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,21 +47,21 @@
             // 
             this.trvBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.trvBrowser.FullRowSelect = true;
             this.trvBrowser.Location = new System.Drawing.Point(3, 3);
             this.trvBrowser.Name = "trvBrowser";
             this.trvBrowser.Size = new System.Drawing.Size(374, 326);
             this.trvBrowser.TabIndex = 4;
-            this.trvBrowser.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.trvBrowser_NodeMouseClick);
+            this.trvBrowser.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvBrowser_AfterSelect);
             // 
             // grbDetails
             // 
             this.grbDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.grbDetails.Controls.Add(this.button1);
             this.grbDetails.Controls.Add(this.pbProgress);
             this.grbDetails.Controls.Add(this.lblTotalBytesDownLoaded);
-            this.grbDetails.Controls.Add(this.lblTotalFileSize);
+            this.grbDetails.Controls.Add(this.lblMbps);
             this.grbDetails.Controls.Add(this.btnDownload);
             this.grbDetails.Controls.Add(this.lblDurationValue);
             this.grbDetails.Controls.Add(this.lblMrlValue);
@@ -76,36 +75,37 @@
             this.grbDetails.TabIndex = 5;
             this.grbDetails.TabStop = false;
             this.grbDetails.Text = "Details";
+            this.grbDetails.Visible = false;
             // 
             // pbProgress
             // 
             this.pbProgress.ForeColor = System.Drawing.Color.LimeGreen;
-            this.pbProgress.Location = new System.Drawing.Point(246, 224);
+            this.pbProgress.Location = new System.Drawing.Point(234, 111);
             this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(145, 10);
+            this.pbProgress.Size = new System.Drawing.Size(118, 10);
             this.pbProgress.TabIndex = 9;
             // 
             // lblTotalBytesDownLoaded
             // 
-            this.lblTotalBytesDownLoaded.BackColor = System.Drawing.Color.White;
-            this.lblTotalBytesDownLoaded.Location = new System.Drawing.Point(41, 255);
+            this.lblTotalBytesDownLoaded.BackColor = System.Drawing.SystemColors.Control;
+            this.lblTotalBytesDownLoaded.Location = new System.Drawing.Point(179, 165);
             this.lblTotalBytesDownLoaded.Name = "lblTotalBytesDownLoaded";
             this.lblTotalBytesDownLoaded.Size = new System.Drawing.Size(173, 23);
             this.lblTotalBytesDownLoaded.TabIndex = 8;
             this.lblTotalBytesDownLoaded.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblTotalFileSize
+            // lblMbps
             // 
-            this.lblTotalFileSize.BackColor = System.Drawing.Color.White;
-            this.lblTotalFileSize.Location = new System.Drawing.Point(41, 217);
-            this.lblTotalFileSize.Name = "lblTotalFileSize";
-            this.lblTotalFileSize.Size = new System.Drawing.Size(173, 23);
-            this.lblTotalFileSize.TabIndex = 7;
-            this.lblTotalFileSize.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblMbps.BackColor = System.Drawing.SystemColors.Control;
+            this.lblMbps.Location = new System.Drawing.Point(234, 133);
+            this.lblMbps.Name = "lblMbps";
+            this.lblMbps.Size = new System.Drawing.Size(118, 23);
+            this.lblMbps.TabIndex = 7;
+            this.lblMbps.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnDownload
             // 
-            this.btnDownload.Location = new System.Drawing.Point(41, 180);
+            this.btnDownload.Location = new System.Drawing.Point(234, 82);
             this.btnDownload.Name = "btnDownload";
             this.btnDownload.Size = new System.Drawing.Size(118, 23);
             this.btnDownload.TabIndex = 6;
@@ -117,7 +117,7 @@
             // 
             this.lblDurationValue.Location = new System.Drawing.Point(93, 82);
             this.lblDurationValue.Name = "lblDurationValue";
-            this.lblDurationValue.Size = new System.Drawing.Size(342, 23);
+            this.lblDurationValue.Size = new System.Drawing.Size(124, 23);
             this.lblDurationValue.TabIndex = 5;
             this.lblDurationValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -168,16 +168,6 @@
             this.lblMrl.Text = "MRL:";
             this.lblMrl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(398, 278);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // UPnPBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -201,9 +191,8 @@
         private Label lblMrlValue;
         private Label lblNameValue;
         private Button btnDownload;
-        private Label lblTotalFileSize;
+        private Label lblMbps;
         private Label lblTotalBytesDownLoaded;
         private ProgressBar pbProgress;
-        private Button button1;
     }
 }

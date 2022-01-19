@@ -40,9 +40,9 @@ public partial class SystemSetting
 
     public string Configuration { get; set; }
 
+
     [MaxLength(255)]
-    public string? UPnPDownloadPath { get; set; }
+    public string UPnPDownloadPath { get; set; }
 
-    public bool? OverWriteUPnPDownload { get; set; }
+    public bool? OverwriteUPnPDownload { get; set; }
 }
-

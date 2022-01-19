@@ -27,6 +27,8 @@ public partial class SystemSettingsController : UserControl
         btnPathToChannelLogos.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SystemSettingsFindPng}");
         btnPathToRecordings.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.SystemSettingsFindPng}");
 
+        btnUPnPDownloadPath.Image = Globals.LoadImage($"{Globals.ImageFolder}/{ Globals.SystemSettingsFindPng}");
+
         picMacExclamation.Image = Globals.LoadImage($"{Globals.ImageFolder}/{Globals.ExclamationPng}");
 
         cmbChannelListTyp.DataSource = Enum.GetValues(typeof(ChannelType));
@@ -49,7 +51,11 @@ public partial class SystemSettingsController : UserControl
             lblLastUpdateTimersValue.Text = $"{systemSettings.LastUpdateTimers:dd.MM.yyyy HH:mm:ss}";
             lblLastUpdateRecordingsValue.Text = $"{systemSettings.LastUpdateRecordings:dd.MM.yyyy HH:mm:ss}";
             lblLastupdateStatusValue.Text = $"{systemSettings.LastUpdateStatus:dd.MM.yyyy HH:mm:ss}";
+            
             tePathToChannelLogogs.Text = systemSettings.PathToChannelLogos;
+
+            teUPnPDownloadPath.Text = systemSettings.UPnPDownloadPath;
+            chbOverwriteUPnPDownload.Checked = !systemSettings.OverwriteUPnPDownload.HasValue ? false : systemSettings.OverwriteUPnPDownload.Value;
         }
 
         List<Station> stations = await _context.Stations
@@ -121,7 +127,7 @@ public partial class SystemSettingsController : UserControl
             try
             {
                 frmMain.AddMessage($"SAVE SETTINGS » {RaX.Extensions.Network.NetHelper.LocalAddress}");
-                SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync();
+                SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
                 if (systemSettings == null)
                     systemSettings = new SystemSetting();
                 else
@@ -132,7 +138,11 @@ public partial class SystemSettingsController : UserControl
                 systemSettings.FavouritesOnly = chbFavouritesOnly.Checked;
                 systemSettings.SaveBufferToFile = chbSaveBufferToFile.Checked;
                 systemSettings.EnableLogging = chbEnableLogging.Checked;
+                
                 systemSettings.PathToChannelLogos = tePathToChannelLogogs.Text.Replace("\\", "/");
+
+                systemSettings.UPnPDownloadPath = teUPnPDownloadPath.Text.Replace("\\", "/");
+                systemSettings.OverwriteUPnPDownload = chbOverwriteUPnPDownload.Checked;
 
                 var station = await _context.Stations.FirstOrDefaultAsync(x => x.RecId == recId);
                 frmMain.AddMessage($"SAVE SETTINGS » {station.HostAddress}");
@@ -295,6 +305,14 @@ public partial class SystemSettingsController : UserControl
         await SaveData();
         _prevSelectedIndex = cmbStations.SelectedIndex;
         await LoadData();
+    }
+
+    private void btnUPnPDownloadPath_Click(object sender, EventArgs e)
+    {
+        FolderBrowserDialog dlg = new FolderBrowserDialog();
+        dlg.SelectedPath = teUPnPDownloadPath.Text;
+        if (dlg.ShowDialog() == DialogResult.OK)
+            teUPnPDownloadPath.Text = dlg.SelectedPath;
     }
 }
 

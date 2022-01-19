@@ -11,6 +11,7 @@ public partial class UPnPBrowser : UserControl
     private HttpClientDownloadWithProgress _downloadWithProgress;
     private const string BTN_DL_DOWN = "Start Download";
     private const string BTN_DL_CANCEL = "Abbrechen";
+    private vdrControlCenterContext _context;
 
     public frmMain MainForm
     {
@@ -41,11 +42,14 @@ public partial class UPnPBrowser : UserControl
 
     private void PostInit()
     {
+        if (_context == null)
+            _context = new vdrControlCenterContext();
+
         _libVLC = new LibVLC(enableDebugLogs: true, options: "--verbose=2");
         _libVLC.Log += (_, args) =>
         {
             string message = $"libVlc : args.Level args.Message @ args.Module";
-            System.Diagnostics.Debug.WriteLine(message);
+            Debug.WriteLine(message);
         };
 
         trvBrowser.ImageList = Globals.LoadImageList(ImageListType.UPnPBrowser);
@@ -98,16 +102,76 @@ public partial class UPnPBrowser : UserControl
         }
     }
 
-    private async void trvBrowser_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+    private async void btnDownload_Click(object sender, EventArgs e)
+    {
+        var systemSetting = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
+        if (systemSetting == null)
+            return;
+
+        if (btnDownload.Text == BTN_DL_CANCEL)
+        {
+            _downloadWithProgress.CancelDownload();
+            btnDownload.Text = BTN_DL_DOWN;
+            return;
+        }
+        
+        btnDownload.Text = BTN_DL_CANCEL;
+        
+        if (!string.IsNullOrWhiteSpace(lblMrlValue.Text) && !string.IsNullOrWhiteSpace(lblNameValue.Text))
+        {
+            var path = $"{systemSetting.UPnPDownloadPath}";
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            //var mediaItem = (MediaItem)trvBrowser.SelectedNode.Tag;
+            
+
+            var source = lblMrlValue.Text;
+            var target = $"{path}/{lblNameValue.Text}.mpeg";
+            if (!systemSetting.OverwriteUPnPDownload.HasValue || !systemSetting.OverwriteUPnPDownload.Value)
+            {
+                if (File.Exists(target))
+                {
+                    var sinceMidnight = DateTime.Now - DateTime.Today;
+                    target = target.Replace(".", $".{(int)sinceMidnight.TotalSeconds}.");
+                }
+            }
+
+            _downloadWithProgress = new HttpClientDownloadWithProgress(source, target);
+            _downloadWithProgress.ProgressChanged += OnProgressChanged;
+            await _downloadWithProgress.StartDownload();
+
+            btnDownload.Text = BTN_DL_DOWN;
+        }
+    }
+
+    private void OnProgressChanged(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage, double mbps)
+    {
+        if (_downloadWithProgress != null)
+        {
+            if (totalFileSize.HasValue)
+                lblMbps.Text = totalFileSize.Value.ToString();
+
+            lblTotalBytesDownLoaded.Text = $"{totalBytesDownloaded:n0}";
+
+            if (progressPercentage.HasValue)
+                pbProgress.Value = (int)progressPercentage.Value;
+
+            lblMbps.Text = $"{mbps: 0.00} MB/s";
+        }
+    }
+
+    private async void trvBrowser_AfterSelect(object sender, TreeViewEventArgs e)
     {
         var node = e.Node;
+        node.SelectedImageIndex = node.ImageIndex;
         var mediaItem = (MediaItem)node.Tag;
         if (mediaItem.Media.Type != MediaType.File)
         {
             node.Nodes.Clear();
             grbDetails.Visible = false;
 
-            await mediaItem.Media.Parse(MediaParseOptions.ParseNetwork);
+            await mediaItem.Media.Parse(MediaParseOptions.ParseNetwork, 2000, CancellationToken.None);
             foreach (var mi in mediaItem.Media.SubItems)
             {
                 var item = new MediaItem(mi)
@@ -125,72 +189,18 @@ public partial class UPnPBrowser : UserControl
         }
         else
         {
-            
+            var media = mediaItem.Media;
+
+            if (!media.IsParsed)
+                await media.Parse(MediaParseOptions.ParseNetwork, 2000, CancellationToken.None);
+
             lblNameValue.Text = mediaItem.Name;
             lblMrlValue.Text = mediaItem.Media.Mrl;
-            lblDurationValue.Text = mediaItem.Media.Duration > -1 ? $"{mediaItem.Media.Duration}" : string.Empty;  
 
-            // $"{mediaItem.Media.Meta(MetadataType.DiscTotal)}";
-
+            lblDurationValue.Text = media.Duration == -1 ? string.Empty : $"{TimeSpan.FromMilliseconds(media.Duration)}";
 
             grbDetails.Visible = true;
-
-           
         }
-    }
-
-    private async void btnDownload_Click(object sender, EventArgs e)
-    {
-        if (btnDownload.Text == BTN_DL_CANCEL)
-        {
-            _downloadWithProgress.CancelDownload();
-            btnDownload.Text = BTN_DL_DOWN;
-            return;
-        }
-        
-        btnDownload.Text = BTN_DL_CANCEL;
-        
-        if (!string.IsNullOrWhiteSpace(lblMrlValue.Text) && !string.IsNullOrWhiteSpace(lblNameValue.Text))
-        {
-            var path = $"{AppDomain.CurrentDomain.BaseDirectory}/Downloads";
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            var source = lblMrlValue.Text;
-            var target = $"{path}/{lblNameValue.Text}.mpeg";
-            _downloadWithProgress = new HttpClientDownloadWithProgress(source, target);
-            _downloadWithProgress.ProgressChanged += OnProgressChanged;
-            await _downloadWithProgress.StartDownload();
-
-            btnDownload.Text = BTN_DL_DOWN;
-        }
-    }
-
-    private void OnProgressChanged(long? totalFileSize, long totalBytesDownloaded, double? progressPercentage)
-    {
-        if (_downloadWithProgress != null)
-        {
-            if (totalFileSize.HasValue)
-                lblTotalFileSize.Text = totalFileSize.Value.ToString();
-
-            lblTotalBytesDownLoaded.Text = $"{totalBytesDownloaded:n0}";
-
-            if (progressPercentage.HasValue)
-                pbProgress.Value = (int)progressPercentage.Value;
-        }
-    }
-
-    private void button1_Click(object sender, EventArgs e)
-    {
-        var node = trvBrowser.SelectedNode;
-        var mediaItem = (MediaItem)node.Tag;
-            
-        var pl = new MediaPlayer(mediaItem.Media);
-        pl.Play();
-        Task.Delay(3000);
-        pl.Stop();
-
-        var t = pl.Media.Duration;
     }
 }
 

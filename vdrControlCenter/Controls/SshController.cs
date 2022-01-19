@@ -138,9 +138,9 @@ public partial class SshController : UserControl
             if (stations != null)
             {
                 ConnectionInfo connectionInfo = new ConnectionInfo(stations.HostAddress,
-                                                                    stations.Sshport.Value,
-                                                                    stations.SshuserName,
-                                                                    new PasswordAuthenticationMethod(stations.SshuserName,
+                                                                   stations.Sshport.Value,
+                                                                   stations.SshuserName,
+                                                                   new PasswordAuthenticationMethod(stations.SshuserName,
                                                                                                     stations.Sshpassword));
                 connectionInfo.Encoding = System.Text.Encoding.GetEncoding("ISO-8859-1");
 

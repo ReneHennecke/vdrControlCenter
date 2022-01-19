@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.grbSystemSettings = new System.Windows.Forms.GroupBox();
+            this.chbOverwriteUPnPDownload = new System.Windows.Forms.CheckBox();
+            this.lblOverwriteUPnpDownload = new System.Windows.Forms.Label();
+            this.btnUPnPDownloadPath = new System.Windows.Forms.Button();
+            this.teUPnPDownloadPath = new System.Windows.Forms.TextBox();
             this.lblLastupdateStatusValue = new System.Windows.Forms.Label();
             this.lblUpdateStatus = new System.Windows.Forms.Label();
             this.btnPathToChannelLogos = new System.Windows.Forms.Button();
@@ -92,6 +96,7 @@
             this.teDescription = new System.Windows.Forms.TextBox();
             this.lblDescription = new System.Windows.Forms.Label();
             this.lblHostAddress = new System.Windows.Forms.Label();
+            this.lblUPnPDownloadPath = new System.Windows.Forms.Label();
             this.grbSystemSettings.SuspendLayout();
             this.grbStation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMacExclamation)).BeginInit();
@@ -102,6 +107,11 @@
             // 
             // grbSystemSettings
             // 
+            this.grbSystemSettings.Controls.Add(this.lblUPnPDownloadPath);
+            this.grbSystemSettings.Controls.Add(this.chbOverwriteUPnPDownload);
+            this.grbSystemSettings.Controls.Add(this.lblOverwriteUPnpDownload);
+            this.grbSystemSettings.Controls.Add(this.btnUPnPDownloadPath);
+            this.grbSystemSettings.Controls.Add(this.teUPnPDownloadPath);
             this.grbSystemSettings.Controls.Add(this.lblLastupdateStatusValue);
             this.grbSystemSettings.Controls.Add(this.lblUpdateStatus);
             this.grbSystemSettings.Controls.Add(this.btnPathToChannelLogos);
@@ -125,14 +135,49 @@
             this.grbSystemSettings.Controls.Add(this.lblChannelListType);
             this.grbSystemSettings.Location = new System.Drawing.Point(10, 8);
             this.grbSystemSettings.Name = "grbSystemSettings";
-            this.grbSystemSettings.Size = new System.Drawing.Size(586, 318);
+            this.grbSystemSettings.Size = new System.Drawing.Size(670, 370);
             this.grbSystemSettings.TabIndex = 0;
             this.grbSystemSettings.TabStop = false;
             this.grbSystemSettings.Text = "Lokale Einstellungen";
             // 
+            // chbOverwriteUPnPDownload
+            // 
+            this.chbOverwriteUPnPDownload.AutoSize = true;
+            this.chbOverwriteUPnPDownload.Location = new System.Drawing.Point(240, 335);
+            this.chbOverwriteUPnPDownload.Name = "chbOverwriteUPnPDownload";
+            this.chbOverwriteUPnPDownload.Size = new System.Drawing.Size(15, 14);
+            this.chbOverwriteUPnPDownload.TabIndex = 25;
+            this.chbOverwriteUPnPDownload.UseVisualStyleBackColor = true;
+            // 
+            // lblOverwriteUPnpDownload
+            // 
+            this.lblOverwriteUPnpDownload.Location = new System.Drawing.Point(18, 335);
+            this.lblOverwriteUPnpDownload.Name = "lblOverwriteUPnpDownload";
+            this.lblOverwriteUPnpDownload.Size = new System.Drawing.Size(197, 23);
+            this.lblOverwriteUPnpDownload.TabIndex = 24;
+            this.lblOverwriteUPnpDownload.Text = " UPnP-Download überschreiben:";
+            this.lblOverwriteUPnpDownload.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnUPnPDownloadPath
+            // 
+            this.btnUPnPDownloadPath.Location = new System.Drawing.Point(588, 303);
+            this.btnUPnPDownloadPath.Name = "btnUPnPDownloadPath";
+            this.btnUPnPDownloadPath.Size = new System.Drawing.Size(44, 23);
+            this.btnUPnPDownloadPath.TabIndex = 23;
+            this.btnUPnPDownloadPath.UseVisualStyleBackColor = true;
+            this.btnUPnPDownloadPath.Click += new System.EventHandler(this.btnUPnPDownloadPath_Click);
+            // 
+            // teUPnPDownloadPath
+            // 
+            this.teUPnPDownloadPath.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.teUPnPDownloadPath.Location = new System.Drawing.Point(240, 303);
+            this.teUPnPDownloadPath.Name = "teUPnPDownloadPath";
+            this.teUPnPDownloadPath.Size = new System.Drawing.Size(342, 23);
+            this.teUPnPDownloadPath.TabIndex = 22;
+            // 
             // lblLastupdateStatusValue
             // 
-            this.lblLastupdateStatusValue.Location = new System.Drawing.Point(184, 248);
+            this.lblLastupdateStatusValue.Location = new System.Drawing.Point(242, 248);
             this.lblLastupdateStatusValue.Name = "lblLastupdateStatusValue";
             this.lblLastupdateStatusValue.Size = new System.Drawing.Size(214, 22);
             this.lblLastupdateStatusValue.TabIndex = 20;
@@ -142,14 +187,14 @@
             // 
             this.lblUpdateStatus.Location = new System.Drawing.Point(18, 248);
             this.lblUpdateStatus.Name = "lblUpdateStatus";
-            this.lblUpdateStatus.Size = new System.Drawing.Size(160, 22);
+            this.lblUpdateStatus.Size = new System.Drawing.Size(197, 22);
             this.lblUpdateStatus.TabIndex = 19;
             this.lblUpdateStatus.Text = "Abfrage Status:";
             this.lblUpdateStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnPathToChannelLogos
             // 
-            this.btnPathToChannelLogos.Location = new System.Drawing.Point(528, 274);
+            this.btnPathToChannelLogos.Location = new System.Drawing.Point(588, 274);
             this.btnPathToChannelLogos.Name = "btnPathToChannelLogos";
             this.btnPathToChannelLogos.Size = new System.Drawing.Size(44, 23);
             this.btnPathToChannelLogos.TabIndex = 18;
@@ -159,7 +204,7 @@
             // tePathToChannelLogogs
             // 
             this.tePathToChannelLogogs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tePathToChannelLogogs.Location = new System.Drawing.Point(182, 274);
+            this.tePathToChannelLogogs.Location = new System.Drawing.Point(240, 274);
             this.tePathToChannelLogogs.Name = "tePathToChannelLogogs";
             this.tePathToChannelLogogs.Size = new System.Drawing.Size(342, 23);
             this.tePathToChannelLogogs.TabIndex = 17;
@@ -168,14 +213,14 @@
             // 
             this.lblPathToChannelLogogs.Location = new System.Drawing.Point(18, 274);
             this.lblPathToChannelLogogs.Name = "lblPathToChannelLogogs";
-            this.lblPathToChannelLogogs.Size = new System.Drawing.Size(160, 23);
+            this.lblPathToChannelLogogs.Size = new System.Drawing.Size(197, 23);
             this.lblPathToChannelLogogs.TabIndex = 16;
             this.lblPathToChannelLogogs.Text = "Pfad zu den Channel-Logos:";
             this.lblPathToChannelLogogs.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblLastUpdateRecordingsValue
             // 
-            this.lblLastUpdateRecordingsValue.Location = new System.Drawing.Point(184, 222);
+            this.lblLastUpdateRecordingsValue.Location = new System.Drawing.Point(242, 222);
             this.lblLastUpdateRecordingsValue.Name = "lblLastUpdateRecordingsValue";
             this.lblLastUpdateRecordingsValue.Size = new System.Drawing.Size(214, 22);
             this.lblLastUpdateRecordingsValue.TabIndex = 15;
@@ -185,14 +230,14 @@
             // 
             this.lblLastUpdateRecordings.Location = new System.Drawing.Point(18, 222);
             this.lblLastUpdateRecordings.Name = "lblLastUpdateRecordings";
-            this.lblLastUpdateRecordings.Size = new System.Drawing.Size(160, 22);
+            this.lblLastUpdateRecordings.Size = new System.Drawing.Size(197, 22);
             this.lblLastUpdateRecordings.TabIndex = 14;
             this.lblLastUpdateRecordings.Text = "Abfrage Aufnahmen:";
             this.lblLastUpdateRecordings.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblLastUpdateTimersValue
             // 
-            this.lblLastUpdateTimersValue.Location = new System.Drawing.Point(184, 196);
+            this.lblLastUpdateTimersValue.Location = new System.Drawing.Point(242, 196);
             this.lblLastUpdateTimersValue.Name = "lblLastUpdateTimersValue";
             this.lblLastUpdateTimersValue.Size = new System.Drawing.Size(214, 22);
             this.lblLastUpdateTimersValue.TabIndex = 13;
@@ -202,14 +247,14 @@
             // 
             this.lblLastUpdateTimers.Location = new System.Drawing.Point(18, 196);
             this.lblLastUpdateTimers.Name = "lblLastUpdateTimers";
-            this.lblLastUpdateTimers.Size = new System.Drawing.Size(160, 22);
+            this.lblLastUpdateTimers.Size = new System.Drawing.Size(197, 22);
             this.lblLastUpdateTimers.TabIndex = 12;
             this.lblLastUpdateTimers.Text = "Abfrage Timer:";
             this.lblLastUpdateTimers.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblLastUpdateEPGValue
             // 
-            this.lblLastUpdateEPGValue.Location = new System.Drawing.Point(184, 170);
+            this.lblLastUpdateEPGValue.Location = new System.Drawing.Point(242, 170);
             this.lblLastUpdateEPGValue.Name = "lblLastUpdateEPGValue";
             this.lblLastUpdateEPGValue.Size = new System.Drawing.Size(214, 22);
             this.lblLastUpdateEPGValue.TabIndex = 11;
@@ -219,14 +264,14 @@
             // 
             this.lblLastUpdateEPG.Location = new System.Drawing.Point(18, 170);
             this.lblLastUpdateEPG.Name = "lblLastUpdateEPG";
-            this.lblLastUpdateEPG.Size = new System.Drawing.Size(160, 22);
+            this.lblLastUpdateEPG.Size = new System.Drawing.Size(197, 22);
             this.lblLastUpdateEPG.TabIndex = 10;
             this.lblLastUpdateEPG.Text = "Abfrage EPG:";
             this.lblLastUpdateEPG.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblLastUpdateChannelsValue
             // 
-            this.lblLastUpdateChannelsValue.Location = new System.Drawing.Point(184, 144);
+            this.lblLastUpdateChannelsValue.Location = new System.Drawing.Point(242, 144);
             this.lblLastUpdateChannelsValue.Name = "lblLastUpdateChannelsValue";
             this.lblLastUpdateChannelsValue.Size = new System.Drawing.Size(214, 22);
             this.lblLastUpdateChannelsValue.TabIndex = 9;
@@ -236,7 +281,7 @@
             // 
             this.lblLastUpdatesChannels.Location = new System.Drawing.Point(18, 144);
             this.lblLastUpdatesChannels.Name = "lblLastUpdatesChannels";
-            this.lblLastUpdatesChannels.Size = new System.Drawing.Size(160, 22);
+            this.lblLastUpdatesChannels.Size = new System.Drawing.Size(197, 22);
             this.lblLastUpdatesChannels.TabIndex = 8;
             this.lblLastUpdatesChannels.Text = "Abfrage  Kanäle:";
             this.lblLastUpdatesChannels.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -244,7 +289,7 @@
             // chbEnableLogging
             // 
             this.chbEnableLogging.AutoSize = true;
-            this.chbEnableLogging.Location = new System.Drawing.Point(182, 120);
+            this.chbEnableLogging.Location = new System.Drawing.Point(240, 120);
             this.chbEnableLogging.Name = "chbEnableLogging";
             this.chbEnableLogging.Size = new System.Drawing.Size(15, 14);
             this.chbEnableLogging.TabIndex = 7;
@@ -254,7 +299,7 @@
             // 
             this.lblEnableLogging.Location = new System.Drawing.Point(18, 116);
             this.lblEnableLogging.Name = "lblEnableLogging";
-            this.lblEnableLogging.Size = new System.Drawing.Size(160, 23);
+            this.lblEnableLogging.Size = new System.Drawing.Size(197, 23);
             this.lblEnableLogging.TabIndex = 6;
             this.lblEnableLogging.Text = "Loggen einschalten:";
             this.lblEnableLogging.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -262,7 +307,7 @@
             // chbSaveBufferToFile
             // 
             this.chbSaveBufferToFile.AutoSize = true;
-            this.chbSaveBufferToFile.Location = new System.Drawing.Point(182, 92);
+            this.chbSaveBufferToFile.Location = new System.Drawing.Point(240, 92);
             this.chbSaveBufferToFile.Name = "chbSaveBufferToFile";
             this.chbSaveBufferToFile.Size = new System.Drawing.Size(15, 14);
             this.chbSaveBufferToFile.TabIndex = 5;
@@ -272,7 +317,7 @@
             // 
             this.lblSaveBufferToFile.Location = new System.Drawing.Point(18, 88);
             this.lblSaveBufferToFile.Name = "lblSaveBufferToFile";
-            this.lblSaveBufferToFile.Size = new System.Drawing.Size(160, 23);
+            this.lblSaveBufferToFile.Size = new System.Drawing.Size(197, 23);
             this.lblSaveBufferToFile.TabIndex = 4;
             this.lblSaveBufferToFile.Text = "SVDRP Puffer speichern:";
             this.lblSaveBufferToFile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -280,7 +325,7 @@
             // chbFavouritesOnly
             // 
             this.chbFavouritesOnly.AutoSize = true;
-            this.chbFavouritesOnly.Location = new System.Drawing.Point(182, 64);
+            this.chbFavouritesOnly.Location = new System.Drawing.Point(240, 64);
             this.chbFavouritesOnly.Name = "chbFavouritesOnly";
             this.chbFavouritesOnly.Size = new System.Drawing.Size(15, 14);
             this.chbFavouritesOnly.TabIndex = 3;
@@ -290,7 +335,7 @@
             // 
             this.lblFavouritesOnly.Location = new System.Drawing.Point(18, 60);
             this.lblFavouritesOnly.Name = "lblFavouritesOnly";
-            this.lblFavouritesOnly.Size = new System.Drawing.Size(160, 23);
+            this.lblFavouritesOnly.Size = new System.Drawing.Size(197, 23);
             this.lblFavouritesOnly.TabIndex = 2;
             this.lblFavouritesOnly.Text = "Nur Favoriten anzeigen:";
             this.lblFavouritesOnly.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -299,7 +344,7 @@
             // 
             this.cmbChannelListTyp.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbChannelListTyp.FormattingEnabled = true;
-            this.cmbChannelListTyp.Location = new System.Drawing.Point(182, 32);
+            this.cmbChannelListTyp.Location = new System.Drawing.Point(240, 32);
             this.cmbChannelListTyp.Name = "cmbChannelListTyp";
             this.cmbChannelListTyp.Size = new System.Drawing.Size(144, 23);
             this.cmbChannelListTyp.TabIndex = 1;
@@ -308,7 +353,7 @@
             // 
             this.lblChannelListType.Location = new System.Drawing.Point(18, 32);
             this.lblChannelListType.Name = "lblChannelListType";
-            this.lblChannelListType.Size = new System.Drawing.Size(160, 22);
+            this.lblChannelListType.Size = new System.Drawing.Size(197, 22);
             this.lblChannelListType.TabIndex = 0;
             this.lblChannelListType.Text = "Filter Kanaltyp:";
             this.lblChannelListType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -334,9 +379,9 @@
             this.grbStation.Controls.Add(this.teDescription);
             this.grbStation.Controls.Add(this.lblDescription);
             this.grbStation.Controls.Add(this.lblHostAddress);
-            this.grbStation.Location = new System.Drawing.Point(608, 8);
+            this.grbStation.Location = new System.Drawing.Point(686, 8);
             this.grbStation.Name = "grbStation";
-            this.grbStation.Size = new System.Drawing.Size(700, 672);
+            this.grbStation.Size = new System.Drawing.Size(700, 714);
             this.grbStation.TabIndex = 1;
             this.grbStation.TabStop = false;
             this.grbStation.Text = "Einstellungen Stationen";
@@ -745,6 +790,15 @@
             this.lblHostAddress.Text = "Host-Addresse:";
             this.lblHostAddress.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // lblUPnPDownloadPath
+            // 
+            this.lblUPnPDownloadPath.Location = new System.Drawing.Point(18, 303);
+            this.lblUPnPDownloadPath.Name = "lblUPnPDownloadPath";
+            this.lblUPnPDownloadPath.Size = new System.Drawing.Size(197, 23);
+            this.lblUPnPDownloadPath.TabIndex = 26;
+            this.lblUPnPDownloadPath.Text = "Pfad zu den UPnP-Downloads:";
+            this.lblUPnPDownloadPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // SystemSettingsController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -834,5 +888,10 @@
         private System.Windows.Forms.PictureBox picMacExclamation;
         private System.Windows.Forms.Label lblLastupdateStatusValue;
         private System.Windows.Forms.Label lblUpdateStatus;
+        private Button btnUPnPDownloadPath;
+        private TextBox teUPnPDownloadPath;
+        private CheckBox chbOverwriteUPnPDownload;
+        private Label lblOverwriteUPnpDownload;
+        private Label lblUPnPDownloadPath;
     }
 }
