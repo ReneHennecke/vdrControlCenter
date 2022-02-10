@@ -15,6 +15,7 @@ public static class Globals
     public const string NavVideoPng = "file-movies-icon24x24.png";
     public const string NavCommanderPng = "total-commander-icon24x24.png";
     public const string NavUPnPServicePng = "services-icon24x24.png";
+    public const string NavTranscodePng = "apps-camtasia-studio-metro-icon24x24.png";
 
     // TabPages in Workspace
     public const string ClosePng = "cancel-icon16x16.png";
@@ -136,6 +137,9 @@ public static class Globals
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
                 fileName = $"{ImageFolder}/{NavUPnPServicePng}";
+                if (File.Exists(fileName))
+                    imageList.Images.Add(Image.FromFile(fileName));
+                fileName = $"{ImageFolder}/{NavTranscodePng}";
                 if (File.Exists(fileName))
                     imageList.Images.Add(Image.FromFile(fileName));
                 break;

@@ -127,6 +127,15 @@
             };
             trvNavigation.Nodes.Add(node);
 
+            node = new TreeNode()
+            {
+                Text = "Transcoder",
+                ImageIndex = (int)Navigation.Transcoder,
+                SelectedImageIndex = (int)Navigation.Transcoder,
+                Tag = Navigation.Transcoder
+            };
+            trvNavigation.Nodes.Add(node);
+
             trvNavigation.SelectedNode = null;
 
             viewStations.PopulateData();
@@ -254,7 +263,7 @@
                 {
                     case Navigation.Setup:
                         {
-                            page.Text = "Setup";
+                            page.Text = "Einstellungen";
                             page.ImageIndex = (int)Navigation.Setup;
                             var controller = new SystemSettingsController();
                             controller.MainForm = this;
@@ -332,6 +341,16 @@
                             page.Text = "UPNP Manager";
                             page.ImageIndex = (int)Navigation.UPnPBrowser;
                             var controller = new UPnPBrowser();
+                            controller.MainForm = this;
+                            controller.Dock = DockStyle.Fill;
+                            page.Controls.Add(controller);
+                        }
+                        break;
+                    case Navigation.Transcoder:
+                        {
+                            page.Text = "Transcoder";
+                            page.ImageIndex = (int)Navigation.Transcoder;
+                            var controller = new Transcoder();
                             controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
@@ -429,8 +448,34 @@
                         SvdrpController controller = (SvdrpController)page.Controls[0];
                         controller.Disconnect();
                     }
+                    //else if (page.Controls[0] is SshController)
+                    //{
+
+                    //}
+                    //else if (page.Controls[0] is VDRAdmindController)
+                    //{
+
+                    //}
+                    //else if (page.Controls[0] is SvdrpController)
+                    //{
+
+                    //}
+                    //else if (page.Controls[0] is EpgGuideLineController)
+                    //{
+
+                    //}
+                    //else if (page.Controls[0] is UPnPBrowser)
+                    //{
+
+                    //}
+                    //else if (page.Controls[0] is Transcoder)
+                    //{
+
+                    //}
                 }
             }
+
+            tabWorkspace.TabPages.Clear();
         }
 
         private void frmMain_Load(object sender, EventArgs e)

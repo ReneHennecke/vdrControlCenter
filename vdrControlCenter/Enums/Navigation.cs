@@ -10,6 +10,7 @@ public enum Navigation
     Editor,
     EPGGuide,
     Video,
-    UPnPBrowser
+    UPnPBrowser,
+    Transcoder
 }
 
