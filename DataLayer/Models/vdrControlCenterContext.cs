@@ -1,5 +1,7 @@
 ﻿using DataLayer.Classes;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 
 namespace DataLayer.Models;
 
@@ -8,7 +10,7 @@ public partial class vdrControlCenterContext : DbContext, IDataProtectionKeyCont
     private readonly IDataProtectionProvider _dataProtectionProvider;
     private readonly IDataProtector _dataProtector;
 
-    public vdrControlCenterContext()
+    public vdrControlCenterContext() 
     {
         _dataProtectionProvider = DataProtectionProvider.Create("vdrControlCenterContext");
         _dataProtector = _dataProtectionProvider.CreateProtector("ProtectedFields");
@@ -17,13 +19,13 @@ public partial class vdrControlCenterContext : DbContext, IDataProtectionKeyCont
     public vdrControlCenterContext(DbContextOptions<vdrControlCenterContext> options)
        : base(options)
     {
-        
+
     }
 
     public vdrControlCenterContext(DbContextOptions<vdrControlCenterContext> options, IDataProtectionProvider dataProtectionProvider)
         : base(options)
     {
-        
+
     }
 
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
@@ -37,12 +39,28 @@ public partial class vdrControlCenterContext : DbContext, IDataProtectionKeyCont
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
+        if (optionsBuilder.IsConfigured)
         {
-            optionsBuilder
-                .UseLazyLoadingProxies()
-                .UseSqlServer(ConfigurationManager.ConnectionStrings["vdrControlCenterDatabase"].ConnectionString);
+            base.OnConfiguring(optionsBuilder);
+            return;
         }
+
+        const string SETTING_FILE = "appSettings.json";
+        const string DB_CONN_STRNG = "vdrControlCenterDatabase";
+
+        var pathToContentRoot = AppDomain.CurrentDomain.BaseDirectory;
+        var json = Path.Combine(pathToContentRoot, SETTING_FILE);
+
+        IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+                                                                .SetBasePath(pathToContentRoot)
+                                                                .AddJsonFile(SETTING_FILE);
+        IConfiguration configuration = configurationBuilder.Build();
+
+        optionsBuilder
+            .UseLazyLoadingProxies()
+            .UseSqlServer(configuration.GetConnectionString(DB_CONN_STRNG));
+
+        base.OnConfiguring(optionsBuilder);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

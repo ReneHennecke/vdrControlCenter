@@ -41,16 +41,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="app.config">
+    <None Update="appSettings.Debug.json">
+      <IsTransformFile>true</IsTransformFile>
+      <DependentUpon>appSettings.json</DependentUpon>
+    </None>
+    <None Update="appSettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <TransformOnBuild>true</TransformOnBuild>
     </None>
-    <None Update="app.Debug.config">
+    <None Update="appSettings.Release.json">
       <IsTransformFile>true</IsTransformFile>
-      <DependentUpon>app.config</DependentUpon>
-    </None>
-    <None Update="app.Release.config">
-      <IsTransformFile>true</IsTransformFile>
-      <DependentUpon>app.config</DependentUpon>
+      <DependentUpon>appSettings.json</DependentUpon>
     </None>
   </ItemGroup>
 

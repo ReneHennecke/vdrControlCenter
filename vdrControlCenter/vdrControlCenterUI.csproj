@@ -85,17 +85,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="app.config">
-      <TransformOnBuild>true</TransformOnBuild>
-    </None>
-    <None Update="app.Debug.config">
-      <IsTransformFile>true</IsTransformFile>
-      <DependentUpon>app.config</DependentUpon>
-    </None>
-    <None Update="app.Release.config">
-      <IsTransformFile>true</IsTransformFile>
-      <DependentUpon>app.config</DependentUpon>
-    </None>
     <None Update="ffmpeg\win-x64\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
