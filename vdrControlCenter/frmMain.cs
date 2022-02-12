@@ -286,6 +286,7 @@
                             page.Text = "VDR-Admin";
                             page.ImageIndex = (int)Navigation.VDRAdmin;
                             var controller = new VDRAdmindController();
+                            controller.MainForm = this;
                             controller.Dock = DockStyle.Fill;
                             page.Controls.Add(controller);
                         }

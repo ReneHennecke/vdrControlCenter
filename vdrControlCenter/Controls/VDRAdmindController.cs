@@ -2,8 +2,14 @@
 
 public partial class VDRAdmindController : UserControl
 {
-    WebBrowser _webBrowser;
-    vdrControlCenterContext _context;
+    private WebBrowser _webBrowser;
+    private vdrControlCenterContext _context;
+    private frmMain _frmMain;
+
+    public frmMain MainForm
+    {
+        set => _frmMain = value;
+    }
 
     public VDRAdmindController()
     {

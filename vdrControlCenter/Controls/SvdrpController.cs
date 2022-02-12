@@ -38,10 +38,10 @@ public partial class SvdrpController : UserControl
     public delegate void OnReceiveCallback(string data);
     public delegate void OnErrorCallback(SocketError error);
 
-    private frmMain frmMain;
+    private frmMain _frmMain;
     public frmMain MainForm
     {
-        set { frmMain = value; }
+        set { _frmMain = value; }
     }
 
     public SvdrpController()
@@ -266,7 +266,7 @@ public partial class SvdrpController : UserControl
                         SvdrpEPGList svdrpEPGList = new SvdrpEPGList();
                         svdrpEPGList.ParseMessage(_svdrpBuffer.Splitter);
                             
-                        frmMain.AddMessage($"SAVE EPG-DATA");
+                        _frmMain.AddMessage($"SAVE EPG-DATA");
 
                         svdrpEpgListView.RefreshData(svdrpEPGList);
                         RefreshRequestControls(true);
@@ -300,7 +300,7 @@ public partial class SvdrpController : UserControl
         if (_client.IsConnected)
             return;
 
-        frmMain.AddMessage("CONNECT SVDRP");
+        _frmMain.AddMessage("CONNECT SVDRP");
 
         _svdrpRequest = SvdrpRequest.Connect;
         _svdrpBuffer.Clear();
@@ -312,7 +312,7 @@ public partial class SvdrpController : UserControl
         if (!_client.IsConnected)
             return;
 
-        frmMain.AddMessage("DISCONNECT SVDRP");
+        _frmMain.AddMessage("DISCONNECT SVDRP");
 
         _svdrpRequest = SvdrpRequest.Disconnect;
         _svdrpBuffer.Clear();
@@ -329,7 +329,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage($"GET STATUSINFO");
+        _frmMain.AddMessage($"GET STATUSINFO");
             
         _svdrpRequest = SvdrpRequest.GetStatusInfo;
         _svdrpBuffer.Clear();
@@ -345,7 +345,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage("GET CHANNELLIST");
+        _frmMain.AddMessage("GET CHANNELLIST");
 
         _svdrpRequest = SvdrpRequest.GetChannelList;
         _svdrpBuffer.Clear();
@@ -361,7 +361,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage($"GET TIMERLIST");
+        _frmMain.AddMessage($"GET TIMERLIST");
 
         _svdrpRequest = SvdrpRequest.GetTimerList;
         _svdrpBuffer.Clear();
@@ -375,7 +375,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage($"GET TIMER");
+        _frmMain.AddMessage($"GET TIMER");
 
         _svdrpRequest = SvdrpRequest.CheckTimer;
         _svdrpBuffer.Clear();
@@ -389,7 +389,7 @@ public partial class SvdrpController : UserControl
 
         foreach (long item in selectedItems)
         {
-            frmMain.AddMessage($"ADD TIMER » {item}");
+            _frmMain.AddMessage($"ADD TIMER » {item}");
 
             Epg epg = await _context.Epg.FirstOrDefaultAsync(e => e.RecId == item);
             if (epg != null)
@@ -423,7 +423,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage($"DEL TIMER {number}");
+        _frmMain.AddMessage($"DEL TIMER {number}");
 
         _svdrpRequest = SvdrpRequest.RemoveTimer;
         _svdrpBuffer.Clear();
@@ -439,7 +439,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage($"GET RECORDINGS");
+        _frmMain.AddMessage($"GET RECORDINGS");
             
         _svdrpRequest = SvdrpRequest.GetRecordings;
         _svdrpBuffer.Clear();
@@ -455,7 +455,7 @@ public partial class SvdrpController : UserControl
 
         RefreshRequestControls(false);
 
-        frmMain.AddMessage($"GET EPG");
+        _frmMain.AddMessage($"GET EPG");
             
         _svdrpRequest = SvdrpRequest.GetEPGList;
         _svdrpBuffer.Clear();
@@ -486,7 +486,7 @@ public partial class SvdrpController : UserControl
 
                 if (svdrpChannelList != null)
                 {
-                    frmMain.AddMessage($"SAVE CHANNEL");
+                    _frmMain.AddMessage($"SAVE CHANNEL");
                     svdrpChannelsView.RefreshData(svdrpChannelList);
                 }
 
@@ -499,7 +499,7 @@ public partial class SvdrpController : UserControl
 
                 if (svdrpTimerList != null)
                 {
-                    frmMain.AddMessage($"SAVE TIMER");
+                    _frmMain.AddMessage($"SAVE TIMER");
                     svdrpTimersView.RefreshData(svdrpTimerList);
                 }
 
@@ -512,7 +512,7 @@ public partial class SvdrpController : UserControl
 
                 if (svdrpRecordingList != null)
                 {
-                    frmMain.AddMessage($"SAVE RECORDINGS");
+                    _frmMain.AddMessage($"SAVE RECORDINGS");
                     svdrpRecordingsView.RefreshData(svdrpRecordingList);
                 }
 

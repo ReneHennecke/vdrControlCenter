@@ -4,10 +4,10 @@ public partial class CommanderController : UserControl
 {
     private vdrControlCenterContext _context;
 
-    private frmMain _mainForm;
+    private frmMain _frmMain;
     public frmMain MainForm
     {
-        set => _mainForm = value;
+        set => _frmMain = value;
     }
 
     public CommanderController()

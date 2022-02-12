@@ -3,12 +3,12 @@
 public partial class SystemSettingsController : UserControl
 {
     private vdrControlCenterContext _context;
-    private frmMain frmMain;
+    private frmMain _frmMain;
     private int _prevSelectedIndex = -1;
 
     public frmMain MainForm
     {
-        set { frmMain = value; }
+        set => _frmMain = value;
     }
 
     public SystemSettingsController()
@@ -93,7 +93,7 @@ public partial class SystemSettingsController : UserControl
         var station = await _context.Stations.FirstOrDefaultAsync(x => x.RecId == recId);
         if (station != null)
         {
-            frmMain.AddMessage($"LOAD SETTINGS » {station.HostAddress}");
+            _frmMain.AddMessage($"LOAD SETTINGS » {station.HostAddress}");
 
             teMacAddress.Text = station.MacAddress;
             chbEnableWOL.Checked = (station.EnableWol.HasValue ? station.EnableWol.Value : false);
@@ -126,7 +126,7 @@ public partial class SystemSettingsController : UserControl
         {
             try
             {
-                frmMain.AddMessage($"SAVE SETTINGS » {RaX.Extensions.Network.NetHelper.LocalAddress}");
+                _frmMain.AddMessage($"SAVE SETTINGS » {RaX.Extensions.Network.NetHelper.LocalAddress}");
                 SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.MachineName);
                 if (systemSettings == null)
                     systemSettings = new SystemSetting();
@@ -145,7 +145,7 @@ public partial class SystemSettingsController : UserControl
                 systemSettings.OverwriteUPnPDownload = chbOverwriteUPnPDownload.Checked;
 
                 var station = await _context.Stations.FirstOrDefaultAsync(x => x.RecId == recId);
-                frmMain.AddMessage($"SAVE SETTINGS » {station.HostAddress}");
+                _frmMain.AddMessage($"SAVE SETTINGS » {station.HostAddress}");
                 if (station == null)
                     station = new Station();
                 else

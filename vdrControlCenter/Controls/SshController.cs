@@ -8,10 +8,10 @@ public partial class SshController : UserControl
     private List<string> _commandList;
     private int _currentCommand;
         
-    private frmMain frmMain;
+    private frmMain _frmMain;
     public frmMain MainForm
     {
-        set { frmMain = value; }
+        set => _frmMain = value;
     }
 
     public SshController()

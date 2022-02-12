@@ -45,4 +45,33 @@ public partial class SystemSetting
     public string UPnPDownloadPath { get; set; }
 
     public bool? OverwriteUPnPDownload { get; set; }
+
+    // Transcode
+    public int? TcAudioBitRate { get; set; }
+    public bool TcRemoveAudio { get; set; }
+
+    [MaxLength(255)]
+    public string TcTarget { get; set; }
+
+    public int? TcVideoBitRate { get; set; }
+    public int? TcAudioChannel { get; set; }
+
+    public int? TcVideoFps { get; set; }
+
+    public double? TcVideoTimeScale { get; set; }
+
+    public TimeSpan? TcMaxVideoDuration { get; set; }
+
+    public int? TcVideoSize { get; set; }
+
+    public int TcVideoCodec { get; set; }
+
+    public int TcVideoFormat { get; set; }
+
+    [MaxLength(30)]
+    public string TcPixelFormat { get; set; }
+
+    public int TcVideoAspectRatio { get; set;}    
+
+    public int TcThreads { get; set; }
 }

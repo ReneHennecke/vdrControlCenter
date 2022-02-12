@@ -7,7 +7,7 @@ public partial class UPnPBrowser : UserControl
 
     private LibVLC _libVLC;
     private delegate void MediaItemAddCallback(MediaItem mediaItem);
-    private frmMain _mainForm;
+    private frmMain _frmMain;
     private HttpClientDownloadWithProgress _downloadWithProgress;
     private const string BTN_DL_DOWN = "Start Download";
     private const string BTN_DL_CANCEL = "Abbrechen";
@@ -15,7 +15,7 @@ public partial class UPnPBrowser : UserControl
 
     public frmMain MainForm
     {
-        set => _mainForm = value;
+        set => _frmMain = value;
     }
 
     public UPnPBrowser()
@@ -114,7 +114,8 @@ public partial class UPnPBrowser : UserControl
             btnDownload.Text = BTN_DL_DOWN;
             return;
         }
-        
+
+        _frmMain.AddMessage($"UPnP Downloading");
         btnDownload.Text = BTN_DL_CANCEL;
         
         if (!string.IsNullOrWhiteSpace(lblMrlValue.Text) && !string.IsNullOrWhiteSpace(lblNameValue.Text))

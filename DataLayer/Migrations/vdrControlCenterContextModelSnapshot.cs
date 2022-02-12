@@ -805,6 +805,50 @@ namespace DataLayer.Migrations
                     b.Property<bool?>("SaveBufferToFile")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("TcAudioBitRate")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TcAudioChannel")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan?>("TcMaxVideoDuration")
+                        .HasColumnType("time");
+
+                    b.Property<string>("TcPixelFormat")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("TcRemoveAudio")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TcTarget")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("TcThreads")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TcVideoAspectRatio")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TcVideoBitRate")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TcVideoCodec")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TcVideoFormat")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TcVideoFps")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TcVideoSize")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("TcVideoTimeScale")
+                        .HasColumnType("float");
+
                     b.Property<string>("UPnPDownloadPath")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");

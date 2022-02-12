@@ -101,7 +101,7 @@ namespace vdrControlCenterUI.Controls
         private void btnInput_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
-            dlg.Description = "Dateiliste laden...";
+            dlg.Description = "Dateiliste laden aus...";
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 livInput.SuspendLayout();
@@ -158,6 +158,7 @@ namespace vdrControlCenterUI.Controls
 
             try
             {
+                _frmMain.AddMessage($"Transcoding");
                 await Task.WhenAll(tasks);
             }
             catch

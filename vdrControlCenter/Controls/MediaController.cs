@@ -27,10 +27,10 @@ public partial class MediaController : UserControl
 
     private float _step = .01f;
 
-    private frmMain _mainForm;
+    private frmMain _frmMain;
     public frmMain MainForm
     {
-        set { _mainForm = value; }
+        set { _frmMain = value; }
     }
 
     public MediaController()
@@ -315,9 +315,7 @@ public partial class MediaController : UserControl
         }
     }
 
-
-
-    private void videoViewer_KeyDown(object sender, KeyEventArgs e)
+     private void videoViewer_KeyDown(object sender, KeyEventArgs e)
     {
         KeyReact(e);
     }
@@ -341,6 +339,10 @@ public partial class MediaController : UserControl
                 break;
             case Keys.M:
                 _mp.Mute = !_mp.Mute;
+                break;
+            case Keys.F12:
+                if (!panController.Visible)
+                    panController.Visible = true;
                 break;
             default:
                 break;
