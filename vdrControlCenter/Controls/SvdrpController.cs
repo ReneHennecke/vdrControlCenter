@@ -538,5 +538,10 @@ public partial class SvdrpController : UserControl
     {
         SendDisconnectRequest();
     }
+
+    public void ForwardMessage(string msg)
+    {
+        _frmMain.AddMessage(msg);
+    }
 }
 

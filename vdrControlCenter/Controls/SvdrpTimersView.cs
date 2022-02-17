@@ -189,6 +189,9 @@ public partial class SvdrpTimersView : UserControl
 
     private async void ReLoad()
     {
+        var owner = (SvdrpController)Parent;
+        owner.ForwardMessage("LOAD TIMERS");
+
         dgvTimers.DataSource = null;
 
         SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);

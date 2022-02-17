@@ -82,6 +82,9 @@ public partial class SvdrpStatusInfoView : UserControl
 
     private async void ReLoad()
     {
+        var owner = (SvdrpController)Parent;
+        owner.ForwardMessage("LOAD STATUSINFO");
+
         SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);
         if (systemSettings != null)
         {

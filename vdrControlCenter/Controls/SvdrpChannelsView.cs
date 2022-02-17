@@ -224,6 +224,9 @@ public partial class SvdrpChannelsView : UserControl
 
     private async void ReLoad()
     {
+        var owner = (SvdrpController)Parent;
+        owner.ForwardMessage("LOAD CHANNELS");
+
         dgvChannels.DataSource = null;
             
         SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName);

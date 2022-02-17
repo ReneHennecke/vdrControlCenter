@@ -211,7 +211,6 @@ public partial class SvdrpEpgView : UserControl
 
         if (reload)
             ReLoad();
-
     }
 
     private void btnFind_Click(object sender, System.EventArgs e)
@@ -271,8 +270,10 @@ public partial class SvdrpEpgView : UserControl
 
     private async void ReLoad()
     {
-        dgvEPG.DataSource = null;
+        var owner = (SvdrpController)Parent;
+        owner.ForwardMessage("LOAD EPG-DATA");
 
+        dgvEPG.DataSource = null;
 
         SystemSetting systemSettings = await _context.SystemSettings.FirstOrDefaultAsync(e => e.MachineName == Environment.MachineName); 
         if (systemSettings != null)
