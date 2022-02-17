@@ -9,6 +9,8 @@ namespace vdrControlCenterUI.Controls
         private Engine _ffmpeg;
         private CancellationTokenSource _cts;
         private frmMain _frmMain;
+        private vdrControlCenterContext _context;
+
         public frmMain MainForm
         {
             set { _frmMain = value; }
@@ -36,6 +38,8 @@ namespace vdrControlCenterUI.Controls
                 _ffmpeg.Data += OnData;
                 _ffmpeg.Error += OnError;
                 _ffmpeg.Complete += OnComplete;
+
+                _context = new vdrControlCenterContext();
             }
             catch (Exception ex)
             {
@@ -107,6 +111,8 @@ namespace vdrControlCenterUI.Controls
                 livInput.SuspendLayout();
                 livInput.Items.Clear();
 
+                _frmMain.AddMessage("LOAD DIRECTORY");
+
                 var files = new DirectoryInfo(dlg.SelectedPath).GetFiles("*.*");
                 foreach (var file in files)
                 {
@@ -120,7 +126,6 @@ namespace vdrControlCenterUI.Controls
 
                 livInput.ResumeLayout();
             }
-
         }
 
         private async void btnTranscode_Click(object sender, EventArgs e)
@@ -137,18 +142,27 @@ namespace vdrControlCenterUI.Controls
             btnInput.Enabled = false;
             btnTranscode.Text = "Abbrechen";
 
+            var systemSetting = await _context.SystemSettings.FirstOrDefaultAsync(x => x.MachineName == Environment.NewLine);
+
+            var maxVideoDuration = systemSetting.TcMaxVideoDuration ??= TimeSpan.FromSeconds(30);
+            var videoAspectRatio = (VideoAspectRatio)systemSetting.TcVideoAspectRatio;
+            var videoSize = systemSetting.TcVideoSize == null ? VideoSize.Hd1080 : (VideoSize)systemSetting.TcVideoSize;
+            var audioSampleRate = systemSetting.TcAudioSampleRate == null ? AudioSampleRate.Hz44100 : (AudioSampleRate)systemSetting.TcAudioSampleRate;
+
             var conversionOptions = new ConversionOptions
             {
-                MaxVideoDuration = TimeSpan.FromSeconds(30),
-                VideoAspectRatio = VideoAspectRatio.R16_9,
-                VideoSize = VideoSize.Hd1080,
-                AudioSampleRate = AudioSampleRate.Hz44100
+                MaxVideoDuration = maxVideoDuration,
+                VideoAspectRatio = videoAspectRatio,
+                VideoSize = videoSize,
+                AudioSampleRate = audioSampleRate
             };
 
             var tasks = new List<Task>();
             foreach (ListViewItem item in livInput.CheckedItems)
             {
                 var file = (FileInfo)item.Tag;
+
+                _frmMain.AddMessage($"ADD TRANSCODE TASK {file.Name}");
 
                 var inputFile = new InputFile(file.FullName);
                 var outputFile = new OutputFile($"{file.FullName}.mp4");

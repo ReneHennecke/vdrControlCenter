@@ -21,6 +21,7 @@ public partial class VDRAdmindController : UserControl
 
     private async void PostInit()
     {
+        _frmMain.AddMessage("LOAD VDRADMIN");
 
         _webBrowser = new WebBrowser();
         _webBrowser.Location = new Point(Location.X + 2, Location.Y + 40);

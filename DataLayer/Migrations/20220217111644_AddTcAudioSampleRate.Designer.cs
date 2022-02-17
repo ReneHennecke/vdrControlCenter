@@ -4,6 +4,7 @@ using DataLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(vdrControlCenterContext))]
-    partial class vdrControlCenterContextModelSnapshot : ModelSnapshot
+    [Migration("20220217111644_AddTcAudioSampleRate")]
+    partial class AddTcAudioSampleRate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,7 +117,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("RecId");
 
-                    b.ToTable("Channels", (string)null);
+                    b.ToTable("Channels");
                 });
 
             modelBuilder.Entity("DataLayer.Models.Epg", b =>
@@ -286,7 +288,7 @@ namespace DataLayer.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("VPS");
 
-                    b.ToTable("FakeEpgs", (string)null);
+                    b.ToTable("FakeEpgs");
                 });
 
             modelBuilder.Entity("DataLayer.Models.FakeEpgGuide", b =>
@@ -510,7 +512,7 @@ namespace DataLayer.Migrations
                     b.Property<int>("RowCounter")
                         .HasColumnType("int");
 
-                    b.ToTable("FakeEpgGuide", (string)null);
+                    b.ToTable("FakeEpgGuide");
                 });
 
             modelBuilder.Entity("DataLayer.Models.FakeTimer", b =>
@@ -551,7 +553,7 @@ namespace DataLayer.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("FakeTimers", (string)null);
+                    b.ToTable("FakeTimers");
                 });
 
             modelBuilder.Entity("DataLayer.Models.FindEntry", b =>
@@ -596,7 +598,7 @@ namespace DataLayer.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("VPS");
 
-                    b.ToTable("FoundEntries", (string)null);
+                    b.ToTable("FoundEntries");
                 });
 
             modelBuilder.Entity("DataLayer.Models.Recording", b =>
@@ -631,7 +633,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("RecId");
 
-                    b.ToTable("Recordings", (string)null);
+                    b.ToTable("Recordings");
                 });
 
             modelBuilder.Entity("DataLayer.Models.Station", b =>
@@ -722,7 +724,7 @@ namespace DataLayer.Migrations
                     b.HasIndex("StationType")
                         .HasDatabaseName("NCI_StationType");
 
-                    b.ToTable("Stations", (string)null);
+                    b.ToTable("Stations");
                 });
 
             modelBuilder.Entity("DataLayer.Models.StatusInfo", b =>
@@ -749,7 +751,7 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("SystemSettingsRecId");
 
-                    b.ToTable("StatusInfo", (string)null);
+                    b.ToTable("StatusInfo");
                 });
 
             modelBuilder.Entity("DataLayer.Models.SystemSetting", b =>
@@ -858,7 +860,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("RecId");
 
-                    b.ToTable("SystemSettings", (string)null);
+                    b.ToTable("SystemSettings");
                 });
 
             modelBuilder.Entity("DataLayer.Models.Timer", b =>
@@ -906,7 +908,7 @@ namespace DataLayer.Migrations
                     b.HasIndex("Title", "StartTime", "EndTime")
                         .HasDatabaseName("NCI_Title_StartTime_EndTime");
 
-                    b.ToTable("Timers", (string)null);
+                    b.ToTable("Timers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -925,7 +927,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DataProtectionKeys", (string)null);
+                    b.ToTable("DataProtectionKeys");
                 });
 
             modelBuilder.Entity("DataLayer.Models.Epg", b =>

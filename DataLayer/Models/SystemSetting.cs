@@ -74,4 +74,6 @@ public partial class SystemSetting
     public int TcVideoAspectRatio { get; set;}    
 
     public int TcThreads { get; set; }
+
+    public int? TcAudioSampleRate { get; set; }
 }
