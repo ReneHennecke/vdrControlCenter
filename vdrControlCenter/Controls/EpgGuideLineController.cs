@@ -114,7 +114,7 @@ public partial class EpgGuideLineController : UserControl
         if (_channelList == null)
             return;
 
-        _frmMain.AddMessage("BUILD EPG-Einträge");
+        _frmMain.AddMessage("BUILD EPG-ENTRIES");
 
         panTimeLineControls.SuspendLayout();
         if (refreshChannels)
@@ -196,7 +196,7 @@ public partial class EpgGuideLineController : UserControl
                 favourites = systemSettings.FavouritesOnly.Value;
         }
 
-        _frmMain.AddMessage("GET Kanalliste");
+        _frmMain.AddMessage("GET CHANNELS");
         _channelList = _context.Channels
                                 .OrderBy(x => x.ChannelName)
                                 .ToList();
@@ -212,7 +212,7 @@ public partial class EpgGuideLineController : UserControl
 
     private void LoadEpg()
     {
-        _frmMain.AddMessage("GET EPG-Daten");
+        _frmMain.AddMessage("GET EPG-DATA");
         string channelList = string.Empty;
         _channelList.ForEach(x =>
         {
