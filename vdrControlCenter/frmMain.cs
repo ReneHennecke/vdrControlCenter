@@ -138,8 +138,6 @@
 
             trvNavigation.SelectedNode = null;
 
-
-
             viewStations.PopulateData();
         }
 
