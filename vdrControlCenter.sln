@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vdrControlCenterUI", "vdrControlCenter\vdrControlCenterUI.csproj", "{F311AF49-9DD0-494C-BA06-2B3737039CF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vdrControlCenterUI", "vdrControlCenterUI\vdrControlCenterUI.csproj", "{F311AF49-9DD0-494C-BA06-2B3737039CF0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{C9070EB0-C381-4487-89E1-FC5C93D2B49F}"
 EndProject

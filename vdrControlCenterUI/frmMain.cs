@@ -10,8 +10,8 @@
 
     public partial class frmMain : Form
     {
-        private Point _imageLocation = new Point(20, 4);
-        private Point _imgHitArea = new Point(20, 4);
+        private Point _imageLocation = new(20, 4);
+        private Point _imgHitArea = new(20, 4);
         private Image _closeImage;
         private const int FRAME_MAXIMIZED = -1;
 
@@ -45,7 +45,7 @@
 
             tabWorkspace.ImageList = imageList;
 
-            TreeNode node = new TreeNode()
+            TreeNode node = new()
             {
                 Text = "Einstellungen",
                 ImageIndex = (int)Navigation.Setup,
@@ -162,7 +162,7 @@
             // TabPage schliessen
             TabControl tabControl = (TabControl)sender;
             Point p = e.Location;
-            int tabWidth = 0;
+            int tabWidth;
             tabWidth = tabWorkspace.GetTabRect(tabControl.SelectedIndex).Width - (_imgHitArea.X);
             Rectangle r = tabWorkspace.GetTabRect(tabControl.SelectedIndex);
             r.Offset(tabWidth, _imgHitArea.Y);
@@ -212,7 +212,7 @@
         private void tabWorkspace_DrawItem(object sender, DrawItemEventArgs e)
         {
             
-            Rectangle r = e.Bounds;
+            Rectangle r;
             r = tabWorkspace.GetTabRect(e.Index);
             r.Offset(2, 2);
             Brush TitleBrush = new SolidBrush(Color.Black);
@@ -235,7 +235,7 @@
         {
             if (teMessages.InvokeRequired)
             {
-                AddMessageCallback amcb = new AddMessageCallback(AddMessage);
+                AddMessageCallback amcb = new(AddMessage);
                 Invoke(amcb, new object[] { msg });
             }
             else
@@ -257,7 +257,6 @@
                     Tag = navigation
                 };
 
-                string title = string.Empty;
                 bool resize = false;
                 switch (navigation)
                 {
@@ -265,9 +264,11 @@
                         {
                             page.Text = "Einstellungen";
                             page.ImageIndex = (int)Navigation.Setup;
-                            var controller = new SystemSettingsController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new SystemSettingsController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -275,9 +276,11 @@
                         {
                             page.Text = "SSH";
                             page.ImageIndex = (int)Navigation.SSH;
-                            var controller = new SshController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new SshController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -285,9 +288,11 @@
                         {
                             page.Text = "VDR-Admin";
                             page.ImageIndex = (int)Navigation.VDRAdmin;
-                            var controller = new VDRAdmindController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new VDRAdmindController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -295,9 +300,11 @@
                         {
                             page.Text = "SVDRP";
                             page.ImageIndex = (int)Navigation.SVDRP;
-                            var controller = new SvdrpController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new SvdrpController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -309,9 +316,11 @@
                         {
                             page.Text = "EPG-Guide";
                             page.ImageIndex = (int)Navigation.EPGGuide;
-                            var controller = new EpgGuideLineController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new EpgGuideLineController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                             controller.LoadData();
                             resize = true;
@@ -321,9 +330,11 @@
                         {
                             page.Text = "Video";
                             page.ImageIndex = (int)Navigation.Video;
-                            var controller = new MediaController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new MediaController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -331,9 +342,11 @@
                         {
                             page.Text = "Datei Manager";
                             page.ImageIndex = (int)Navigation.Commander;
-                            var controller = new CommanderController();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new CommanderController()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -341,9 +354,11 @@
                         {
                             page.Text = "UPNP Manager";
                             page.ImageIndex = (int)Navigation.UPnPBrowser;
-                            var controller = new UPnPBrowser();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new UPnPBrowser()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -351,9 +366,11 @@
                         {
                             page.Text = "Transcoder";
                             page.ImageIndex = (int)Navigation.Transcoder;
-                            var controller = new Transcoder();
-                            controller.MainForm = this;
-                            controller.Dock = DockStyle.Fill;
+                            var controller = new Transcoder()
+                            {
+                                MainForm = this,
+                                Dock = DockStyle.Fill
+                            };
                             page.Controls.Add(controller);
                         }
                         break;
@@ -434,21 +451,13 @@
             {
                 if (page.Controls.Count > 0)
                 {
-                    if (page.Controls[0] is SystemSettingsController)
-                    {
-                        SystemSettingsController controller = (SystemSettingsController)page.Controls[0];
-                        await controller.SaveData();
-                    }
-                    else if (page.Controls[0] is CommanderController)
-                    {
-                        CommanderController controller = (CommanderController)page.Controls[0];
-                        controller.SaveConfig();
-                    }
-                    else if (page.Controls[0] is SvdrpController)
-                    {
-                        SvdrpController controller = (SvdrpController)page.Controls[0];
-                        controller.Disconnect();
-                    }
+                    if (page.Controls[0] is SystemSettingsController systemController)
+                        await systemController.SaveData();
+                    else if (page.Controls[0] is CommanderController commanderController)
+                        commanderController.SaveConfig();
+                    else if (page.Controls[0] is SvdrpController svdrpController)
+                        svdrpController.Disconnect();
+
                     //else if (page.Controls[0] is SshController)
                     //{
 
@@ -491,11 +500,8 @@
             {
                 if (page.Controls.Count > 0)
                 {
-                    if (page.Controls[0] is EpgGuideLineController)
-                    {
-                        EpgGuideLineController controller = (EpgGuideLineController)page.Controls[0];
+                    if (page.Controls[0] is EpgGuideLineController controller)
                         controller.Redraw();
-                    }
                 }
             }
         }
