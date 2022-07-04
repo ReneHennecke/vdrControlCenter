@@ -87,12 +87,13 @@ namespace vdrServerHelper
                 {
                     using (Process p = new())
                     {
-                        p.StartInfo.UseShellExecute = false;
+                        p.StartInfo.UseShellExecute = true;
                         p.StartInfo.FileName = "/sbin/shutdown";
                         p.StartInfo.Arguments = "-h now";
+                        p.EnableRaisingEvents = true;
                         p.StartInfo.CreateNoWindow = true;
-
-                        p.Start();
+                        p.Exited += OnExited;
+                        p.Start();  
         }
     }
                 catch (Exception ex)
@@ -101,8 +102,15 @@ namespace vdrServerHelper
                 }
             }
 #else
+            Console.WriteLine("Press any key to exit.");
             Console.ReadLine();
 #endif
+            Environment.Exit(1);
+        }
+
+        private static void OnExited(object? sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
 
         #region Logging
