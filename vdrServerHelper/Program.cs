@@ -35,6 +35,7 @@ namespace vdrServerHelper
                     const int TCP_PORT_SSH = 22;
                     const int TCP_PORT_SAMBA = 445;
                     const int TCP_PORT_VNSI = 34890;
+                    const int TCP_PORT_SVDRP = 6419;
 
                     if (!ignoreShutdown)
                         ignoreShutdown = await IsPortAvailableAsync(ip, connections, TCP_PORT_SSH);
@@ -44,6 +45,9 @@ namespace vdrServerHelper
 
                     if (!ignoreShutdown)
                         ignoreShutdown = await IsPortAvailableAsync(ip, connections, TCP_PORT_VNSI);
+
+                    if (!ignoreShutdown)
+                        ignoreShutdown = await IsPortAvailableAsync(ip, connections, TCP_PORT_SVDRP);
                 }
             }
 
@@ -55,12 +59,15 @@ namespace vdrServerHelper
             {
                 // Checking timers
                 var list = await GetTimerListAsync();
-                
-                // Checking very close timer
-                ignoreShutdown = await HasNextOrVeryCloseTimerAsync(list, 20 * 60); // 20 min
 
-                if (!ignoreShutdown)
-                    ignoreShutdown = await HasNextOrVeryCloseTimerAsync(list, 5 * 60); // 5 min
+                if (list != null && list.Count > 0)
+                {
+                    // Checking very close timer
+                    ignoreShutdown = await HasNextOrVeryCloseTimerAsync(list, 20 * 60); // 20 min
+
+                    if (!ignoreShutdown)
+                        ignoreShutdown = await HasNextOrVeryCloseTimerAsync(list, 5 * 60); // 5 min
+                }
             }
 
             if (!ignoreShutdown)
